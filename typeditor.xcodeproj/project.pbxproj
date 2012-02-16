@@ -11,7 +11,7 @@
 		2ABB27F014ECCF7100820C07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB27EE14ECCF7100820C07 /* InfoPlist.strings */; };
 		2ABB27F214ECCF7100820C07 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB27F114ECCF7100820C07 /* main.m */; };
 		2ABB27F614ECCF7100820C07 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB27F414ECCF7100820C07 /* Credits.rtf */; };
-		2ABB27F914ECCF7100820C07 /* SFAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB27F814ECCF7100820C07 /* SFAppDelegate.m */; };
+		2ABB27F914ECCF7100820C07 /* SFAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB27F814ECCF7100820C07 /* SFAppDelegate.mm */; };
 		2ABB27FC14ECCF7200820C07 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB27FA14ECCF7200820C07 /* MainMenu.xib */; };
 		2ABB280414ECCF7200820C07 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB280314ECCF7200820C07 /* SenTestingKit.framework */; };
 		2ABB280514ECCF7200820C07 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB27E514ECCF7100820C07 /* Cocoa.framework */; };
@@ -20,6 +20,8 @@
 		2ABB283514ECD67D00820C07 /* Scintilla.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB283214ECD44700820C07 /* Scintilla.framework */; };
 		2ABB283814ECD69E00820C07 /* libv8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB283614ECD69E00820C07 /* libv8.a */; };
 		2ABB283914ECD69E00820C07 /* libv8preparser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB283714ECD69E00820C07 /* libv8preparser.a */; };
+		2ABB284314ECDD0600820C07 /* ScintillaViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB284114ECDD0600820C07 /* ScintillaViewController.mm */; };
+		2ABB284414ECDD0600820C07 /* ScintillaViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB284214ECDD0600820C07 /* ScintillaViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,7 +53,7 @@
 		2ABB27F314ECCF7100820C07 /* typeditor-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "typeditor-Prefix.pch"; sourceTree = "<group>"; };
 		2ABB27F514ECCF7100820C07 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		2ABB27F714ECCF7100820C07 /* SFAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAppDelegate.h; sourceTree = "<group>"; };
-		2ABB27F814ECCF7100820C07 /* SFAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SFAppDelegate.m; sourceTree = "<group>"; };
+		2ABB27F814ECCF7100820C07 /* SFAppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = SFAppDelegate.mm; sourceTree = "<group>"; };
 		2ABB27FB14ECCF7200820C07 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		2ABB280214ECCF7200820C07 /* typeditorTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = typeditorTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ABB280314ECCF7200820C07 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -62,6 +64,9 @@
 		2ABB282A14ECD44700820C07 /* ScintillaFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ScintillaFramework.xcodeproj; path = scintilla/cocoa/ScintillaFramework/ScintillaFramework.xcodeproj; sourceTree = "<group>"; };
 		2ABB283614ECD69E00820C07 /* libv8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libv8.a; path = v8/lib/libv8.a; sourceTree = "<group>"; };
 		2ABB283714ECD69E00820C07 /* libv8preparser.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libv8preparser.a; path = v8/lib/libv8preparser.a; sourceTree = "<group>"; };
+		2ABB284014ECDD0600820C07 /* ScintillaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScintillaViewController.h; sourceTree = "<group>"; };
+		2ABB284114ECDD0600820C07 /* ScintillaViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ScintillaViewController.mm; sourceTree = "<group>"; };
+		2ABB284214ECDD0600820C07 /* ScintillaViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScintillaViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,8 +138,9 @@
 		2ABB27EB14ECCF7100820C07 /* typeditor */ = {
 			isa = PBXGroup;
 			children = (
+				2ABB283F14ECDC8F00820C07 /* Controller */,
 				2ABB27F714ECCF7100820C07 /* SFAppDelegate.h */,
-				2ABB27F814ECCF7100820C07 /* SFAppDelegate.m */,
+				2ABB27F814ECCF7100820C07 /* SFAppDelegate.mm */,
 				2ABB27FA14ECCF7200820C07 /* MainMenu.xib */,
 				2ABB27EC14ECCF7100820C07 /* Supporting Files */,
 			);
@@ -178,6 +184,16 @@
 				2ABB283214ECD44700820C07 /* Scintilla.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2ABB283F14ECDC8F00820C07 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				2ABB284014ECDD0600820C07 /* ScintillaViewController.h */,
+				2ABB284114ECDD0600820C07 /* ScintillaViewController.mm */,
+				2ABB284214ECDD0600820C07 /* ScintillaViewController.xib */,
+			);
+			name = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -270,6 +286,7 @@
 				2ABB27F014ECCF7100820C07 /* InfoPlist.strings in Resources */,
 				2ABB27F614ECCF7100820C07 /* Credits.rtf in Resources */,
 				2ABB27FC14ECCF7200820C07 /* MainMenu.xib in Resources */,
+				2ABB284414ECDD0600820C07 /* ScintillaViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,7 +322,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2ABB27F214ECCF7100820C07 /* main.m in Sources */,
-				2ABB27F914ECCF7100820C07 /* SFAppDelegate.m in Sources */,
+				2ABB27F914ECCF7100820C07 /* SFAppDelegate.mm in Sources */,
+				2ABB284314ECDD0600820C07 /* ScintillaViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -423,8 +441,8 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				HEADER_SEARCH_PATHS = (
-					"./v8/include/**",
-					"./scintilla/**",
+					"${SRCROOT}/v8/include",
+					"${SRCROOT}/scintilla/**",
 				);
 				INFOPLIST_FILE = "typeditor/typeditor-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -450,8 +468,8 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				HEADER_SEARCH_PATHS = (
-					"./v8/include/**",
-					"./scintilla/**",
+					"${SRCROOT}/v8/include",
+					"${SRCROOT}/scintilla/**",
 				);
 				INFOPLIST_FILE = "typeditor/typeditor-Info.plist";
 				LIBRARY_SEARCH_PATHS = (

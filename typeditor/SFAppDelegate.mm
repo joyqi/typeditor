@@ -15,7 +15,7 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     scintillaViewController = [[ScintillaViewController alloc] initWithNibName:@"ScintillaViewController" bundle:nil];
-    [scintillaViewController appendScintillaViewTo:[_window contentView]];
+    [scintillaViewController appendScintillaToWindow:_window];
 }
 
 @end

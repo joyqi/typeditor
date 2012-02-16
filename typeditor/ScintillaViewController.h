@@ -9,9 +9,9 @@
 #import <Cocoa/Cocoa.h>
 #import "ScintillaView.h"
 
-@interface ScintillaViewController : NSViewController {
+@interface ScintillaViewController : NSViewController <NSWindowDelegate> {
     ScintillaView *scintillaView;
 }
 
-- (void)appendScintillaViewTo:(NSView *)parentView;
+- (void)appendScintillaToWindow:(NSWindow *)window;
 @end

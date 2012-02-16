@@ -21,10 +21,20 @@
     return self;
 }
 
-- (void)appendScintillaViewTo:(NSView *)parentView
+- (void)appendScintillaToWindow:(NSWindow *)window
 {
-    [scintillaView setFrame:[parentView frame]];
-    [parentView addSubview:scintillaView];
+    NSView *contentView = [window contentView];
+    CGRect frame = [contentView frame];
+    
+    [scintillaView setFrame:frame];
+    [contentView addSubview:scintillaView];
+    [window setDelegate:self];
+}
+
+- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize
+{
+    [scintillaView setFrame:CGRectMake(0, 0, frameSize.width, frameSize.height)];
+    return frameSize;
 }
 
 @end

@@ -17,6 +17,9 @@
 		2ABB280514ECCF7200820C07 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB27E514ECCF7100820C07 /* Cocoa.framework */; };
 		2ABB280D14ECCF7200820C07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB280B14ECCF7200820C07 /* InfoPlist.strings */; };
 		2ABB281014ECCF7200820C07 /* typeditorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB280F14ECCF7200820C07 /* typeditorTests.m */; };
+		2ABB283514ECD67D00820C07 /* Scintilla.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB283214ECD44700820C07 /* Scintilla.framework */; };
+		2ABB283814ECD69E00820C07 /* libv8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB283614ECD69E00820C07 /* libv8.a */; };
+		2ABB283914ECD69E00820C07 /* libv8preparser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB283714ECD69E00820C07 /* libv8preparser.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,6 +29,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 2ABB27E014ECCF7100820C07;
 			remoteInfo = typeditor;
+		};
+		2ABB283114ECD44700820C07 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2ABB282A14ECD44700820C07 /* ScintillaFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = Scintilla;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -49,6 +59,9 @@
 		2ABB280C14ECCF7200820C07 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2ABB280E14ECCF7200820C07 /* typeditorTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = typeditorTests.h; sourceTree = "<group>"; };
 		2ABB280F14ECCF7200820C07 /* typeditorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = typeditorTests.m; sourceTree = "<group>"; };
+		2ABB282A14ECD44700820C07 /* ScintillaFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ScintillaFramework.xcodeproj; path = scintilla/cocoa/ScintillaFramework/ScintillaFramework.xcodeproj; sourceTree = "<group>"; };
+		2ABB283614ECD69E00820C07 /* libv8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libv8.a; path = v8/lib/libv8.a; sourceTree = "<group>"; };
+		2ABB283714ECD69E00820C07 /* libv8preparser.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libv8preparser.a; path = v8/lib/libv8preparser.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +69,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2ABB283514ECD67D00820C07 /* Scintilla.framework in Frameworks */,
 				2ABB27E614ECCF7100820C07 /* Cocoa.framework in Frameworks */,
+				2ABB283814ECD69E00820C07 /* libv8.a in Frameworks */,
+				2ABB283914ECD69E00820C07 /* libv8preparser.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +91,7 @@
 		2ABB27D614ECCF7100820C07 = {
 			isa = PBXGroup;
 			children = (
+				2ABB282A14ECD44700820C07 /* ScintillaFramework.xcodeproj */,
 				2ABB27EB14ECCF7100820C07 /* typeditor */,
 				2ABB280814ECCF7200820C07 /* typeditorTests */,
 				2ABB27E414ECCF7100820C07 /* Frameworks */,
@@ -94,6 +111,8 @@
 		2ABB27E414ECCF7100820C07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2ABB283614ECD69E00820C07 /* libv8.a */,
+				2ABB283714ECD69E00820C07 /* libv8preparser.a */,
 				2ABB27E514ECCF7100820C07 /* Cocoa.framework */,
 				2ABB280314ECCF7200820C07 /* SenTestingKit.framework */,
 				2ABB27E714ECCF7100820C07 /* Other Frameworks */,
@@ -151,6 +170,14 @@
 				2ABB280B14ECCF7200820C07 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2ABB282B14ECD44700820C07 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2ABB283214ECD44700820C07 /* Scintilla.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -211,6 +238,12 @@
 			mainGroup = 2ABB27D614ECCF7100820C07;
 			productRefGroup = 2ABB27E214ECCF7100820C07 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 2ABB282B14ECD44700820C07 /* Products */;
+					ProjectRef = 2ABB282A14ECD44700820C07 /* ScintillaFramework.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				2ABB27E014ECCF7100820C07 /* typeditor */,
@@ -218,6 +251,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		2ABB283214ECD44700820C07 /* Scintilla.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Scintilla.framework;
+			remoteRef = 2ABB283114ECD44700820C07 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		2ABB27DF14ECCF7100820C07 /* Resources */ = {
@@ -370,10 +413,26 @@
 		2ABB281414ECCF7200820C07 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "typeditor/typeditor-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					SCI_LEXER,
+					SCI_NAMESPACE,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				HEADER_SEARCH_PATHS = (
+					"./v8/include/**",
+					"./scintilla/**",
+				);
 				INFOPLIST_FILE = "typeditor/typeditor-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/v8/lib\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VERSION_INFO_SUFFIX = Typeditor;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -381,10 +440,26 @@
 		2ABB281514ECCF7200820C07 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "typeditor/typeditor-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					SCI_LEXER,
+					SCI_NAMESPACE,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				HEADER_SEARCH_PATHS = (
+					"./v8/include/**",
+					"./scintilla/**",
+				);
 				INFOPLIST_FILE = "typeditor/typeditor-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/v8/lib\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VERSION_INFO_SUFFIX = Typeditor;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -436,6 +511,7 @@
 				2ABB281514ECCF7200820C07 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2ABB281614ECCF7200820C07 /* Build configuration list for PBXNativeTarget "typeditorTests" */ = {
 			isa = XCConfigurationList;
@@ -444,6 +520,7 @@
 				2ABB281814ECCF7200820C07 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -1,0 +1,451 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2ABB27E614ECCF7100820C07 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB27E514ECCF7100820C07 /* Cocoa.framework */; };
+		2ABB27F014ECCF7100820C07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB27EE14ECCF7100820C07 /* InfoPlist.strings */; };
+		2ABB27F214ECCF7100820C07 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB27F114ECCF7100820C07 /* main.m */; };
+		2ABB27F614ECCF7100820C07 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB27F414ECCF7100820C07 /* Credits.rtf */; };
+		2ABB27F914ECCF7100820C07 /* SFAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB27F814ECCF7100820C07 /* SFAppDelegate.m */; };
+		2ABB27FC14ECCF7200820C07 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB27FA14ECCF7200820C07 /* MainMenu.xib */; };
+		2ABB280414ECCF7200820C07 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB280314ECCF7200820C07 /* SenTestingKit.framework */; };
+		2ABB280514ECCF7200820C07 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB27E514ECCF7100820C07 /* Cocoa.framework */; };
+		2ABB280D14ECCF7200820C07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB280B14ECCF7200820C07 /* InfoPlist.strings */; };
+		2ABB281014ECCF7200820C07 /* typeditorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB280F14ECCF7200820C07 /* typeditorTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2ABB280614ECCF7200820C07 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2ABB27D814ECCF7100820C07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2ABB27E014ECCF7100820C07;
+			remoteInfo = typeditor;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2ABB27E114ECCF7100820C07 /* typeditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = typeditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2ABB27E514ECCF7100820C07 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		2ABB27E814ECCF7100820C07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		2ABB27E914ECCF7100820C07 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		2ABB27EA14ECCF7100820C07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		2ABB27ED14ECCF7100820C07 /* typeditor-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "typeditor-Info.plist"; sourceTree = "<group>"; };
+		2ABB27EF14ECCF7100820C07 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2ABB27F114ECCF7100820C07 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		2ABB27F314ECCF7100820C07 /* typeditor-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "typeditor-Prefix.pch"; sourceTree = "<group>"; };
+		2ABB27F514ECCF7100820C07 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		2ABB27F714ECCF7100820C07 /* SFAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFAppDelegate.h; sourceTree = "<group>"; };
+		2ABB27F814ECCF7100820C07 /* SFAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SFAppDelegate.m; sourceTree = "<group>"; };
+		2ABB27FB14ECCF7200820C07 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		2ABB280214ECCF7200820C07 /* typeditorTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = typeditorTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2ABB280314ECCF7200820C07 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		2ABB280A14ECCF7200820C07 /* typeditorTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "typeditorTests-Info.plist"; sourceTree = "<group>"; };
+		2ABB280C14ECCF7200820C07 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2ABB280E14ECCF7200820C07 /* typeditorTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = typeditorTests.h; sourceTree = "<group>"; };
+		2ABB280F14ECCF7200820C07 /* typeditorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = typeditorTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2ABB27DE14ECCF7100820C07 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ABB27E614ECCF7100820C07 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2ABB27FE14ECCF7200820C07 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ABB280414ECCF7200820C07 /* SenTestingKit.framework in Frameworks */,
+				2ABB280514ECCF7200820C07 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2ABB27D614ECCF7100820C07 = {
+			isa = PBXGroup;
+			children = (
+				2ABB27EB14ECCF7100820C07 /* typeditor */,
+				2ABB280814ECCF7200820C07 /* typeditorTests */,
+				2ABB27E414ECCF7100820C07 /* Frameworks */,
+				2ABB27E214ECCF7100820C07 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2ABB27E214ECCF7100820C07 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2ABB27E114ECCF7100820C07 /* typeditor.app */,
+				2ABB280214ECCF7200820C07 /* typeditorTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2ABB27E414ECCF7100820C07 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2ABB27E514ECCF7100820C07 /* Cocoa.framework */,
+				2ABB280314ECCF7200820C07 /* SenTestingKit.framework */,
+				2ABB27E714ECCF7100820C07 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2ABB27E714ECCF7100820C07 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2ABB27E814ECCF7100820C07 /* AppKit.framework */,
+				2ABB27E914ECCF7100820C07 /* CoreData.framework */,
+				2ABB27EA14ECCF7100820C07 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		2ABB27EB14ECCF7100820C07 /* typeditor */ = {
+			isa = PBXGroup;
+			children = (
+				2ABB27F714ECCF7100820C07 /* SFAppDelegate.h */,
+				2ABB27F814ECCF7100820C07 /* SFAppDelegate.m */,
+				2ABB27FA14ECCF7200820C07 /* MainMenu.xib */,
+				2ABB27EC14ECCF7100820C07 /* Supporting Files */,
+			);
+			path = typeditor;
+			sourceTree = "<group>";
+		};
+		2ABB27EC14ECCF7100820C07 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2ABB27ED14ECCF7100820C07 /* typeditor-Info.plist */,
+				2ABB27EE14ECCF7100820C07 /* InfoPlist.strings */,
+				2ABB27F114ECCF7100820C07 /* main.m */,
+				2ABB27F314ECCF7100820C07 /* typeditor-Prefix.pch */,
+				2ABB27F414ECCF7100820C07 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2ABB280814ECCF7200820C07 /* typeditorTests */ = {
+			isa = PBXGroup;
+			children = (
+				2ABB280E14ECCF7200820C07 /* typeditorTests.h */,
+				2ABB280F14ECCF7200820C07 /* typeditorTests.m */,
+				2ABB280914ECCF7200820C07 /* Supporting Files */,
+			);
+			path = typeditorTests;
+			sourceTree = "<group>";
+		};
+		2ABB280914ECCF7200820C07 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2ABB280A14ECCF7200820C07 /* typeditorTests-Info.plist */,
+				2ABB280B14ECCF7200820C07 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2ABB27E014ECCF7100820C07 /* typeditor */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2ABB281314ECCF7200820C07 /* Build configuration list for PBXNativeTarget "typeditor" */;
+			buildPhases = (
+				2ABB27DD14ECCF7100820C07 /* Sources */,
+				2ABB27DE14ECCF7100820C07 /* Frameworks */,
+				2ABB27DF14ECCF7100820C07 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = typeditor;
+			productName = typeditor;
+			productReference = 2ABB27E114ECCF7100820C07 /* typeditor.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2ABB280114ECCF7200820C07 /* typeditorTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2ABB281614ECCF7200820C07 /* Build configuration list for PBXNativeTarget "typeditorTests" */;
+			buildPhases = (
+				2ABB27FD14ECCF7200820C07 /* Sources */,
+				2ABB27FE14ECCF7200820C07 /* Frameworks */,
+				2ABB27FF14ECCF7200820C07 /* Resources */,
+				2ABB280014ECCF7200820C07 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2ABB280714ECCF7200820C07 /* PBXTargetDependency */,
+			);
+			name = typeditorTests;
+			productName = typeditorTests;
+			productReference = 2ABB280214ECCF7200820C07 /* typeditorTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2ABB27D814ECCF7100820C07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = MagnetJoy;
+			};
+			buildConfigurationList = 2ABB27DB14ECCF7100820C07 /* Build configuration list for PBXProject "typeditor" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 2ABB27D614ECCF7100820C07;
+			productRefGroup = 2ABB27E214ECCF7100820C07 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2ABB27E014ECCF7100820C07 /* typeditor */,
+				2ABB280114ECCF7200820C07 /* typeditorTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2ABB27DF14ECCF7100820C07 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ABB27F014ECCF7100820C07 /* InfoPlist.strings in Resources */,
+				2ABB27F614ECCF7100820C07 /* Credits.rtf in Resources */,
+				2ABB27FC14ECCF7200820C07 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2ABB27FF14ECCF7200820C07 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ABB280D14ECCF7200820C07 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2ABB280014ECCF7200820C07 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2ABB27DD14ECCF7100820C07 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ABB27F214ECCF7100820C07 /* main.m in Sources */,
+				2ABB27F914ECCF7100820C07 /* SFAppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2ABB27FD14ECCF7200820C07 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ABB281014ECCF7200820C07 /* typeditorTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2ABB280714ECCF7200820C07 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2ABB27E014ECCF7100820C07 /* typeditor */;
+			targetProxy = 2ABB280614ECCF7200820C07 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		2ABB27EE14ECCF7100820C07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2ABB27EF14ECCF7100820C07 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		2ABB27F414ECCF7100820C07 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2ABB27F514ECCF7100820C07 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		2ABB27FA14ECCF7200820C07 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2ABB27FB14ECCF7200820C07 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		2ABB280B14ECCF7200820C07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2ABB280C14ECCF7200820C07 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2ABB281114ECCF7200820C07 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		2ABB281214ECCF7200820C07 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		2ABB281414ECCF7200820C07 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "typeditor/typeditor-Prefix.pch";
+				INFOPLIST_FILE = "typeditor/typeditor-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		2ABB281514ECCF7200820C07 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "typeditor/typeditor-Prefix.pch";
+				INFOPLIST_FILE = "typeditor/typeditor-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		2ABB281714ECCF7200820C07 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/typeditor.app/Contents/MacOS/typeditor";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "typeditor/typeditor-Prefix.pch";
+				INFOPLIST_FILE = "typeditorTests/typeditorTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		2ABB281814ECCF7200820C07 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/typeditor.app/Contents/MacOS/typeditor";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "typeditor/typeditor-Prefix.pch";
+				INFOPLIST_FILE = "typeditorTests/typeditorTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2ABB27DB14ECCF7100820C07 /* Build configuration list for PBXProject "typeditor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2ABB281114ECCF7200820C07 /* Debug */,
+				2ABB281214ECCF7200820C07 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2ABB281314ECCF7200820C07 /* Build configuration list for PBXNativeTarget "typeditor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2ABB281414ECCF7200820C07 /* Debug */,
+				2ABB281514ECCF7200820C07 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		2ABB281614ECCF7200820C07 /* Build configuration list for PBXNativeTarget "typeditorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2ABB281714ECCF7200820C07 /* Debug */,
+				2ABB281814ECCF7200820C07 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2ABB27D814ECCF7100820C07 /* Project object */;
+}

@@ -50,11 +50,15 @@ public:
 		
 	        stringLength = CFStringGetLength(str);
 
-		CFMutableDictionaryRef stringAttribs = r.getCTStyle();
-		
-		if (mString != NULL)
-			CFRelease(mString);
-		mString = ::CFAttributedStringCreate(NULL, str, stringAttribs);
+        CFMutableDictionaryRef stringAttribs = NULL;
+
+        if (&r) {
+            stringAttribs = r.getCTStyle();
+        }
+        
+        if (mString != NULL)
+            CFRelease(mString);
+        mString = ::CFAttributedStringCreate(NULL, str, stringAttribs);
 		
 		if (mLine != NULL)
 			CFRelease(mLine);

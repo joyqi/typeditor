@@ -12,9 +12,10 @@
 
 @interface V8Cocoa : NSObject {
     ScintillaView *scintillaView;
+    v8::Persistent<v8::Context> context;
 }
 
-- (void)embedScintilla:(ScintillaView *) senderScintillaView;
+- (BOOL)embedScintilla:(ScintillaView *) senderScintillaView;
 + (V8Cocoa *)shared;
 + (ScintillaView *)scintillaView;
 

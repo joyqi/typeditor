@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		202923D814EEB51700AF7E8C /* constants.js in Resources */ = {isa = PBXBuildFile; fileRef = 202923D614EEB4FA00AF7E8C /* constants.js */; };
 		2ABB27E614ECCF7100820C07 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB27E514ECCF7100820C07 /* Cocoa.framework */; };
 		2ABB27F014ECCF7100820C07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB27EE14ECCF7100820C07 /* InfoPlist.strings */; };
 		2ABB27F214ECCF7100820C07 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB27F114ECCF7100820C07 /* main.m */; };
@@ -44,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		202923D614EEB4FA00AF7E8C /* constants.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = constants.js; sourceTree = "<group>"; };
 		2ABB27E114ECCF7100820C07 /* typeditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = typeditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ABB27E514ECCF7100820C07 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		2ABB27E814ECCF7100820C07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -216,6 +218,7 @@
 			isa = PBXGroup;
 			children = (
 				2AF4883E14EE54DE00F07726 /* init.js */,
+				202923D614EEB4FA00AF7E8C /* constants.js */,
 			);
 			name = JS;
 			sourceTree = "<group>";
@@ -307,6 +310,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				202923D814EEB51700AF7E8C /* constants.js in Resources */,
 				2AF4884014EE553C00F07726 /* init.js in Resources */,
 				2ABB27F014ECCF7100820C07 /* InfoPlist.strings in Resources */,
 				2ABB27F614ECCF7100820C07 /* Credits.rtf in Resources */,

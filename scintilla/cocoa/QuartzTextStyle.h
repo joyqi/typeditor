@@ -45,7 +45,9 @@ public:
 	 
 	void setCTStyleColor(CGColor* inColor )
 	{
-		CFDictionarySetValue(styleDict, kCTForegroundColorAttributeName, inColor);
+        if (&styleDict) {
+            CFDictionarySetValue(styleDict, kCTForegroundColorAttributeName, inColor);
+        }
 	}
 	
 	float getAscent() const

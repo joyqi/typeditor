@@ -108,7 +108,11 @@ Font::~Font()
 //--------------------------------------------------------------------------------------------------
 
 static int FontCharacterSet(Font &f) {
-	return reinterpret_cast<QuartzTextStyle *>(f.GetID())->getCharacterSet();
+    if (f.GetID()) {
+        return reinterpret_cast<QuartzTextStyle *>(f.GetID())->getCharacterSet();
+    } else {
+        return 0;
+    }
 }
 
 /**
@@ -915,7 +919,13 @@ static size_t utf8LengthFromLead(unsigned char uch) {
 void SurfaceImpl::MeasureWidths(Font &font_, const char *s, int len, XYPOSITION *positions)
 {
 	CFStringEncoding encoding = EncodingFromCharacterSet(unicodeMode, FontCharacterSet(font_));
-	textLayout->setText (reinterpret_cast<const UInt8*>(s), len, encoding, *reinterpret_cast<QuartzTextStyle*>(font_.GetID()));
+    QuartzTextStyle *r = NULL;
+    
+    if (font_.GetID()) {
+        r = reinterpret_cast<QuartzTextStyle*>(font_.GetID());
+    }
+    
+	textLayout->setText (reinterpret_cast<const UInt8*>(s), len, encoding, *r);
 	
 	CTLineRef mLine = textLayout->getCTLine();
 	assert(mLine != NULL);

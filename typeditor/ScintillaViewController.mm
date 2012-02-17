@@ -7,6 +7,12 @@
 //
 
 #import "ScintillaViewController.h"
+#import "SFAppDelegate.h"
+
+@interface ScintillaViewController (Private)
+- (NSRect)getWindowFrame;
+- (NSRect)getWindowResizeFrame:(NSWindow *)sender toSize:(NSSize)frameSize;
+@end
 
 @implementation ScintillaViewController
 
@@ -14,27 +20,28 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Initialization code here.
-        scintillaView = [[ScintillaView alloc] init];
+        window = [[SFAppDelegate sharedApp] window];
+
+        ScintillaView *scintillaView = [[ScintillaView alloc] initWithFrame:[[window contentView] frame]];
+        [scintillaView setAutoresizesSubviews: YES];
+        [scintillaView setAutoresizingMask: NSViewWidthSizable | NSViewHeightSizable];
+        
+        InfoBar *infoBar = [[InfoBar alloc] initWithFrame:NSMakeRect(0, 0, 400, 0)];
+        [infoBar setDisplay: IBShowAll];
+        [scintillaView setInfoBar: infoBar top: YES];
+        [scintillaView setStatusText: @"Operation complete"];
+        
+        [self setView:scintillaView];
+        [[window contentView] addSubview:[self view]];
+        
+        // init v8
+        v8 = [[V8Cocoa alloc] init];
+        [v8 embedScintilla:scintillaView];
+        
+        scintillaView = nil;
     }
     
     return self;
-}
-
-- (void)appendScintillaToWindow:(NSWindow *)window
-{
-    NSView *contentView = [window contentView];
-    CGRect frame = [contentView frame];
-    
-    [scintillaView setFrame:frame];
-    [contentView addSubview:scintillaView];
-    [window setDelegate:self];
-}
-
-- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize
-{
-    [scintillaView setFrame:CGRectMake(0, 0, frameSize.width, frameSize.height)];
-    return frameSize;
 }
 
 @end

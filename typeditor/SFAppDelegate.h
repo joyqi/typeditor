@@ -15,4 +15,6 @@
 
 @property (assign) IBOutlet NSWindow *window;
 
++ (SFAppDelegate *)sharedApp;
+
 @end

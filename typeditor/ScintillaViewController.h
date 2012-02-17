@@ -8,10 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 #import "ScintillaView.h"
+#import "InfoBar.h"
+#import "V8Cocoa.h"
 
-@interface ScintillaViewController : NSViewController <NSWindowDelegate> {
-    ScintillaView *scintillaView;
+@interface ScintillaViewController : NSViewController {
+    NSWindow *window;
+    V8Cocoa *v8;
 }
 
-- (void)appendScintillaToWindow:(NSWindow *)window;
 @end

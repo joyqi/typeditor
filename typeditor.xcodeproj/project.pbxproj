@@ -22,6 +22,8 @@
 		2ABB283914ECD69E00820C07 /* libv8preparser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB283714ECD69E00820C07 /* libv8preparser.a */; };
 		2ABB284314ECDD0600820C07 /* ScintillaViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB284114ECDD0600820C07 /* ScintillaViewController.mm */; };
 		2ABB284414ECDD0600820C07 /* ScintillaViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB284214ECDD0600820C07 /* ScintillaViewController.xib */; };
+		2AF4883614EE3CE500F07726 /* V8Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2AF4883514EE3CE500F07726 /* V8Cocoa.mm */; };
+		2AF4884014EE553C00F07726 /* init.js in Resources */ = {isa = PBXBuildFile; fileRef = 2AF4883E14EE54DE00F07726 /* init.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +69,9 @@
 		2ABB284014ECDD0600820C07 /* ScintillaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScintillaViewController.h; sourceTree = "<group>"; };
 		2ABB284114ECDD0600820C07 /* ScintillaViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ScintillaViewController.mm; sourceTree = "<group>"; };
 		2ABB284214ECDD0600820C07 /* ScintillaViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScintillaViewController.xib; sourceTree = "<group>"; };
+		2AF4883414EE3CE500F07726 /* V8Cocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = V8Cocoa.h; sourceTree = "<group>"; };
+		2AF4883514EE3CE500F07726 /* V8Cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = V8Cocoa.mm; sourceTree = "<group>"; };
+		2AF4883E14EE54DE00F07726 /* init.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = init.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +143,8 @@
 		2ABB27EB14ECCF7100820C07 /* typeditor */ = {
 			isa = PBXGroup;
 			children = (
+				2AF4883D14EE54C100F07726 /* JS */,
+				2AF4883714EE3CF700F07726 /* V8 */,
 				2ABB283F14ECDC8F00820C07 /* Controller */,
 				2ABB27F714ECCF7100820C07 /* SFAppDelegate.h */,
 				2ABB27F814ECCF7100820C07 /* SFAppDelegate.mm */,
@@ -194,6 +201,23 @@
 				2ABB284214ECDD0600820C07 /* ScintillaViewController.xib */,
 			);
 			name = Controller;
+			sourceTree = "<group>";
+		};
+		2AF4883714EE3CF700F07726 /* V8 */ = {
+			isa = PBXGroup;
+			children = (
+				2AF4883414EE3CE500F07726 /* V8Cocoa.h */,
+				2AF4883514EE3CE500F07726 /* V8Cocoa.mm */,
+			);
+			name = V8;
+			sourceTree = "<group>";
+		};
+		2AF4883D14EE54C100F07726 /* JS */ = {
+			isa = PBXGroup;
+			children = (
+				2AF4883E14EE54DE00F07726 /* init.js */,
+			);
+			name = JS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -283,6 +307,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AF4884014EE553C00F07726 /* init.js in Resources */,
 				2ABB27F014ECCF7100820C07 /* InfoPlist.strings in Resources */,
 				2ABB27F614ECCF7100820C07 /* Credits.rtf in Resources */,
 				2ABB27FC14ECCF7200820C07 /* MainMenu.xib in Resources */,
@@ -324,6 +349,7 @@
 				2ABB27F214ECCF7100820C07 /* main.m in Sources */,
 				2ABB27F914ECCF7100820C07 /* SFAppDelegate.mm in Sources */,
 				2ABB284314ECDD0600820C07 /* ScintillaViewController.mm in Sources */,
+				2AF4883614EE3CE500F07726 /* V8Cocoa.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -441,7 +467,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/v8/include",
+					"${SRCROOT}/v8/include/**",
 					"${SRCROOT}/scintilla/**",
 				);
 				INFOPLIST_FILE = "typeditor/typeditor-Info.plist";
@@ -468,7 +494,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/v8/include",
+					"${SRCROOT}/v8/include/**",
 					"${SRCROOT}/scintilla/**",
 				);
 				INFOPLIST_FILE = "typeditor/typeditor-Info.plist";

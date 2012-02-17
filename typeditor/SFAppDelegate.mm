@@ -10,12 +10,32 @@
 
 @implementation SFAppDelegate
 
+static SFAppDelegate *sharedApp = NULL;
+
 @synthesize window = _window;
+
+- (id)init
+{
+    if (!sharedApp) {
+        sharedApp = [super init];
+    }
+    
+    return sharedApp;
+}
+
++ (SFAppDelegate *)sharedApp
+{
+    if (!sharedApp) {
+        sharedApp = [[SFAppDelegate alloc] init];
+    }
+    
+    return sharedApp;
+}
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+    // init scintilla
     scintillaViewController = [[ScintillaViewController alloc] initWithNibName:@"ScintillaViewController" bundle:nil];
-    [scintillaViewController appendScintillaToWindow:_window];
 }
 
 @end

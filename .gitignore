@@ -2,3 +2,4 @@
 .svn/
 project.xcworkspace/
 xcuserdata/
+*.swp

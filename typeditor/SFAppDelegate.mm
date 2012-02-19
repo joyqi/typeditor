@@ -7,17 +7,17 @@
 //
 
 #import "SFAppDelegate.h"
+#import "WindowController.h"
 
 @implementation SFAppDelegate
 
 static SFAppDelegate *sharedApp = NULL;
 
-@synthesize window = _window;
-
 - (id)init
 {
     if (!sharedApp) {
         sharedApp = [super init];
+        windowControllers = [NSMutableArray array];
     }
     
     return sharedApp;
@@ -34,8 +34,11 @@ static SFAppDelegate *sharedApp = NULL;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    // init scintilla
-    scintillaViewController = [[ScintillaViewController alloc] initWithNibName:@"ScintillaViewController" bundle:nil];
+    // NSLog(@"%@", [self methodForSelector:@selector(applicationDidFinishLaunching:)]);
+    WindowController *windowController = [[WindowController alloc] initWithApp:self];
+    [windowController showWindow:[windowController window]];
+    [windowControllers addObject:windowController];
+    // windowController = nil;
 }
 
 @end

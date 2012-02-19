@@ -7,13 +7,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "ScintillaViewController.h"
 
 @interface SFAppDelegate : NSObject <NSApplicationDelegate> {
-    ScintillaViewController *scintillaViewController;
+    NSMutableArray *windowControllers;
 }
-
-@property (assign) IBOutlet NSWindow *window;
 
 + (SFAppDelegate *)sharedApp;
 

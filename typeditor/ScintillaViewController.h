@@ -16,4 +16,5 @@
     V8Cocoa *v8;
 }
 
+- (id)initWithWindow:(NSWindow *)parent;
 @end

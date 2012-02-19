@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		202923D814EEB51700AF7E8C /* constants.js in Resources */ = {isa = PBXBuildFile; fileRef = 202923D614EEB4FA00AF7E8C /* constants.js */; };
+		203AE70214F00DBD00D07E10 /* INAppStoreWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 203AE70114F00DBD00D07E10 /* INAppStoreWindow.m */; };
+		203AE70514F014A000D07E10 /* WindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 203AE70414F014A000D07E10 /* WindowController.mm */; };
+		203AE70714F02B1700D07E10 /* WindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 203AE70614F02B1700D07E10 /* WindowController.xib */; };
 		2ABB27E614ECCF7100820C07 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB27E514ECCF7100820C07 /* Cocoa.framework */; };
 		2ABB27F014ECCF7100820C07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB27EE14ECCF7100820C07 /* InfoPlist.strings */; };
 		2ABB27F214ECCF7100820C07 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB27F114ECCF7100820C07 /* main.m */; };
@@ -45,7 +47,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		202923D614EEB4FA00AF7E8C /* constants.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = constants.js; sourceTree = "<group>"; };
+		203AE70014F00DBD00D07E10 /* INAppStoreWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INAppStoreWindow.h; sourceTree = "<group>"; };
+		203AE70114F00DBD00D07E10 /* INAppStoreWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INAppStoreWindow.m; sourceTree = "<group>"; };
+		203AE70314F014A000D07E10 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
+		203AE70414F014A000D07E10 /* WindowController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WindowController.mm; sourceTree = "<group>"; };
+		203AE70614F02B1700D07E10 /* WindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WindowController.xib; sourceTree = "<group>"; };
 		2ABB27E114ECCF7100820C07 /* typeditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = typeditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ABB27E514ECCF7100820C07 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		2ABB27E814ECCF7100820C07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -100,6 +106,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		203AE6FF14F00DA700D07E10 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				203AE70014F00DBD00D07E10 /* INAppStoreWindow.h */,
+				203AE70114F00DBD00D07E10 /* INAppStoreWindow.m */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
 		2ABB27D614ECCF7100820C07 = {
 			isa = PBXGroup;
 			children = (
@@ -145,6 +160,7 @@
 		2ABB27EB14ECCF7100820C07 /* typeditor */ = {
 			isa = PBXGroup;
 			children = (
+				203AE6FF14F00DA700D07E10 /* View */,
 				2AF4883D14EE54C100F07726 /* JS */,
 				2AF4883714EE3CF700F07726 /* V8 */,
 				2ABB283F14ECDC8F00820C07 /* Controller */,
@@ -201,6 +217,9 @@
 				2ABB284014ECDD0600820C07 /* ScintillaViewController.h */,
 				2ABB284114ECDD0600820C07 /* ScintillaViewController.mm */,
 				2ABB284214ECDD0600820C07 /* ScintillaViewController.xib */,
+				203AE70314F014A000D07E10 /* WindowController.h */,
+				203AE70414F014A000D07E10 /* WindowController.mm */,
+				203AE70614F02B1700D07E10 /* WindowController.xib */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -218,7 +237,6 @@
 			isa = PBXGroup;
 			children = (
 				2AF4883E14EE54DE00F07726 /* init.js */,
-				202923D614EEB4FA00AF7E8C /* constants.js */,
 			);
 			name = JS;
 			sourceTree = "<group>";
@@ -310,12 +328,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				202923D814EEB51700AF7E8C /* constants.js in Resources */,
 				2AF4884014EE553C00F07726 /* init.js in Resources */,
 				2ABB27F014ECCF7100820C07 /* InfoPlist.strings in Resources */,
 				2ABB27F614ECCF7100820C07 /* Credits.rtf in Resources */,
 				2ABB27FC14ECCF7200820C07 /* MainMenu.xib in Resources */,
 				2ABB284414ECDD0600820C07 /* ScintillaViewController.xib in Resources */,
+				203AE70714F02B1700D07E10 /* WindowController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,6 +372,8 @@
 				2ABB27F914ECCF7100820C07 /* SFAppDelegate.mm in Sources */,
 				2ABB284314ECDD0600820C07 /* ScintillaViewController.mm in Sources */,
 				2AF4883614EE3CE500F07726 /* V8Cocoa.mm in Sources */,
+				203AE70214F00DBD00D07E10 /* INAppStoreWindow.m in Sources */,
+				203AE70514F014A000D07E10 /* WindowController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,7 +7,6 @@
 //
 
 #import "ScintillaViewController.h"
-#import "SFAppDelegate.h"
 
 @interface ScintillaViewController (Private)
 - (NSRect)getWindowFrame;
@@ -16,12 +15,12 @@
 
 @implementation ScintillaViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithWindow:(NSWindow *)parent
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:@"ScintillaViewController" bundle:nil];
     if (self) {
-        window = [[SFAppDelegate sharedApp] window];
-
+        window = parent;
+        
         ScintillaView *scintillaView = [[ScintillaView alloc] initWithFrame:[[window contentView] frame]];
         [scintillaView setAutoresizesSubviews: YES];
         [scintillaView setAutoresizingMask: NSViewWidthSizable | NSViewHeightSizable];

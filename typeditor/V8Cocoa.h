@@ -10,8 +10,13 @@
 #import "ScintillaView.h"
 #import "v8.h"
 
-#define v8method(method) \
-    v8::Handle<v8::Value> (* method)(const v8::Arguments &) = (v8::Handle<v8::Value> (*)(const v8::Arguments &))[self methodForSelector:@selector(method: args:)]
+#define editor(e) \
+v8::Local<v8::Object> self = args.Holder(); \
+if (self->InternalFieldCount() != 1) { \
+    return v8::Undefined(); \
+} \
+v8::Local<v8::External> wrap = v8::Local<v8::External>::Cast(self->GetInternalField(0)); \
+ScintillaView *e = (__bridge ScintillaView *) wrap->Value();
 
 @interface V8Cocoa : NSObject {
     ScintillaView *scintillaView;
@@ -20,7 +25,5 @@
 
 - (BOOL)embedScintilla:(ScintillaView *) senderScintillaView;
 - (ScintillaView *)scintillaView;
-
-- (v8::Handle<v8::Value>) log:(const v8::Arguments& )args;
 
 @end

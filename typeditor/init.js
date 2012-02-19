@@ -2433,12 +2433,12 @@ var $ = {
     // get or set lexer
     lexer : function (lexer) {
         if (!lexer) {
-            return getGeneralProperty($._('SCI_GETLEXER'));
+            return editor.getGeneralProperty($._('SCI_GETLEXER'));
         } else {
             lexer = $._('SCLEX', lexer);
           
             if (false !== lexer) {
-                setGeneralProperty($._('SCI_SETLEXER'), lexer, 0);
+                editor.setGeneralProperty($._('SCI_SETLEXER'), lexer, 0);
             }
         }
     },
@@ -2447,14 +2447,10 @@ var $ = {
     log : function () {
         var str = arguments[0], args = arguments, pos = 0;
 
-        str.replace(/%@/g, function (holder) {
+        editor.log(str.replace(/%@/g, function (holder) {
             pos ++;
-            return args[pos] ? (args[pos]) : holder;
-        });
-
-        log(str);
+            return args[pos] ? args[pos] : holder;
+        }));
     }
 };
-
-$.log('hello boy');
 

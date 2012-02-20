@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "V8Cocoa.h"
 
-@interface EditorViewController : NSViewController <NSTextStorageDelegate> {
+@interface EditorViewController : NSViewController <NSTextViewDelegate, NSTextStorageDelegate> {
     
     // parent window
     NSWindow *window;
@@ -34,5 +34,6 @@
 
 - (id)initWithWindow:(NSWindow *)parent;
 - (void)setTextStyle:(int)location withLength:(int)length;
+- (void)setText:(int)location withLength:(int)length replacementString:(NSString *)string;
 
 @end

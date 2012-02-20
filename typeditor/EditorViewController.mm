@@ -33,12 +33,10 @@
         [editor setMaxSize:NSMakeSize(FLT_MAX, FLT_MAX)];
         [editor setVerticallyResizable:YES];
         [editor setHorizontallyResizable:NO];
-        [editor setAutoresizingMask:NSViewWidthSizable];
+        [editor setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
         
         [[editor textContainer] setContainerSize:NSMakeSize(contentSize.width, FLT_MAX)];
         [[editor textContainer] setWidthTracksTextView:YES];
-        
-        [editor textContainer];
         
         [scroll setDocumentView:editor];
         [window setContentView:scroll];
@@ -49,6 +47,7 @@
         [v8 embed:self];
         
         [[editor textStorage] setDelegate:self];
+        textStorage = [editor textStorage];
     }
     
     return self;
@@ -57,7 +56,7 @@
 - (void)textStorageDidProcessEditing:(NSNotification *)notification
 {
     // clear all style
-    textStorage = [notification object];
+    // textStorage = [notification object];
     NSString *string = [textStorage string];
     [textStorage removeAttribute:NSForegroundColorAttributeName range:NSMakeRange(0, [string length])];
     
@@ -87,6 +86,23 @@
     NSRange found = NSMakeRange(location, length);
     
     [textStorage addAttribute:NSForegroundColorAttributeName value:blue range:found];
+}
+
+- (void)setText:(int)location withLength:(int)length replacementString:(NSString *)string
+{
+    NSRange found = NSMakeRange(0, 1);
+    NSLog(@"%d, %d", location, length);
+    
+    //[textStorage edited:NSTextStorageEditedCharacters range:found changeInLength:3];
+    
+    // check changeable
+    //if ([editor shouldChangeTextInRange:found replacementString:string]) {
+        //[textStorage beginEditing];
+        [textStorage replaceCharactersInRange:found withString:@"bbb"];
+        //[textStorage edited:<#(NSUInteger)#> range:<#(NSRange)#> changeInLength:<#(NSInteger)#>
+        // [textStorage removeAttribute:<#(NSString *)#> range:<#(NSRange)#>]
+        //[textStorage endEditing];
+    //}
 }
 
 @end

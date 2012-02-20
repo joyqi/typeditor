@@ -9,6 +9,10 @@
 #import "EditorViewController.h"
 #import "EditorViewReplacement.h"
 
+@interface EditorViewController (Private)
+- (NSColor *)colorWithString:(NSString *)stringColor;
+@end
+
 @implementation EditorViewController
 
 @synthesize window, scroll, editor, holdReplacement, editing, v8;
@@ -47,11 +51,18 @@
         v8 = [[V8Cocoa alloc] init];
         [v8 embed:self];
         
-        editing = NO;
-        holdReplacement = [NSMutableArray array];
+        // set delegate
         [editor setDelegate:self];
         [[editor textStorage] setDelegate:self];
         textStorage = [editor textStorage];
+        
+        // init var
+        editing = NO;
+        holdReplacement = [NSMutableArray array];
+        
+        // default font
+        font = [[NSFontManager sharedFontManager] fontWithFamily:@"Helvetica" traits:0 weight:0 size:12.0f];
+        // font = [NSFont fontWithName:@"Helvetica" size:12.0f];
     }
     
     return self;
@@ -65,7 +76,15 @@
     // clear all style
     // textStorage = [notification object];
     NSString *string = [textStorage string];
-    [textStorage removeAttribute:NSForegroundColorAttributeName range:NSMakeRange(0, [string length])];
+    NSRange range = NSMakeRange(0, [string length]);
+    
+    [textStorage removeAttribute:NSForegroundColorAttributeName range:range];
+    [textStorage removeAttribute:NSBackgroundColorAttributeName range:range];
+    [textStorage removeAttribute:NSUnderlineStyleAttributeName range:range];
+    [textStorage removeAttribute:NSUnderlineColorAttributeName range:range];
+    [textStorage removeAttribute:NSFontAttributeName range:range];
+    [textStorage addAttribute:NSFontAttributeName value:font range:range];
+    
     
     v8::HandleScope handle_scope;
     v8::Persistent<v8::Context> context = [self v8]->context;
@@ -104,12 +123,62 @@
     [holdReplacement removeAllObjects];
 }
 
-- (void)setTextStyle:(int)location withLength:(int)length
+- (void)setTextStyle:(int)location withLength:(int)length forType:(NSString *)type withValue:(id)value
 {
-    NSColor *blue = [NSColor blueColor];
     NSRange found = NSMakeRange(location, length);
     
-    [textStorage addAttribute:NSForegroundColorAttributeName value:blue range:found];
+    if ([type isEqualToString:@"color"]) {
+        [textStorage addAttribute:NSForegroundColorAttributeName value:[self colorWithString:(NSString *)value] range:found];
+    } else if ([type isEqualToString:@"background-color"]) {
+        [textStorage addAttribute:NSBackgroundColorAttributeName value:[self colorWithString:(NSString *)value] range:found];
+    } else if ([type isEqualToString:@"underline"]) {
+        [textStorage addAttribute:NSUnderlineStyleAttributeName value:value range:found];
+    } else if ([type isEqualToString:@"underline-color"]) {
+        [textStorage addAttribute:NSUnderlineColorAttributeName value:[self colorWithString:(NSString *)value] range:found];
+    } else if ([type isEqualToString:@"font-family"]) {
+        font(currentFont);
+        NSFontManager *fontManager = [NSFontManager sharedFontManager];
+        NSFont *newFont = [fontManager fontWithFamily:value
+                                                  traits:[[currentFont fontDescriptor] symbolicTraits]
+                                                  weight:0
+                                                    size:[currentFont pointSize]];
+        if (newFont) {
+            [textStorage addAttribute:NSFontAttributeName value:newFont range:found];
+        }
+    } else if ([type isEqualToString:@"font-size"]) {
+        font(currentFont);
+        NSFontManager *fontManager = [NSFontManager sharedFontManager];
+        NSFont *newFont = [fontManager fontWithFamily:[currentFont familyName]
+                                               traits:[[currentFont fontDescriptor] symbolicTraits]
+                                               weight:0
+                                                 size:[(NSNumber *)value floatValue]];
+
+        if (newFont) {
+            [textStorage addAttribute:NSFontAttributeName value:newFont range:found];
+        }
+    } else if ([type isEqualToString:@"font-weight"]) {
+        font(currentFont);
+        NSFontManager *fontManager = [NSFontManager sharedFontManager];
+        NSFont *newFont = [fontManager fontWithFamily:[currentFont familyName]
+                                               traits:[[currentFont fontDescriptor] symbolicTraits] | [(NSString *)value isEqualToString:@"bold"] ? NSBoldFontMask : NSUnboldFontMask
+                                               weight:0
+                                                 size:[currentFont pointSize]];
+        
+        if (newFont) {
+            [textStorage addAttribute:NSFontAttributeName value:newFont range:found];
+        }
+    } else if ([type isEqualToString:@"font-style"]) {
+        font(currentFont);
+        NSFontManager *fontManager = [NSFontManager sharedFontManager];
+        NSFont *newFont = [fontManager fontWithFamily:[currentFont familyName]
+                                               traits:[[currentFont fontDescriptor] symbolicTraits] | ([(NSString *)value isEqualToString:@"italic"] ? NSItalicFontMask : NSUnitalicFontMask)
+                                               weight:0
+                                                 size:[currentFont pointSize]];
+        
+        if (newFont) {
+            [textStorage addAttribute:NSFontAttributeName value:newFont range:found];
+        }
+    }
 }
 
 - (void)setText:(int)location withLength:(int)length replacementString:(NSString *)string
@@ -126,6 +195,41 @@
         [holdReplacement addObject:replacement];
         replacement = nil;
     }
+}
+
+- (void)setDefaultFont:(NSString *)fontName size:(CGFloat)fontSize
+{
+    font = [NSFont fontWithName:fontName size:fontSize];
+}
+         
+# pragma Mark - Private methods
+- (NSColor *)colorWithString:(NSString *)htmlString
+{
+    NSError *error = nil;
+    int length = [htmlString length];
+    NSRegularExpression *regex = [NSRegularExpression         
+                                  regularExpressionWithPattern:@"^#[0-9a-f]{3,6}$"
+                                  options:NSRegularExpressionCaseInsensitive
+                                  error:&error];
+    
+    // not matches return black color for default
+    if (1 != [regex numberOfMatchesInString:htmlString options:0 range:NSMakeRange(0, length)]
+        || (length != 4 && length != 7)) {
+        return [NSColor blackColor];
+    }
+    
+    // sub color
+    if (4 == [htmlString length]) {
+        htmlString = [[NSString alloc] initWithFormat:@"%@%@", htmlString, [htmlString substringFromIndex:1]];
+    }
+    
+    unsigned int r, g, b;
+    [[NSScanner scannerWithString:[htmlString substringWithRange:NSMakeRange(1, 2)]] scanHexInt:&r];
+    [[NSScanner scannerWithString:[htmlString substringWithRange:NSMakeRange(3, 2)]] scanHexInt:&g];
+    [[NSScanner scannerWithString:[htmlString substringWithRange:NSMakeRange(5, 2)]] scanHexInt:&b];
+    
+    return [NSColor colorWithCalibratedRed:((float) r / 255.0f) 
+        green:((float) g / 255.0f) blue:((float) b / 255.0f) alpha:1.0f];
 }
 
 @end

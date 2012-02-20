@@ -9,6 +9,13 @@
 #import <Cocoa/Cocoa.h>
 #import "V8Cocoa.h"
 
+#define font(f) \
+NSRange rp; \
+NSFont *f = (NSFont *)[textStorage attribute:NSFontAttributeName atIndex:location effectiveRange:&rp]; \
+if (!f) { \
+    f = font; \
+}
+
 @interface EditorViewController : NSViewController <NSTextViewDelegate, NSTextStorageDelegate> {
     
     // parent window
@@ -26,6 +33,9 @@
     // hold replacement
     NSMutableArray *holdReplacement;
     
+    // master font
+    NSFont *font;
+    
     // v8 embed
     V8Cocoa *v8;
     
@@ -41,7 +51,8 @@
 @property (strong, nonatomic) V8Cocoa *v8;
 
 - (id)initWithWindow:(NSWindow *)parent;
-- (void)setTextStyle:(int)location withLength:(int)length;
+- (void)setTextStyle:(int)location withLength:(int)length forType:(NSString *)type withValue:(id)value;
 - (void)setText:(int)location withLength:(int)length replacementString:(NSString *)string;
+- (void)setDefaultFont:(NSString *)fontName size:(CGFloat)fontSize;
 
 @end

@@ -60,7 +60,11 @@ v8::Handle<v8::Value> style(const v8::Arguments &args)
     editor(editor, context);
     
     if (2 <= args.Length()) {
-        [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue()];
+        // [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"font-family" withValue:@"Monaco"];
+        [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"font-weight" withValue:@"bold"];
+        [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"font-style" withValue:@"italic"];
+        [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"color" withValue:@"#0000ff"];
+        [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"font-size" withValue:[NSNumber numberWithFloat:19.0f]];
     }
     
     return v8::Undefined();

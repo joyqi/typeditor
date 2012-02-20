@@ -16,6 +16,8 @@
     if (self) {
         mainWindow = (INAppStoreWindow *)[self window];
         
+        editor = [[EditorViewController alloc] initWithWindow:mainWindow];
+        
         // Initialization code here.
         [mainWindow setTrafficLightButtonsLeftMargin:7.0f];
         [mainWindow setFullScreenButtonRightMargin:7.0f];
@@ -24,8 +26,6 @@
         [mainWindow setTitleBarHeight:40.0f];
         [mainWindow setShowsBaselineSeparator:NO];
         [mainWindow setDelegate:self];
-        
-        editor = [[EditorViewController alloc] initWithWindow:mainWindow];
     }
     
     return self;

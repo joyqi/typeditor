@@ -63,8 +63,10 @@ v8::Handle<v8::Value> style(const v8::Arguments &args)
         // [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"font-family" withValue:@"Monaco"];
         [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"font-weight" withValue:@"bold"];
         [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"font-style" withValue:@"italic"];
-        [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"color" withValue:@"#0000ff"];
+        // [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"background-color" withValue:@"#0000ff"];
         [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"font-size" withValue:[NSNumber numberWithFloat:19.0f]];
+        [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"underline" withValue:[NSNumber numberWithInt:3]];
+        [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"underline-color" withValue:@"#0000ff"];
     }
     
     return v8::Undefined();

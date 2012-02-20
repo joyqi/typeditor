@@ -6,24 +6,25 @@
 //  Copyright (c) 2012年 MagnetJoy. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "ScintillaView.h"
+#import <Cocoa/Cocoa.h>
 #import "v8.h"
 
-#define editor(e) \
+#define editor(e, c) \
+v8::HandleScope handle_scope; \
 v8::Local<v8::Object> self = args.Holder(); \
 if (self->InternalFieldCount() != 1) { \
     return v8::Undefined(); \
 } \
 v8::Local<v8::External> wrap = v8::Local<v8::External>::Cast(self->GetInternalField(0)); \
-ScintillaView *e = (__bridge ScintillaView *) wrap->Value();
+EditorViewController *e = (__bridge EditorViewController *) wrap->Value(); \
+v8::Persistent<v8::Context> c = [e v8]->context; \
+v8::Context::Scope context_scope(c);
 
 @interface V8Cocoa : NSObject {
-    ScintillaView *scintillaView;
+@public
     v8::Persistent<v8::Context> context;
 }
 
-- (BOOL)embedScintilla:(ScintillaView *) senderScintillaView;
-- (ScintillaView *)scintillaView;
+- (BOOL)embed:(id)editor;
 
 @end

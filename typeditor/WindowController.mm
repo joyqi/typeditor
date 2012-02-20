@@ -23,9 +23,9 @@
         [mainWindow setCenterFullScreenButton:YES];
         [mainWindow setTitleBarHeight:40.0f];
         [mainWindow setShowsBaselineSeparator:NO];
+        [mainWindow setDelegate:self];
         
-        // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
-        editor = [[ScintillaViewController alloc] initWithWindow:mainWindow];
+        editor = [[EditorViewController alloc] initWithWindow:mainWindow];
     }
     
     return self;

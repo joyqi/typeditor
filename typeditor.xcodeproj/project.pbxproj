@@ -10,6 +10,8 @@
 		203AE70214F00DBD00D07E10 /* INAppStoreWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 203AE70114F00DBD00D07E10 /* INAppStoreWindow.m */; };
 		203AE70514F014A000D07E10 /* WindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 203AE70414F014A000D07E10 /* WindowController.mm */; };
 		203AE70714F02B1700D07E10 /* WindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 203AE70614F02B1700D07E10 /* WindowController.xib */; };
+		2AAA6DAF14F20B88000BF463 /* EditorViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2AAA6DAD14F20B88000BF463 /* EditorViewController.mm */; };
+		2AAA6DB014F20B88000BF463 /* EditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2AAA6DAE14F20B88000BF463 /* EditorViewController.xib */; };
 		2ABB27E614ECCF7100820C07 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB27E514ECCF7100820C07 /* Cocoa.framework */; };
 		2ABB27F014ECCF7100820C07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB27EE14ECCF7100820C07 /* InfoPlist.strings */; };
 		2ABB27F214ECCF7100820C07 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB27F114ECCF7100820C07 /* main.m */; };
@@ -20,11 +22,8 @@
 		2ABB280514ECCF7200820C07 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB27E514ECCF7100820C07 /* Cocoa.framework */; };
 		2ABB280D14ECCF7200820C07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB280B14ECCF7200820C07 /* InfoPlist.strings */; };
 		2ABB281014ECCF7200820C07 /* typeditorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB280F14ECCF7200820C07 /* typeditorTests.m */; };
-		2ABB283514ECD67D00820C07 /* Scintilla.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB283214ECD44700820C07 /* Scintilla.framework */; };
 		2ABB283814ECD69E00820C07 /* libv8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB283614ECD69E00820C07 /* libv8.a */; };
 		2ABB283914ECD69E00820C07 /* libv8preparser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB283714ECD69E00820C07 /* libv8preparser.a */; };
-		2ABB284314ECDD0600820C07 /* ScintillaViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB284114ECDD0600820C07 /* ScintillaViewController.mm */; };
-		2ABB284414ECDD0600820C07 /* ScintillaViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB284214ECDD0600820C07 /* ScintillaViewController.xib */; };
 		2AF4883614EE3CE500F07726 /* V8Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2AF4883514EE3CE500F07726 /* V8Cocoa.mm */; };
 		2AF4884014EE553C00F07726 /* init.js in Resources */ = {isa = PBXBuildFile; fileRef = 2AF4883E14EE54DE00F07726 /* init.js */; };
 /* End PBXBuildFile section */
@@ -37,13 +36,6 @@
 			remoteGlobalIDString = 2ABB27E014ECCF7100820C07;
 			remoteInfo = typeditor;
 		};
-		2ABB283114ECD44700820C07 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2ABB282A14ECD44700820C07 /* ScintillaFramework.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
-			remoteInfo = Scintilla;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +44,9 @@
 		203AE70314F014A000D07E10 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		203AE70414F014A000D07E10 /* WindowController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WindowController.mm; sourceTree = "<group>"; };
 		203AE70614F02B1700D07E10 /* WindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WindowController.xib; sourceTree = "<group>"; };
+		2AAA6DAC14F20B88000BF463 /* EditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorViewController.h; sourceTree = "<group>"; };
+		2AAA6DAD14F20B88000BF463 /* EditorViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EditorViewController.mm; sourceTree = "<group>"; };
+		2AAA6DAE14F20B88000BF463 /* EditorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditorViewController.xib; sourceTree = "<group>"; };
 		2ABB27E114ECCF7100820C07 /* typeditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = typeditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ABB27E514ECCF7100820C07 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		2ABB27E814ECCF7100820C07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -71,12 +66,8 @@
 		2ABB280C14ECCF7200820C07 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2ABB280E14ECCF7200820C07 /* typeditorTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = typeditorTests.h; sourceTree = "<group>"; };
 		2ABB280F14ECCF7200820C07 /* typeditorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = typeditorTests.m; sourceTree = "<group>"; };
-		2ABB282A14ECD44700820C07 /* ScintillaFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ScintillaFramework.xcodeproj; path = scintilla/cocoa/ScintillaFramework/ScintillaFramework.xcodeproj; sourceTree = "<group>"; };
 		2ABB283614ECD69E00820C07 /* libv8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libv8.a; path = v8/lib/libv8.a; sourceTree = "<group>"; };
 		2ABB283714ECD69E00820C07 /* libv8preparser.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libv8preparser.a; path = v8/lib/libv8preparser.a; sourceTree = "<group>"; };
-		2ABB284014ECDD0600820C07 /* ScintillaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScintillaViewController.h; sourceTree = "<group>"; };
-		2ABB284114ECDD0600820C07 /* ScintillaViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ScintillaViewController.mm; sourceTree = "<group>"; };
-		2ABB284214ECDD0600820C07 /* ScintillaViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScintillaViewController.xib; sourceTree = "<group>"; };
 		2AF4883414EE3CE500F07726 /* V8Cocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = V8Cocoa.h; sourceTree = "<group>"; };
 		2AF4883514EE3CE500F07726 /* V8Cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = V8Cocoa.mm; sourceTree = "<group>"; };
 		2AF4883E14EE54DE00F07726 /* init.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = init.js; sourceTree = "<group>"; };
@@ -87,7 +78,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2ABB283514ECD67D00820C07 /* Scintilla.framework in Frameworks */,
 				2ABB27E614ECCF7100820C07 /* Cocoa.framework in Frameworks */,
 				2ABB283814ECD69E00820C07 /* libv8.a in Frameworks */,
 				2ABB283914ECD69E00820C07 /* libv8preparser.a in Frameworks */,
@@ -118,7 +108,6 @@
 		2ABB27D614ECCF7100820C07 = {
 			isa = PBXGroup;
 			children = (
-				2ABB282A14ECD44700820C07 /* ScintillaFramework.xcodeproj */,
 				2ABB27EB14ECCF7100820C07 /* typeditor */,
 				2ABB280814ECCF7200820C07 /* typeditorTests */,
 				2ABB27E414ECCF7100820C07 /* Frameworks */,
@@ -203,23 +192,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		2ABB282B14ECD44700820C07 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2ABB283214ECD44700820C07 /* Scintilla.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		2ABB283F14ECDC8F00820C07 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				2ABB284014ECDD0600820C07 /* ScintillaViewController.h */,
-				2ABB284114ECDD0600820C07 /* ScintillaViewController.mm */,
-				2ABB284214ECDD0600820C07 /* ScintillaViewController.xib */,
 				203AE70314F014A000D07E10 /* WindowController.h */,
 				203AE70414F014A000D07E10 /* WindowController.mm */,
 				203AE70614F02B1700D07E10 /* WindowController.xib */,
+				2AAA6DAC14F20B88000BF463 /* EditorViewController.h */,
+				2AAA6DAD14F20B88000BF463 /* EditorViewController.mm */,
+				2AAA6DAE14F20B88000BF463 /* EditorViewController.xib */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -299,12 +280,6 @@
 			mainGroup = 2ABB27D614ECCF7100820C07;
 			productRefGroup = 2ABB27E214ECCF7100820C07 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 2ABB282B14ECD44700820C07 /* Products */;
-					ProjectRef = 2ABB282A14ECD44700820C07 /* ScintillaFramework.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				2ABB27E014ECCF7100820C07 /* typeditor */,
@@ -312,16 +287,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		2ABB283214ECD44700820C07 /* Scintilla.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Scintilla.framework;
-			remoteRef = 2ABB283114ECD44700820C07 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		2ABB27DF14ECCF7100820C07 /* Resources */ = {
@@ -332,8 +297,8 @@
 				2ABB27F014ECCF7100820C07 /* InfoPlist.strings in Resources */,
 				2ABB27F614ECCF7100820C07 /* Credits.rtf in Resources */,
 				2ABB27FC14ECCF7200820C07 /* MainMenu.xib in Resources */,
-				2ABB284414ECDD0600820C07 /* ScintillaViewController.xib in Resources */,
 				203AE70714F02B1700D07E10 /* WindowController.xib in Resources */,
+				2AAA6DB014F20B88000BF463 /* EditorViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,10 +335,10 @@
 			files = (
 				2ABB27F214ECCF7100820C07 /* main.m in Sources */,
 				2ABB27F914ECCF7100820C07 /* SFAppDelegate.mm in Sources */,
-				2ABB284314ECDD0600820C07 /* ScintillaViewController.mm in Sources */,
 				2AF4883614EE3CE500F07726 /* V8Cocoa.mm in Sources */,
 				203AE70214F00DBD00D07E10 /* INAppStoreWindow.m in Sources */,
 				203AE70514F014A000D07E10 /* WindowController.mm in Sources */,
+				2AAA6DAF14F20B88000BF463 /* EditorViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -481,19 +446,12 @@
 		2ABB281414ECCF7200820C07 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "typeditor/typeditor-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					SCI_LEXER,
-					SCI_NAMESPACE,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/v8/include/**",
-					"${SRCROOT}/scintilla/**",
-				);
+				HEADER_SEARCH_PATHS = "${SRCROOT}/v8/include/**";
 				INFOPLIST_FILE = "typeditor/typeditor-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -508,19 +466,12 @@
 		2ABB281514ECCF7200820C07 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "typeditor/typeditor-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					SCI_LEXER,
-					SCI_NAMESPACE,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/v8/include/**",
-					"${SRCROOT}/scintilla/**",
-				);
+				HEADER_SEARCH_PATHS = "${SRCROOT}/v8/include/**";
 				INFOPLIST_FILE = "typeditor/typeditor-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

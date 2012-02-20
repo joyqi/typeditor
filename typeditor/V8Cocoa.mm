@@ -8,9 +8,10 @@
 
 #import "V8Cocoa.h"
 #import "v8.h"
+#import "EditorViewController.h"
 
 @interface V8Cocoa (Private)
-- (BOOL) createContext;
+- (BOOL) createContext:(id)editor;
 - (BOOL) loadScript:(NSString *) file;
 @end
 
@@ -20,6 +21,7 @@ v8::Handle<v8::Value> logTest (const v8::Arguments &args) {
 }
 
 # pragma Mark - v8 methods
+/*
 v8::Handle<v8::Value> setGeneralProperty(const v8::Arguments &args)
 {
     v8::HandleScope handle_scope;
@@ -69,6 +71,7 @@ v8::Handle<v8::Value> getLexerProperty(const v8::Arguments &args)
     
     return v8::Undefined();
 }
+*/
 
 v8::Handle<v8::Value> log(const v8::Arguments &args)
 {
@@ -84,43 +87,69 @@ v8::Handle<v8::Value> log(const v8::Arguments &args)
     return v8::Undefined();
 }
 
+// register lexer function
+v8::Handle<v8::Value> lexer(const v8::Arguments &args)
+{
+    editor(editor, context);
+    v8::Local<v8::String> key = v8::String::New("callback");
+    
+    if (args.Length() >= 1 || args[0]->IsFunction()) {
+        if (!*(context->Global()->GetHiddenValue(key)) || context->Global()->GetHiddenValue(key)->IsNull()) {
+            context->Global()->SetHiddenValue(key, v8::Array::New());
+        }
+        
+        v8::Local<v8::Array> callback = v8::Local<v8::Array>::Cast(context->Global()->GetHiddenValue(key));
+        callback->Set(callback->Length(), args[0]);
+    }
+    
+    return v8::Undefined();
+}
+
+// set style
+v8::Handle<v8::Value> style(const v8::Arguments &args)
+{
+    editor(editor, context);
+    
+    if (2 <= args.Length()) {
+        [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue()];
+    }
+    
+    return v8::Undefined();
+}
+
 @implementation V8Cocoa
 
 - (void)dealloc
 {
     // [super dealloc];
-    scintillaView = nil;
     context.Dispose();
 }
 
-- (ScintillaView *)scintillaView
-{
-    return scintillaView;
-}
-
-- (BOOL)embedScintilla:(ScintillaView *) senderScintillaView
-{
-    scintillaView = senderScintillaView;
-
-    // init v8
-    v8::HandleScope handle_scope;
-    
-    if (![self createContext]) {
-        NSLog(@"Error creating context");
-        return FALSE;
+- (BOOL)embed:(id)editor
+{    
+    if (self) {
+        // init v8
+        v8::HandleScope handle_scope;
+        
+        if (![self createContext:editor]) {
+            NSLog(@"Error creating context");
+            return FALSE;
+        }
+        
+        v8::Context::Scope context_scope(context);
+        
+        if (![self loadScript:[[NSBundle mainBundle] pathForResource:@"init" ofType:@"js"]]) {
+            NSLog(@"Error load init.js");
+            return FALSE;
+        }
+        
+        return TRUE;
     }
     
-    v8::Context::Scope context_scope(context);
-    
-    if (![self loadScript:[[NSBundle mainBundle] pathForResource:@"init" ofType:@"js"]]) {
-        NSLog(@"Error load init.js");
-        return FALSE;
-    }
-    
-    return TRUE;
+    return FALSE;
 }
 
-- (BOOL) createContext
+- (BOOL) createContext:(id)editor
 {
     v8::HandleScope handle_scope;
     v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New();
@@ -138,16 +167,20 @@ v8::Handle<v8::Value> log(const v8::Arguments &args)
     objInst->SetInternalFieldCount(1);
     
     v8::Local<v8::Template> proto_t = templ->PrototypeTemplate();
+    /*
     proto_t->Set("setGeneralProperty",  v8::FunctionTemplate::New(setGeneralProperty));
     proto_t->Set("getGeneralProperty", v8::FunctionTemplate::New(getGeneralProperty));
     proto_t->Set("getLexerProperty", v8::FunctionTemplate::New(getLexerProperty));
+     */
     proto_t->Set("log", v8::FunctionTemplate::New(log));
+    proto_t->Set("lexer", v8::FunctionTemplate::New(lexer));
+    proto_t->Set("style", v8::FunctionTemplate::New(style));
     
     // v8::Handle<v8::Function> ctor = templ->GetFunction();
     v8::Handle<v8::Function> ctor = templ->GetFunction();
     v8::Handle<v8::Object> obj = ctor->NewInstance();
-    obj->SetInternalField(0, v8::External::New((__bridge void *)scintillaView));
-    context->Global()->Set(v8::String::New("editor"), obj);
+    obj->SetInternalField(0, v8::External::New((__bridge void *)editor));
+    context->Global()->Set(v8::String::New("$"), obj);
     
     return TRUE;
 }

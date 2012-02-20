@@ -7,11 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "ScintillaViewController.h"
+#import "EditorViewController.h"
 #import "INAppStoreWindow.h"
 
-@interface WindowController : NSWindowController {
-    ScintillaViewController *editor;
+@interface WindowController : NSWindowController <NSWindowDelegate> {
+    EditorViewController *editor;
     INAppStoreWindow *mainWindow;
 }
 

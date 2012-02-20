@@ -7,10 +7,11 @@
 //
 
 #import "EditorViewController.h"
+#import "EditorViewReplacement.h"
 
 @implementation EditorViewController
 
-@synthesize window, scroll, editor, v8;
+@synthesize window, scroll, editor, holdReplacement, editing, v8;
 
 // init with parent window
 - (id)initWithWindow:(NSWindow *)parent
@@ -46,6 +47,9 @@
         v8 = [[V8Cocoa alloc] init];
         [v8 embed:self];
         
+        editing = NO;
+        holdReplacement = [NSMutableArray array];
+        [editor setDelegate:self];
         [[editor textStorage] setDelegate:self];
         textStorage = [editor textStorage];
     }
@@ -55,6 +59,9 @@
 
 - (void)textStorageDidProcessEditing:(NSNotification *)notification
 {
+    // is editing
+    editing = YES;
+    
     // clear all style
     // textStorage = [notification object];
     NSString *string = [textStorage string];
@@ -80,6 +87,23 @@
     }
 }
 
+- (void)textDidChange:(NSNotification*)notification
+{
+    editing = FALSE;
+    
+    if (0 == [holdReplacement count]) {
+        return;
+    }
+    
+    for (EditorViewReplacement *replacement in holdReplacement) {
+        [textStorage beginEditing];
+        [textStorage replaceCharactersInRange:[replacement area] withString:[replacement string]];
+        [textStorage endEditing];
+    }
+    
+    [holdReplacement removeAllObjects];
+}
+
 - (void)setTextStyle:(int)location withLength:(int)length
 {
     NSColor *blue = [NSColor blueColor];
@@ -90,19 +114,18 @@
 
 - (void)setText:(int)location withLength:(int)length replacementString:(NSString *)string
 {
-    NSRange found = NSMakeRange(0, 1);
-    NSLog(@"%d, %d", location, length);
+    NSRange area = NSMakeRange(location, length);
+    // NSRange append = NSMakeRange(location, 0);
     
-    //[textStorage edited:NSTextStorageEditedCharacters range:found changeInLength:3];
-    
-    // check changeable
-    //if ([editor shouldChangeTextInRange:found replacementString:string]) {
-        //[textStorage beginEditing];
-        [textStorage replaceCharactersInRange:found withString:@"bbb"];
-        //[textStorage edited:<#(NSUInteger)#> range:<#(NSRange)#> changeInLength:<#(NSInteger)#>
-        // [textStorage removeAttribute:<#(NSString *)#> range:<#(NSRange)#>]
-        //[textStorage endEditing];
-    //}
+    // if is not edting
+    if (!editing) {
+        [textStorage replaceCharactersInRange:area withString:string];
+    } else {
+        // add to hold replacement
+        EditorViewReplacement *replacement = [[EditorViewReplacement alloc] init:area replacementString:string];
+        [holdReplacement addObject:replacement];
+        replacement = nil;
+    }
 }
 
 @end

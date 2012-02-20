@@ -23,13 +23,21 @@
     // text storage
     NSTextStorage *textStorage;
     
+    // hold replacement
+    NSMutableArray *holdReplacement;
+    
     // v8 embed
     V8Cocoa *v8;
+    
+    // editing
+    BOOL editing;
 }
 
+@property (assign, atomic) BOOL editing;
 @property (strong, nonatomic) NSWindow *window;
 @property (strong, nonatomic) NSTextView *editor;
 @property (strong, nonatomic) NSScrollView *scroll;
+@property (strong, nonatomic) NSMutableArray *holdReplacement;
 @property (strong, nonatomic) V8Cocoa *v8;
 
 - (id)initWithWindow:(NSWindow *)parent;

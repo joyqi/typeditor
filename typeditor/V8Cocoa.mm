@@ -15,11 +15,6 @@
 - (BOOL) loadScript:(NSString *) file;
 @end
 
-v8::Handle<v8::Value> logTest (const v8::Arguments &args) {
-    NSLog(@"%d", args.Length());
-    return v8::Undefined();
-}
-
 # pragma Mark - v8 methods
 
 v8::Handle<v8::Value> log(const v8::Arguments &args)
@@ -59,17 +54,44 @@ v8::Handle<v8::Value> style(const v8::Arguments &args)
 {
     editor(editor, context);
     
-    if (2 <= args.Length()) {
-        // [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"font-family" withValue:@"Monaco"];
-        [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"font-weight" withValue:@"bold"];
-        [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"font-style" withValue:@"italic"];
-        // [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"background-color" withValue:@"#0000ff"];
-        [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"font-size" withValue:[NSNumber numberWithFloat:19.0f]];
-        [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"underline" withValue:[NSNumber numberWithInt:3]];
-        [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:@"underline-color" withValue:@"#0000ff"];
+    if (4 <= args.Length() &&
+        args[0]->IsNumber() &&
+        args[1]->IsNumber() &&
+        args[2]->IsString() &&
+        !args[3]->IsNull()) {
+        
+        v8::Handle<v8::Value> arg = args[2];
+        v8::String::Utf8Value type(arg);
+        
+        [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:cstring(*type) withValue:args[3]];
     }
     
     return v8::Undefined();
+}
+
+// set default style
+v8::Handle<v8::Value> editorStyle(const v8::Arguments &args)
+{
+    editor(editor, context);
+    
+    if (2 <= args.Length() &&
+        args[0]->IsString() &&
+        !args[1]->IsNull()) {
+        
+        v8::Handle<v8::Value> arg = args[0];
+        v8::String::Utf8Value type(arg);
+        
+        [editor setEditorStyle:cstring(*type) withValue:args[1]];
+    }
+    
+    return v8::Undefined();
+}
+
+// get text
+v8::Handle<v8::Value> text(const v8::Arguments &args)
+{
+    editor(editor, context);
+    return v8::String::New([[[editor editor] string] cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
 // set style
@@ -81,11 +103,61 @@ v8::Handle<v8::Value> replace(const v8::Arguments &args)
         v8::Handle<v8::Value> arg = args[2];
         v8::String::Utf8Value value(arg);
 
-        [editor setText:args[0]->IntegerValue() withLength:args[1]->IntegerValue() 
-            replacementString:[[NSString alloc] initWithCString:*value encoding:NSUTF8StringEncoding]];
+        [editor setText:args[0]->IntegerValue() withLength:args[1]->IntegerValue() replacementString:cstring(*value)];
     }
     
     return v8::Undefined();
+}
+
+// insert string
+v8::Handle<v8::Value> insert(const v8::Arguments &args)
+{
+    editor(editor, context);
+    
+    if (2 <= args.Length()) {
+        v8::Handle<v8::Value> arg = args[1];
+        v8::String::Utf8Value value(arg);
+        
+        [editor setText:args[0]->IntegerValue() withLength:0 replacementString:cstring(*value)];
+    }
+    
+    return v8::Undefined();
+}
+
+// remove string
+v8::Handle<v8::Value> remove(const v8::Arguments &args)
+{
+    editor(editor, context);
+    
+    if (2 <= args.Length()) {
+        [editor setText:args[0]->IntegerValue() withLength:args[1]->IntegerValue() replacementString:@""];
+    }
+    
+    return v8::Undefined();
+}
+
+// get selected range
+v8::Handle<v8::Value> selectedRange(const v8::Arguments &args)
+{
+    editor(editor, context);
+    
+    NSRange range = [[editor editor] selectedRange];
+    v8::Local<v8::ObjectTemplate> resultTemplate = v8::ObjectTemplate::New();
+    v8::Local<v8::Object> result = resultTemplate->NewInstance();
+    
+    result->Set(v8::String::New("location"), v8::Integer::New(range.location));
+    result->Set(v8::String::New("length"), v8::Integer::New(range.length));
+    
+    return result;
+}
+
+// get current position
+v8::Handle<v8::Value> currentPosition(const v8::Arguments &args)
+{
+    editor(editor, context);
+    NSRange range = [[editor editor] selectedRange];
+    
+    return v8::Integer::New(range.location);
 }
 
 @implementation V8Cocoa
@@ -138,17 +210,17 @@ v8::Handle<v8::Value> replace(const v8::Arguments &args)
     objInst->SetInternalFieldCount(1);
     
     v8::Local<v8::Template> proto_t = templ->PrototypeTemplate();
-    /*
-    proto_t->Set("setGeneralProperty",  v8::FunctionTemplate::New(setGeneralProperty));
-    proto_t->Set("getGeneralProperty", v8::FunctionTemplate::New(getGeneralProperty));
-    proto_t->Set("getLexerProperty", v8::FunctionTemplate::New(getLexerProperty));
-     */
     proto_t->Set("log", v8::FunctionTemplate::New(log));
     proto_t->Set("lexer", v8::FunctionTemplate::New(lexer));
     proto_t->Set("style", v8::FunctionTemplate::New(style));
+    proto_t->Set("editorStyle", v8::FunctionTemplate::New(editorStyle));
+    proto_t->Set("text", v8::FunctionTemplate::New(text));
     proto_t->Set("replace", v8::FunctionTemplate::New(replace));
+    proto_t->Set("insert", v8::FunctionTemplate::New(insert));
+    proto_t->Set("remove", v8::FunctionTemplate::New(remove));
+    proto_t->Set("selectedRange", v8::FunctionTemplate::New(selectedRange));
+    proto_t->Set("currentPosition", v8::FunctionTemplate::New(currentPosition));
     
-    // v8::Handle<v8::Function> ctor = templ->GetFunction();
     v8::Handle<v8::Function> ctor = templ->GetFunction();
     v8::Handle<v8::Object> obj = ctor->NewInstance();
     obj->SetInternalField(0, v8::External::New((__bridge void *)editor));
@@ -178,7 +250,7 @@ v8::Handle<v8::Value> replace(const v8::Arguments &args)
         NSLog(@"Error with(%d:%d): %@", 
             try_catch.Message()->GetLineNumber(),
             try_catch.Message()->GetStartColumn(),
-            [[NSString alloc] initWithCString:*error encoding:NSUTF8StringEncoding]);
+            cstring(*error));
         return FALSE;
     }
     
@@ -189,7 +261,7 @@ v8::Handle<v8::Value> replace(const v8::Arguments &args)
         NSLog(@"Error with(%d:%d): %@", 
               try_catch.Message()->GetLineNumber(),
               try_catch.Message()->GetStartColumn(),
-              [[NSString alloc] initWithCString:*error encoding:NSUTF8StringEncoding]);
+              cstring(*error));
         return FALSE;
     }
     

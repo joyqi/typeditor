@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "EditorTextView.h"
 #import "V8Cocoa.h"
 
 #define font(f) \
@@ -22,7 +23,7 @@ if (!f) { \
     NSWindow *window;
     
     // editor view
-    NSTextView *editor;
+    EditorTextView *editor;
     
     // scroll
     NSScrollView *scroll;
@@ -48,11 +49,12 @@ if (!f) { \
 @property (strong, nonatomic) NSTextView *editor;
 @property (strong, nonatomic) NSScrollView *scroll;
 @property (strong, nonatomic) NSMutableArray *holdReplacement;
+@property (strong, nonatomic) NSFont *font;
 @property (strong, nonatomic) V8Cocoa *v8;
 
 - (id)initWithWindow:(NSWindow *)parent;
-- (void)setTextStyle:(int)location withLength:(int)length forType:(NSString *)type withValue:(id)value;
+- (void)setTextStyle:(int)location withLength:(int)length forType:(NSString *)type withValue:(v8::Local<v8::Value>)value;
 - (void)setText:(int)location withLength:(int)length replacementString:(NSString *)string;
-- (void)setDefaultFont:(NSString *)fontName size:(CGFloat)fontSize;
+- (void)setEditorStyle:(NSString *)type withValue:(v8::Local<v8::Value>)value;
 
 @end

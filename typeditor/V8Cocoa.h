@@ -20,6 +20,9 @@ EditorViewController *e = (__bridge EditorViewController *) wrap->Value(); \
 v8::Persistent<v8::Context> c = [e v8]->context; \
 v8::Context::Scope context_scope(c);
 
+#define cstring(str) \
+[[NSString alloc] initWithCString:str encoding:NSUTF8StringEncoding]
+
 @interface V8Cocoa : NSObject {
 @public
     v8::Persistent<v8::Context> context;

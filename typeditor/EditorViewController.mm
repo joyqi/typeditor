@@ -15,7 +15,7 @@
 
 @implementation EditorViewController
 
-@synthesize window, scroll, editor, holdReplacement, editing, v8;
+@synthesize window, scroll, editor, holdReplacement, editing, font, v8;
 
 // init with parent window
 - (id)initWithWindow:(NSWindow *)parent
@@ -32,8 +32,9 @@
         [scroll setHasVerticalScroller:YES];
         [scroll setHasHorizontalScroller:NO];
         [scroll setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+        [scroll setDrawsBackground:NO];
         
-        editor = [[NSTextView alloc] initWithFrame:[[window contentView] frame]];
+        editor = [[EditorTextView alloc] initWithFrame:[[window contentView] frame]];
         [editor setMinSize:NSMakeSize(0.0, contentSize.height)];
         [editor setMaxSize:NSMakeSize(FLT_MAX, FLT_MAX)];
         [editor setVerticallyResizable:YES];
@@ -42,6 +43,12 @@
         
         [[editor textContainer] setContainerSize:NSMakeSize(contentSize.width, FLT_MAX)];
         [[editor textContainer] setWidthTracksTextView:YES];
+        
+        // default font
+        font = [editor font];
+        if (!font) {
+            font = [NSFont fontWithName:@"Helvetica" size:12.0f];
+        }
         
         [scroll setDocumentView:editor];
         [window setContentView:scroll];
@@ -59,10 +66,6 @@
         // init var
         editing = NO;
         holdReplacement = [NSMutableArray array];
-        
-        // default font
-        font = [[NSFontManager sharedFontManager] fontWithFamily:@"Helvetica" traits:0 weight:0 size:12.0f];
-        // font = [NSFont fontWithName:@"Helvetica" size:12.0f];
     }
     
     return self;
@@ -123,22 +126,26 @@
     [holdReplacement removeAllObjects];
 }
 
-- (void)setTextStyle:(int)location withLength:(int)length forType:(NSString *)type withValue:(id)value
+- (void)setTextStyle:(int)location withLength:(int)length forType:(NSString *)type withValue:(v8::Local<v8::Value>)value
 {
     NSRange found = NSMakeRange(location, length);
     
     if ([type isEqualToString:@"color"]) {
-        [textStorage addAttribute:NSForegroundColorAttributeName value:[self colorWithString:(NSString *)value] range:found];
+        v8::String::Utf8Value color(value);
+        [textStorage addAttribute:NSForegroundColorAttributeName value:[self colorWithString:cstring(*color)] range:found];
     } else if ([type isEqualToString:@"background-color"]) {
-        [textStorage addAttribute:NSBackgroundColorAttributeName value:[self colorWithString:(NSString *)value] range:found];
+        v8::String::Utf8Value bg(value);
+        [textStorage addAttribute:NSBackgroundColorAttributeName value:[self colorWithString:cstring(*bg)] range:found];
     } else if ([type isEqualToString:@"underline"]) {
-        [textStorage addAttribute:NSUnderlineStyleAttributeName value:value range:found];
+        [textStorage addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:value->IntegerValue()] range:found];
     } else if ([type isEqualToString:@"underline-color"]) {
-        [textStorage addAttribute:NSUnderlineColorAttributeName value:[self colorWithString:(NSString *)value] range:found];
+        v8::String::Utf8Value underline(value);
+        [textStorage addAttribute:NSUnderlineColorAttributeName value:[self colorWithString:cstring(*underline)] range:found];
     } else if ([type isEqualToString:@"font-family"]) {
         font(currentFont);
+        v8::String::Utf8Value fontName(value);
         NSFontManager *fontManager = [NSFontManager sharedFontManager];
-        NSFont *newFont = [fontManager fontWithFamily:value
+        NSFont *newFont = [fontManager fontWithFamily:cstring(*fontName)
                                                   traits:[[currentFont fontDescriptor] symbolicTraits]
                                                   weight:0
                                                     size:[currentFont pointSize]];
@@ -151,16 +158,17 @@
         NSFont *newFont = [fontManager fontWithFamily:[currentFont familyName]
                                                traits:[[currentFont fontDescriptor] symbolicTraits]
                                                weight:0
-                                                 size:[(NSNumber *)value floatValue]];
+                                                 size:value->NumberValue()];
 
         if (newFont) {
             [textStorage addAttribute:NSFontAttributeName value:newFont range:found];
         }
     } else if ([type isEqualToString:@"font-weight"]) {
         font(currentFont);
+        v8::String::Utf8Value fontWeight(value);
         NSFontManager *fontManager = [NSFontManager sharedFontManager];
         NSFont *newFont = [fontManager fontWithFamily:[currentFont familyName]
-                                               traits:[[currentFont fontDescriptor] symbolicTraits] | [(NSString *)value isEqualToString:@"bold"] ? NSBoldFontMask : NSUnboldFontMask
+                                               traits:[[currentFont fontDescriptor] symbolicTraits] | [cstring(*fontWeight) isEqualToString:@"bold"] ? NSBoldFontMask : NSUnboldFontMask
                                                weight:0
                                                  size:[currentFont pointSize]];
         
@@ -169,9 +177,10 @@
         }
     } else if ([type isEqualToString:@"font-style"]) {
         font(currentFont);
+        v8::String::Utf8Value fontStyle(value);
         NSFontManager *fontManager = [NSFontManager sharedFontManager];
         NSFont *newFont = [fontManager fontWithFamily:[currentFont familyName]
-                                               traits:[[currentFont fontDescriptor] symbolicTraits] | ([(NSString *)value isEqualToString:@"italic"] ? NSItalicFontMask : NSUnitalicFontMask)
+                                               traits:[[currentFont fontDescriptor] symbolicTraits] | ([cstring(*fontStyle) isEqualToString:@"italic"] ? NSItalicFontMask : NSUnitalicFontMask)
                                                weight:0
                                                  size:[currentFont pointSize]];
         
@@ -197,9 +206,88 @@
     }
 }
 
-- (void)setDefaultFont:(NSString *)fontName size:(CGFloat)fontSize
+- (void)setEditorStyle:(NSString *)type withValue:(v8::Local<v8::Value>)value
 {
-    font = [NSFont fontWithName:fontName size:fontSize];
+    if ([type isEqualToString:@"color"]) {
+        v8::String::Utf8Value color(value);
+        [editor setTextColor:[self colorWithString:cstring(*color)]];
+    } else if ([type isEqualToString:@"background-color"]) {
+        v8::String::Utf8Value bg(value);
+        [editor setBackgroundColor:[self colorWithString:cstring(*bg)]];
+    } else if ([type isEqualToString:@"font-family"]) {
+        v8::String::Utf8Value fontName(value);
+        NSFontManager *fontManager = [NSFontManager sharedFontManager];
+        NSFont *newFont = [fontManager fontWithFamily:cstring(*fontName)
+                                               traits:[[font fontDescriptor] symbolicTraits]
+                                               weight:0
+                                                 size:[font pointSize]];
+        if (newFont) {
+            font = newFont;
+            [editor setFont:font];
+        }
+    } else if ([type isEqualToString:@"font-size"]) {
+        NSFontManager *fontManager = [NSFontManager sharedFontManager];
+        NSFont *newFont = [fontManager fontWithFamily:[font familyName]
+                                               traits:[[font fontDescriptor] symbolicTraits]
+                                               weight:0
+                                                 size:value->NumberValue()];
+        
+        if (newFont) {
+            font = newFont;
+            [editor setFont:font];
+        }
+    } else if ([type isEqualToString:@"font-weight"]) {
+        v8::String::Utf8Value fontWeight(value);
+        NSFontManager *fontManager = [NSFontManager sharedFontManager];
+        NSFont *newFont = [fontManager fontWithFamily:[font familyName]
+                                               traits:[[font fontDescriptor] symbolicTraits] | [cstring(*fontWeight) isEqualToString:@"bold"] ? NSBoldFontMask : NSUnboldFontMask
+                                               weight:0
+                                                 size:[font pointSize]];
+        
+        if (newFont) {
+            font = newFont;
+            [editor setFont:font];
+        }
+    } else if ([type isEqualToString:@"font-style"]) {
+        v8::String::Utf8Value fontStyle(value);
+        NSFontManager *fontManager = [NSFontManager sharedFontManager];
+        NSFont *newFont = [fontManager fontWithFamily:[font familyName]
+                                               traits:[[font fontDescriptor] symbolicTraits] | ([cstring(*fontStyle) isEqualToString:@"italic"] ? NSItalicFontMask : NSUnitalicFontMask)
+                                               weight:0
+                                                 size:[font pointSize]];
+        
+        if (newFont) {
+            font = newFont;
+            [editor setFont:font];
+        }
+    } else if ([type isEqualToString:@"padding-horizontal"]) {
+        NSSize size = [editor textContainerInset];
+        size.width = value->IntegerValue();
+        [editor setTextContainerInset:size];
+    } else if ([type isEqualToString:@"padding-vertical"]) {
+        NSSize size = [editor textContainerInset];
+        size.height = value->IntegerValue();
+        [editor setTextContainerInset:size];
+    } else if ([type isEqualToString:@"line-spacing"]) {
+        NSDictionary *attributes = [[editor typingAttributes] mutableCopy];
+        NSMutableParagraphStyle *paragraphStyle;
+        
+        if ([editor defaultParagraphStyle]) {
+            paragraphStyle = [[editor defaultParagraphStyle] mutableCopy];
+        } else {
+            paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+        }
+
+        [paragraphStyle setLineSpacing:value->NumberValue()];
+        [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
+        [editor setTypingAttributes:attributes];
+        [editor setDefaultParagraphStyle:paragraphStyle];
+    } else if ([type isEqualToString:@"cursor-width"]) {
+        [editor setInsertionPointWidth:value->NumberValue()];
+    } else if ([type isEqualToString:@"cursor-color"]) {
+        v8::String::Utf8Value color(value);
+        [editor setInsertionPointColor:[self colorWithString:cstring(*color)]];
+    }
 }
          
 # pragma Mark - Private methods

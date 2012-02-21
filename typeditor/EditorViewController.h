@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "EditorTextView.h"
+#import "EditorLineNumberView.h"
 #import "V8Cocoa.h"
 
 #define font(f) \
@@ -24,6 +25,9 @@ if (!f) { \
     
     // editor view
     EditorTextView *editor;
+    
+    // line number
+    EditorLineNumberView *lineNumber;
     
     // scroll
     NSScrollView *scroll;

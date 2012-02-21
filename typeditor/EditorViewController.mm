@@ -44,6 +44,10 @@
         [[editor textContainer] setContainerSize:NSMakeSize(contentSize.width, FLT_MAX)];
         [[editor textContainer] setWidthTracksTextView:YES];
         
+        // disale rich edit
+        [editor setRichText:NO];
+        [editor setImportsGraphics:NO];
+        
         // default font
         font = [editor font];
         if (!font) {
@@ -54,6 +58,10 @@
         [window setContentView:scroll];
         [window makeKeyAndOrderFront:nil];
         [window makeFirstResponder:editor];
+        
+        lineNumber = [[EditorLineNumberView alloc] initWithScrollView:scroll];
+        [scroll setVerticalRulerView:lineNumber];
+        [scroll setRulersVisible:YES];
         
         v8 = [[V8Cocoa alloc] init];
         [v8 embed:self];
@@ -81,13 +89,17 @@
     NSString *string = [textStorage string];
     NSRange range = NSMakeRange(0, [string length]);
     
+    [textStorage beginEditing];
+    
     [textStorage removeAttribute:NSForegroundColorAttributeName range:range];
     [textStorage removeAttribute:NSBackgroundColorAttributeName range:range];
     [textStorage removeAttribute:NSUnderlineStyleAttributeName range:range];
     [textStorage removeAttribute:NSUnderlineColorAttributeName range:range];
     [textStorage removeAttribute:NSFontAttributeName range:range];
     [textStorage addAttribute:NSFontAttributeName value:font range:range];
-    
+
+    [textStorage fixAttributesInRange:range];
+    [textStorage endEditing];
     
     v8::HandleScope handle_scope;
     v8::Persistent<v8::Context> context = [self v8]->context;
@@ -104,7 +116,9 @@
         
         for (index = 0; index < length; index ++) {
             v8::Local<v8::Function> func = v8::Local<v8::Function>::Cast(callbackArray->Get(index));
+            [textStorage beginEditing];
             func->Call(context->Global(), 1, argv);
+            [textStorage endEditing];
         }
     }
 }
@@ -268,7 +282,7 @@
         NSSize size = [editor textContainerInset];
         size.height = value->IntegerValue();
         [editor setTextContainerInset:size];
-    } else if ([type isEqualToString:@"line-spacing"]) {
+    } else if ([type isEqualToString:@"line-height"]) {
         NSDictionary *attributes = [[editor typingAttributes] mutableCopy];
         NSMutableParagraphStyle *paragraphStyle;
         
@@ -277,8 +291,9 @@
         } else {
             paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
         }
-
-        [paragraphStyle setLineSpacing:value->NumberValue()];
+        
+        [paragraphStyle setMaximumLineHeight:value->NumberValue()];
+        [paragraphStyle setMinimumLineHeight:value->NumberValue()];
         [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
         [editor setTypingAttributes:attributes];
         [editor setDefaultParagraphStyle:paragraphStyle];

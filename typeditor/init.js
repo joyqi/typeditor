@@ -942,7 +942,7 @@
         'styles': {
             // token style names.  correspond to css classes
             /** token style for a string literal */
-            'str' : { color : '#E6DB74' },
+            'str' : { color : '#E6DB74', 'font-size' : 19 },
             /** token style for a keyword */
             'kwd' : { color : '#F92672' },
             /** token style for a comment */
@@ -987,7 +987,7 @@ $.styles = {
         'font-family'       :   'Monaco',
         'cursor-width'      :   '3',
         'cursor-color'      :   '#777',
-        'line-spacing'      :   2
+        'line-height'       :   20
     }
 
 };

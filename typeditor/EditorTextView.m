@@ -24,19 +24,18 @@
 
 - (void)drawInsertionPointInRect:(NSRect)rect color:(NSColor *)color turnedOn:(BOOL)flag
 {
+    rect.size.width = insertionPointWidth;
+    
     if (flag) {
         [color set];
+        [NSBezierPath fillRect:rect];
     } else {
-        [[self backgroundColor] set];
+        [self setNeedsDisplayInRect:[self visibleRect] avoidAdditionalLayout:NO];
     }
-    
-    rect.size.width = insertionPointWidth;
-    [NSBezierPath fillRect:rect];
 }
 
 - (void)_drawInsertionPointInRect:(NSRect)rect color:(NSColor *)color
 {
-
     [color set];
     rect.size.width = insertionPointWidth;
     [NSBezierPath fillRect:rect];
@@ -45,7 +44,9 @@
 - (void)insertText:(id)insertString
 {
     [super insertText:insertString];
-    NSLog(@"%@", insertString);
+    if (nil != [self delegate]) {
+        [(id<EditorTextViewDelegate>)[self delegate] insertText:insertString];
+    }
 }
 
 @end

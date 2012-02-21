@@ -7,6 +7,7 @@
 //
 
 #import <AppKit/AppKit.h>
+#import "EditorTextViewDelegate.h"
 
 @interface EditorTextView : NSTextView {
     

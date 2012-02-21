@@ -726,13 +726,16 @@
     */
   function recombineTagsAndDecorations(job) {
     var sourceText = job.source, decorations = job.decorations, length = job.source.length,
-        lastPos = 0, lastType = PR_PUNCTUATION, count = decorations.length / 2;
+        lastPos = 0, lastType = PR_PUNCTUATION, count = decorations.length / 2, result = [];
 
     for (var i = 0; i < count; i ++) {
         var pos = decorations[i * 2], type = decorations[i * 2 + 1];
 
         if (pos != lastPos) {
             renderSyntax(lastPos, pos - lastPos, lastType);
+
+            // store result
+            result.push([lastPos, pos, lastType]);
         }
 
         lastPos = pos;
@@ -741,7 +744,12 @@
 
     if (lastPos != length) {
         renderSyntax(lastPos, length - lastPos, lastType);
+        
+        // store result
+        result.push([lastPos, length, lastType]);
     }
+
+    return result;
   }
 
   /** render styntax by type */
@@ -775,8 +783,8 @@
       var ext = fileExtensions[i];
       if (!langHandlerRegistry.hasOwnProperty(ext)) {
         langHandlerRegistry[ext] = handler;
-      } else if ('console' in $) {
-        console['warn']('cannot override language handler %s', ext);
+      } else {
+        $.log('cannot override language handler ' + ext);
       }
     }
   }
@@ -904,12 +912,12 @@
       langHandlerForExtension(opt_langExtension, source)(job);
       // Integrate the decorations and tags back into the source code to produce
       // a decorated html string which is left in job.prettyPrintedHtml.
-      recombineTagsAndDecorations(job);
+      return recombineTagsAndDecorations(job);
     } catch (e) {
-      if ('console' in $) {
-        console['log'](e && e['stack'] ? e['stack'] : e);
-      }
+      $.log(e && e['stack'] ? e['stack'] : e);
     }
+
+    return [];
   }
 
   function prettyPrintOne(source, opt_langExtension) {
@@ -917,7 +925,7 @@
       source: source,
       langExtension: opt_langExtension
     };
-    applyDecorator(job);
+    $.PR.result = applyDecorator(job);
   }
 
   $['prettyPrintOne'] = prettyPrintOne;
@@ -939,6 +947,7 @@
         'PR_STRING': PR_STRING,
         'PR_TAG': PR_TAG,
         'PR_TYPE': PR_TYPE,
+        'result': [],
         'styles': {
             // token style names.  correspond to css classes
             /** token style for a string literal */
@@ -985,11 +994,23 @@ $.styles = {
         'color'             :   '#333',
         'font-size'         :   13,
         'font-family'       :   'Monaco',
-        'cursor-width'      :   '3',
+        'cursor-width'      :   2,
         'cursor-color'      :   '#777',
         'line-height'       :   20
     }
 
+};
+
+$.syntax = function (pos) {
+    var result = $.PR.result;
+    pos = pos ? pos : $.currentPosition();
+
+    for (var i = 0; i < result.length; i ++) {
+        var exp = result[i];
+        if (pos >= exp[0] && pos <= exp[1]) {
+            return exp[2];
+        }
+    }
 };
 
 // merge styles
@@ -1012,7 +1033,9 @@ $.styles = {
 
 $.lexer(function (str) {
     $.prettyPrintOne(str, 'php');
-    var range = $.selectedRange();
-    // $.log(range.location + ':' + range.length);
+});
+
+$.enter(function (str, pos) {
+    $.log($.syntax(pos));
 });
 

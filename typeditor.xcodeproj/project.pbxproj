@@ -52,6 +52,7 @@
 		2058101714F3D46F00EAAD8E /* EditorLineNumberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditorLineNumberView.m; sourceTree = "<group>"; };
 		2058101A14F3D60300EAAD8E /* EditorLineNumberMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorLineNumberMarker.h; sourceTree = "<group>"; };
 		2058101B14F3D60300EAAD8E /* EditorLineNumberMarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditorLineNumberMarker.m; sourceTree = "<group>"; };
+		2058101D14F3F98800EAAD8E /* EditorTextViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorTextViewDelegate.h; sourceTree = "<group>"; };
 		208DFC1C14F2832C0067D6E1 /* EditorViewReplacement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorViewReplacement.h; sourceTree = "<group>"; };
 		208DFC1D14F2832C0067D6E1 /* EditorViewReplacement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditorViewReplacement.m; sourceTree = "<group>"; };
 		2A3EEE2114F399CD007F0CE3 /* EditorTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorTextView.h; sourceTree = "<group>"; };
@@ -128,6 +129,7 @@
 			children = (
 				208DFC1C14F2832C0067D6E1 /* EditorViewReplacement.h */,
 				208DFC1D14F2832C0067D6E1 /* EditorViewReplacement.m */,
+				2058101D14F3F98800EAAD8E /* EditorTextViewDelegate.h */,
 			);
 			name = Class;
 			sourceTree = "<group>";

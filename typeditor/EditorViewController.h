@@ -18,7 +18,7 @@ if (!f) { \
     f = font; \
 }
 
-@interface EditorViewController : NSViewController <NSTextViewDelegate, NSTextStorageDelegate> {
+@interface EditorViewController : NSViewController <EditorTextViewDelegate, NSTextStorageDelegate> {
     
     // parent window
     NSWindow *window;

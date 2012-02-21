@@ -35,7 +35,25 @@ v8::Handle<v8::Value> log(const v8::Arguments &args)
 v8::Handle<v8::Value> lexer(const v8::Arguments &args)
 {
     editor(editor, context);
-    v8::Local<v8::String> key = v8::String::New("callback");
+    v8::Local<v8::String> key = v8::String::New("lexerCallback");
+    
+    if (args.Length() >= 1 || args[0]->IsFunction()) {
+        if (!*(context->Global()->GetHiddenValue(key)) || context->Global()->GetHiddenValue(key)->IsNull()) {
+            context->Global()->SetHiddenValue(key, v8::Array::New());
+        }
+        
+        v8::Local<v8::Array> callback = v8::Local<v8::Array>::Cast(context->Global()->GetHiddenValue(key));
+        callback->Set(callback->Length(), args[0]);
+    }
+    
+    return v8::Undefined();
+}
+
+// register enter function
+v8::Handle<v8::Value> enter(const v8::Arguments &args)
+{
+    editor(editor, context);
+    v8::Local<v8::String> key = v8::String::New("enterCallback");
     
     if (args.Length() >= 1 || args[0]->IsFunction()) {
         if (!*(context->Global()->GetHiddenValue(key)) || context->Global()->GetHiddenValue(key)->IsNull()) {
@@ -212,6 +230,7 @@ v8::Handle<v8::Value> currentPosition(const v8::Arguments &args)
     v8::Local<v8::Template> proto_t = templ->PrototypeTemplate();
     proto_t->Set("log", v8::FunctionTemplate::New(log));
     proto_t->Set("lexer", v8::FunctionTemplate::New(lexer));
+    proto_t->Set("enter", v8::FunctionTemplate::New(enter));
     proto_t->Set("style", v8::FunctionTemplate::New(style));
     proto_t->Set("editorStyle", v8::FunctionTemplate::New(editorStyle));
     proto_t->Set("text", v8::FunctionTemplate::New(text));

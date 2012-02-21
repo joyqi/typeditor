@@ -89,23 +89,20 @@
     NSString *string = [textStorage string];
     NSRange range = NSMakeRange(0, [string length]);
     
-    [textStorage beginEditing];
-    
     [textStorage removeAttribute:NSForegroundColorAttributeName range:range];
     [textStorage removeAttribute:NSBackgroundColorAttributeName range:range];
     [textStorage removeAttribute:NSUnderlineStyleAttributeName range:range];
     [textStorage removeAttribute:NSUnderlineColorAttributeName range:range];
     [textStorage removeAttribute:NSFontAttributeName range:range];
     [textStorage addAttribute:NSFontAttributeName value:font range:range];
-
     [textStorage fixAttributesInRange:range];
-    [textStorage endEditing];
+
     
     v8::HandleScope handle_scope;
     v8::Persistent<v8::Context> context = [self v8]->context;
     v8::Context::Scope context_scope(context);
     
-    v8::Local<v8::Value> callback = context->Global()->GetHiddenValue(v8::String::New("callback"));
+    v8::Local<v8::Value> callback = context->Global()->GetHiddenValue(v8::String::New("lexerCallback"));
     
     if (*callback && !callback->IsNull()) {        
         v8::Local<v8::Array> callbackArray = v8::Local<v8::Array>::Cast(callback);
@@ -116,9 +113,7 @@
         
         for (index = 0; index < length; index ++) {
             v8::Local<v8::Function> func = v8::Local<v8::Function>::Cast(callbackArray->Get(index));
-            [textStorage beginEditing];
             func->Call(context->Global(), 1, argv);
-            [textStorage endEditing];
         }
     }
 }
@@ -138,6 +133,29 @@
     }
     
     [holdReplacement removeAllObjects];
+}
+
+- (void)insertText:(id)insertString
+{
+    v8::HandleScope handle_scope;
+    v8::Persistent<v8::Context> context = [self v8]->context;
+    v8::Context::Scope context_scope(context);
+    
+    v8::Local<v8::Value> callback = context->Global()->GetHiddenValue(v8::String::New("enterCallback"));
+    
+    if (*callback && !callback->IsNull()) {        
+        v8::Local<v8::Array> callbackArray = v8::Local<v8::Array>::Cast(callback);
+        v8::Local<v8::Value> argv[2];
+        int index, length = callbackArray->Length();
+        
+        argv[0] = v8::String::New([insertString cStringUsingEncoding:NSUTF8StringEncoding]);
+        argv[1] = v8::Integer::New([editor selectedRange].location);
+        
+        for (index = 0; index < length; index ++) {
+            v8::Local<v8::Function> func = v8::Local<v8::Function>::Cast(callbackArray->Get(index));
+            func->Call(context->Global(), 2, argv);
+        }
+    }
 }
 
 - (void)setTextStyle:(int)location withLength:(int)length forType:(NSString *)type withValue:(v8::Local<v8::Value>)value

@@ -33,7 +33,7 @@
     NSString *lineEndings;
     
     // v8 embed
-    V8Cocoa *v8;
+    id editorViewController;
 }
 
 @property (assign) CGFloat insertionPointWidth;
@@ -42,7 +42,7 @@
 @property (assign) NSUInteger tabStop;
 @property (strong, nonatomic) NSFont *defaultFont;
 @property (strong, nonatomic) NSColor *defaultColor;
-@property (strong, nonatomic) V8Cocoa *v8;
+@property (strong, nonatomic) id editorViewController;
 
 - (void)setTextStyle:(int)location withLength:(int)length forType:(NSString *)type withValue:(v8::Local<v8::Value>)value;
 - (void)setEditorStyle:(NSString *)type withValue:(v8::Local<v8::Value>)value;
@@ -54,9 +54,7 @@
 - (NSUInteger)lineAt:(NSUInteger)location;
 - (NSUInteger)lineCurrent;
 - (NSRange)lineRange:(NSUInteger)line;
-- (NSUInteger)lineStart:(NSUInteger)line;
-- (NSUInteger)lineLength:(NSUInteger)line;
-- (NSUInteger)countWith:(NSRange)range;
+- (NSUInteger)countWidth:(NSRange)range;
 - (void)appendTab:(NSUInteger)location withWidth:(NSUInteger)width;
 - (void)replaceTab:(NSRange)range withWidth:(NSUInteger)width;
 @end

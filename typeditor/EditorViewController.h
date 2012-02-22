@@ -43,6 +43,7 @@
 @property (strong, nonatomic) NSTextView *editor;
 @property (strong, nonatomic) NSScrollView *scroll;
 @property (strong, nonatomic) NSMutableArray *holdReplacement;
+@property (strong, nonatomic) EditorLineNumberView *lineNumber;
 @property (strong, nonatomic) V8Cocoa *v8;
 
 - (id)initWithWindow:(NSWindow *)parent;

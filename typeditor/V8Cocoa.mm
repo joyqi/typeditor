@@ -133,10 +133,87 @@ v8::Handle<v8::Value> editorStyle(const v8::Arguments &args)
 }
 
 // get text
-v8::Handle<v8::Value> text(const v8::Arguments &args)
+v8::Handle<v8::Value> string(const v8::Arguments &args)
 {
     importEditor(editor, context);
-    return v8::String::New([[[editor editor] string] cStringUsingEncoding:NSUTF8StringEncoding]);
+    
+    NSString *result;
+    
+    if (2 <= args.Length() &&
+        args[0]->IsNumber() &&
+        args[1]->IsNumber()) {
+        result = [(EditorTextView *)[editor editor] stringAt:args[0]->IntegerValue() withLength:args[1]->IntegerValue()];
+    } else if (1 <= args.Length() &&
+        args[0]->IsNumber()) {
+        result = [(EditorTextView *)[editor editor] stringAt:args[0]->IntegerValue()];
+    } else {
+        result = [[editor editor] string];
+    }
+    
+    return result ? v8::String::New([result cStringUsingEncoding:NSUTF8StringEncoding]) : v8::Undefined();
+}
+
+// get text
+v8::Handle<v8::Value> line(const v8::Arguments &args)
+{
+    importEditor(editor, context);
+    
+    if (1 <= args.Length() &&
+        args[0]->IsNumber()) {
+        return v8::Integer::New([(EditorTextView *)[editor editor] lineAt:args[0]->IntegerValue()]);
+    } else {
+        return v8::Integer::New([(EditorTextView *)[editor editor] lineCurrent]);
+    }
+    
+    return v8::Undefined();
+}
+
+// get line range
+v8::Handle<v8::Value> lineRange(const v8::Arguments &args)
+{
+    importEditor(editor, context);
+    
+    if (1 <= args.Length() &&
+        args[0]->IsNumber()) {
+        NSRange range = [(EditorTextView *)[editor editor] lineRange:args[0]->IntegerValue()];
+        v8::Local<v8::ObjectTemplate> resultTemplate = v8::ObjectTemplate::New();
+        v8::Local<v8::Object> result = resultTemplate->NewInstance();
+        
+        result->Set(v8::String::New("location"), v8::Integer::New(range.location));
+        result->Set(v8::String::New("length"), v8::Integer::New(range.length));
+        
+        return result;
+    }
+    
+    return v8::Undefined();
+}
+
+// get charactor width
+v8::Handle<v8::Value> width(const v8::Arguments &args)
+{
+    importEditor(editor, context);
+    
+    if (2 <= args.Length() &&
+        args[0]->IsNumber() &&
+        args[1]->IsNumber()) {
+        return v8::Integer::New([(EditorTextView *)[editor editor] countWidth:NSMakeRange(args[0]->IntegerValue(), args[1]->IntegerValue())]);
+    }
+    
+    return v8::Undefined();
+}
+
+// indent with width
+v8::Handle<v8::Value> indent(const v8::Arguments &args)
+{
+    importEditor(editor, context);
+    
+    if (2 <= args.Length() &&
+        args[0]->IsNumber() &&
+        args[1]->IsNumber()) {
+        [(EditorTextView *)[editor editor] appendTab:args[0]->IntegerValue() withWidth:args[1]->IntegerValue()];
+    }
+    
+    return v8::Undefined();
 }
 
 // set style
@@ -277,8 +354,7 @@ v8::Handle<v8::Value> tabStop(const v8::Arguments &args)
             NSLog(@"Error load init.js");
             return FALSE;
         }
-        
-        [(EditorTextView *)[(EditorViewController *)editor editor] setV8:self];
+
         return TRUE;
     }
     
@@ -310,7 +386,9 @@ v8::Handle<v8::Value> tabStop(const v8::Arguments &args)
     proto_t->Set("onNewLine", v8::FunctionTemplate::New(onNewLine));
     proto_t->Set("style", v8::FunctionTemplate::New(style));
     proto_t->Set("editorStyle", v8::FunctionTemplate::New(editorStyle));
-    proto_t->Set("text", v8::FunctionTemplate::New(text));
+    proto_t->Set("string", v8::FunctionTemplate::New(string));
+    proto_t->Set("line", v8::FunctionTemplate::New(line));
+    proto_t->Set("lineRange", v8::FunctionTemplate::New(lineRange));
     proto_t->Set("replace", v8::FunctionTemplate::New(replace));
     proto_t->Set("insert", v8::FunctionTemplate::New(insert));
     proto_t->Set("remove", v8::FunctionTemplate::New(remove));
@@ -320,6 +398,8 @@ v8::Handle<v8::Value> tabStop(const v8::Arguments &args)
     proto_t->Set("scrollTo", v8::FunctionTemplate::New(scrollTo));
     proto_t->Set("tabStop", v8::FunctionTemplate::New(tabStop));
     proto_t->Set("isSoftTab", v8::FunctionTemplate::New(isSoftTab));
+    proto_t->Set("width", v8::FunctionTemplate::New(width));
+    proto_t->Set("indent", v8::FunctionTemplate::New(indent));
     
     v8::Handle<v8::Function> ctor = templ->GetFunction();
     v8::Handle<v8::Object> obj = ctor->NewInstance();

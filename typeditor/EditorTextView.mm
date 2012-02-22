@@ -7,6 +7,7 @@
 //
 
 #import "EditorTextView.h"
+#import "EditorViewController.h"
 
 #define beginParagraphStyle(paragraphStyle) \
     NSDictionary *attributes = [[self typingAttributes] mutableCopy]; \
@@ -29,7 +30,7 @@
     v8::String::Utf8Value type(value); \
     NSFontManager *fontManager = [NSFontManager sharedFontManager];
 
-#define  endEditorFont(newFont) \
+#define endEditorFont(newFont) \
     if (newFont) {\
         [self setDefaultFont:newFont];\
         [attributes setValue:newFont forKey:NSFontAttributeName]; \
@@ -38,6 +39,15 @@
     }\
     attributes = nil;
 
+#define beginLineNumberFont(font) \
+    NSFont *font = [[(EditorViewController *)[self editorViewController] lineNumber] font]; \
+    NSFontManager *fontManager = [NSFontManager sharedFontManager];
+
+#define endLineNumberFont(newFont) \
+    [[(EditorViewController *)[self editorViewController] lineNumber] setFont:newFont]; \
+    fontManager = nil; \
+    newFont = nil;
+
 @interface EditorTextView (Private)
 - (NSColor *)colorWithString:(NSString *)stringColor;
 - (NSUInteger)findCloseByLineIndent:(NSInteger)location;
@@ -45,7 +55,7 @@
 
 @implementation EditorTextView
 
-@synthesize insertionPointWidth, softTab, tabInterval, tabStop, defaultFont, defaultColor, v8;
+@synthesize insertionPointWidth, softTab, tabInterval, tabStop, defaultFont, defaultColor, editorViewController;
 
 - (id) initWithFrame:(NSRect)frameRect
 {
@@ -53,7 +63,6 @@
     
     if (self) {
         insertionPointWidth = 2.0f;
-        softTab = YES;
         lineEndings = @"\n";
         
         if ([self font]) {
@@ -107,7 +116,7 @@
 
 - (void)insertTab:(id)sender {
     v8::HandleScope handle_scope;
-    v8::Persistent<v8::Context> context = v8->context;
+    v8::Persistent<v8::Context> context = [(EditorViewController *)editorViewController v8]->context;
     v8::Context::Scope context_scope(context);
     
     v8::Local<v8::Value> callback = context->Global()->GetHiddenValue(v8::String::New("tabHandler"));
@@ -127,7 +136,7 @@
 
 - (void)insertNewline:(id)sender {
     v8::HandleScope handle_scope;
-    v8::Persistent<v8::Context> context = v8->context;
+    v8::Persistent<v8::Context> context = [(EditorViewController *)editorViewController v8]->context;
     v8::Context::Scope context_scope(context);
     NSUInteger location = [self selectedRange].location;
     
@@ -153,7 +162,7 @@
     
     if (softTab && [insertString isEqualToString:@"\t"]) {
         NSRange range = [self selectedRange], replace = NSMakeRange(range.location - 1, 1);
-        NSInteger count = [self countWith:replace];
+        NSInteger count = [self countWidth:replace];
         [self replaceTab:replace withWidth:count];
     }
     
@@ -239,16 +248,6 @@
     return lineRange;
 }
 
-- (NSUInteger)lineStart:(NSUInteger)line
-{
-    return [self lineRange:line].location;
-}
-
-- (NSUInteger)lineLength:(NSUInteger)line
-{
-    return [self lineRange:line].length;
-}
-
 - (CGFloat)spaceWidth:(NSUInteger)location
 {
     NSFont *font = [self fontAt:location];
@@ -263,7 +262,7 @@
     return [self spaceWidth:location];
 }
 
-- (NSUInteger)countWith:(NSRange)range
+- (NSUInteger)countWidth:(NSRange)range
 {
     NSUInteger startGlyphIndex = [[self layoutManager] glyphIndexForCharacterAtIndex:range.location];
     /*
@@ -525,6 +524,33 @@
         } else {
             lineEndings = @"\n";
         }
+    } else if ([type isEqualToString:@"line-number"]) {
+        [[(EditorViewController *)[self editorViewController] scroll] setRulersVisible:value->BooleanValue()];
+    } else if ([type isEqualToString:@"line-number-color"]) {
+        v8::String::Utf8Value color(value);
+        [[(EditorViewController *)[self editorViewController] lineNumber] setTextColor:[self colorWithString:cstring(*color)]];
+    } else if ([type isEqualToString:@"line-number-background-color"]) {
+        v8::String::Utf8Value color(value);
+        [[(EditorViewController *)[self editorViewController] lineNumber] setBackgroundColor:[self colorWithString:cstring(*color)]];
+    } else if ([type isEqualToString:@"line-number-font-family"]) {
+        beginLineNumberFont(font)
+
+        v8::String::Utf8Value fontFamily(value);
+        NSFont *newFont = [fontManager fontWithFamily:cstring(*fontFamily)
+                                               traits:[[font fontDescriptor] symbolicTraits]
+                                               weight:0
+                                                 size:[font pointSize]];
+        
+        endLineNumberFont(newFont);
+    } else if ([type isEqualToString:@"line-number-font-size"]) {
+        beginLineNumberFont(font)
+        
+        NSFont *newFont = [fontManager fontWithFamily:[font familyName]
+                                               traits:[[font fontDescriptor] symbolicTraits]
+                                               weight:0
+                                                 size:value->NumberValue()];
+        
+        endLineNumberFont(newFont);
     }
 }
 

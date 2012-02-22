@@ -14,7 +14,7 @@
 
 @implementation EditorViewController
 
-@synthesize window, scroll, editor, holdReplacement, editing, v8;
+@synthesize window, scroll, editor, holdReplacement, editing, lineNumber, v8;
 
 // init with parent window
 - (id)initWithWindow:(NSWindow *)parent
@@ -34,6 +34,7 @@
         [scroll setDrawsBackground:NO];
         
         editor = [[EditorTextView alloc] initWithFrame:[[window contentView] frame]];
+        [editor setEditorViewController:self];
         [editor setMinSize:NSMakeSize(0.0, contentSize.height)];
         [editor setMaxSize:NSMakeSize(FLT_MAX, FLT_MAX)];
         [editor setVerticallyResizable:YES];
@@ -54,7 +55,6 @@
         
         lineNumber = [[EditorLineNumberView alloc] initWithScrollView:scroll];
         [scroll setVerticalRulerView:lineNumber];
-        [scroll setRulersVisible:YES];
         
         v8 = [[V8Cocoa alloc] init];
         [v8 embed:self];

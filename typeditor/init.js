@@ -999,7 +999,11 @@ $.styles = {
         'cursor-width'                  :   2,
         'cursor-color'                  :   '#777',
         'line-height'                   :   20,
-        'tab-stop'                      :   4
+        'tab-stop'                      :   4,
+        'line-number'                   :   true,
+        'line-number-background-color'  :   '#000',
+        'line-number-color'             :   '#FFF',
+        'line-number-font-size'         :   13
     }
 
 };
@@ -1039,7 +1043,10 @@ $.lexer(function (str) {
 });
 
 $.onEnter(function (str, pos) {
-    $.log($.syntax(pos));
+    // $.log($.syntax(pos));
+    
+    var range = $.lineRange($.line());
+    $.log(range.location + ':' + range.length + ':' + $.line());
 });
 
 $.onNewLine(function (str, pos, line) {

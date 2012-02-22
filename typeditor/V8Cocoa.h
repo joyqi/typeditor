@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "v8.h"
 
-#define editor(e, c) \
+#define importEditor(e, c) \
 v8::HandleScope handle_scope; \
 v8::Local<v8::Object> self = args.Holder(); \
 if (self->InternalFieldCount() != 1) { \

@@ -1036,7 +1036,7 @@ $.lexer(function (str) {
     $.prettyPrintOne(str, 'php');
 });
 
-$.enter(function (str, pos) {
+$.onEnter(function (str, pos) {
     $.log($.syntax(pos));
 });
 

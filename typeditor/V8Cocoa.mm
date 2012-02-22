@@ -9,6 +9,7 @@
 #import "V8Cocoa.h"
 #import "v8.h"
 #import "EditorViewController.h"
+#import "EditorTextView.h"
 
 @interface V8Cocoa (Private)
 - (BOOL) createContext:(id)editor;
@@ -34,7 +35,7 @@ v8::Handle<v8::Value> log(const v8::Arguments &args)
 // register lexer function
 v8::Handle<v8::Value> lexer(const v8::Arguments &args)
 {
-    editor(editor, context);
+    importEditor(editor, context);
     v8::Local<v8::String> key = v8::String::New("lexerCallback");
     
     if (args.Length() >= 1 || args[0]->IsFunction()) {
@@ -50,9 +51,9 @@ v8::Handle<v8::Value> lexer(const v8::Arguments &args)
 }
 
 // register enter function
-v8::Handle<v8::Value> enter(const v8::Arguments &args)
+v8::Handle<v8::Value> onEnter(const v8::Arguments &args)
 {
-    editor(editor, context);
+    importEditor(editor, context);
     v8::Local<v8::String> key = v8::String::New("enterCallback");
     
     if (args.Length() >= 1 || args[0]->IsFunction()) {
@@ -70,7 +71,7 @@ v8::Handle<v8::Value> enter(const v8::Arguments &args)
 // set style
 v8::Handle<v8::Value> style(const v8::Arguments &args)
 {
-    editor(editor, context);
+    importEditor(editor, context);
     
     if (4 <= args.Length() &&
         args[0]->IsNumber() &&
@@ -81,7 +82,7 @@ v8::Handle<v8::Value> style(const v8::Arguments &args)
         v8::Handle<v8::Value> arg = args[2];
         v8::String::Utf8Value type(arg);
         
-        [editor setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:cstring(*type) withValue:args[3]];
+        [(EditorTextView *)[editor editor] setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:cstring(*type) withValue:args[3]];
     }
     
     return v8::Undefined();
@@ -90,7 +91,7 @@ v8::Handle<v8::Value> style(const v8::Arguments &args)
 // set default style
 v8::Handle<v8::Value> editorStyle(const v8::Arguments &args)
 {
-    editor(editor, context);
+    importEditor(editor, context);
     
     if (2 <= args.Length() &&
         args[0]->IsString() &&
@@ -99,7 +100,7 @@ v8::Handle<v8::Value> editorStyle(const v8::Arguments &args)
         v8::Handle<v8::Value> arg = args[0];
         v8::String::Utf8Value type(arg);
         
-        [editor setEditorStyle:cstring(*type) withValue:args[1]];
+        [(EditorTextView *)[editor editor] setEditorStyle:cstring(*type) withValue:args[1]];
     }
     
     return v8::Undefined();
@@ -108,14 +109,14 @@ v8::Handle<v8::Value> editorStyle(const v8::Arguments &args)
 // get text
 v8::Handle<v8::Value> text(const v8::Arguments &args)
 {
-    editor(editor, context);
+    importEditor(editor, context);
     return v8::String::New([[[editor editor] string] cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
 // set style
 v8::Handle<v8::Value> replace(const v8::Arguments &args)
 {
-    editor(editor, context);
+    importEditor(editor, context);
     
     if (3 <= args.Length()) {
         v8::Handle<v8::Value> arg = args[2];
@@ -130,7 +131,7 @@ v8::Handle<v8::Value> replace(const v8::Arguments &args)
 // insert string
 v8::Handle<v8::Value> insert(const v8::Arguments &args)
 {
-    editor(editor, context);
+    importEditor(editor, context);
     
     if (2 <= args.Length()) {
         v8::Handle<v8::Value> arg = args[1];
@@ -145,7 +146,7 @@ v8::Handle<v8::Value> insert(const v8::Arguments &args)
 // remove string
 v8::Handle<v8::Value> remove(const v8::Arguments &args)
 {
-    editor(editor, context);
+    importEditor(editor, context);
     
     if (2 <= args.Length()) {
         [editor setText:args[0]->IntegerValue() withLength:args[1]->IntegerValue() replacementString:@""];
@@ -157,7 +158,7 @@ v8::Handle<v8::Value> remove(const v8::Arguments &args)
 // get selected range
 v8::Handle<v8::Value> selectedRange(const v8::Arguments &args)
 {
-    editor(editor, context);
+    importEditor(editor, context);
     
     NSRange range = [[editor editor] selectedRange];
     v8::Local<v8::ObjectTemplate> resultTemplate = v8::ObjectTemplate::New();
@@ -172,7 +173,7 @@ v8::Handle<v8::Value> selectedRange(const v8::Arguments &args)
 // get current position
 v8::Handle<v8::Value> currentPosition(const v8::Arguments &args)
 {
-    editor(editor, context);
+    importEditor(editor, context);
     NSRange range = [[editor editor] selectedRange];
     
     return v8::Integer::New(range.location);
@@ -230,7 +231,7 @@ v8::Handle<v8::Value> currentPosition(const v8::Arguments &args)
     v8::Local<v8::Template> proto_t = templ->PrototypeTemplate();
     proto_t->Set("log", v8::FunctionTemplate::New(log));
     proto_t->Set("lexer", v8::FunctionTemplate::New(lexer));
-    proto_t->Set("enter", v8::FunctionTemplate::New(enter));
+    proto_t->Set("onEnter", v8::FunctionTemplate::New(onEnter));
     proto_t->Set("style", v8::FunctionTemplate::New(style));
     proto_t->Set("editorStyle", v8::FunctionTemplate::New(editorStyle));
     proto_t->Set("text", v8::FunctionTemplate::New(text));

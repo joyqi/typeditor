@@ -216,6 +216,23 @@ v8::Handle<v8::Value> indent(const v8::Arguments &args)
     return v8::Undefined();
 }
 
+// indent with width
+v8::Handle<v8::Value> select(const v8::Arguments &args)
+{
+    importEditor(editor, context);
+    
+    if (2 <= args.Length() &&
+        args[0]->IsNumber() &&
+        args[1]->IsNumber()) {
+        [(EditorTextView *)[editor editor] setSelectedRange:NSMakeRange(args[0]->IntegerValue(), args[1]->IntegerValue())];
+    } else if (1 <= args.Length() &&
+               args[0]->IsNumber()) {
+        [(EditorTextView *)[editor editor] setSelectedRange:NSMakeRange(args[0]->IntegerValue(), 1)];
+    }
+    
+    return v8::Undefined();
+}
+
 // set style
 v8::Handle<v8::Value> replace(const v8::Arguments &args)
 {
@@ -392,6 +409,7 @@ v8::Handle<v8::Value> tabStop(const v8::Arguments &args)
     proto_t->Set("replace", v8::FunctionTemplate::New(replace));
     proto_t->Set("insert", v8::FunctionTemplate::New(insert));
     proto_t->Set("remove", v8::FunctionTemplate::New(remove));
+    proto_t->Set("select", v8::FunctionTemplate::New(select));
     proto_t->Set("selectedRange", v8::FunctionTemplate::New(selectedRange));
     proto_t->Set("currentPosition", v8::FunctionTemplate::New(currentPosition));
     proto_t->Set("highlight", v8::FunctionTemplate::New(highlight));

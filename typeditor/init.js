@@ -1044,6 +1044,14 @@ $.lexer(function (str) {
 
 $.onEnter(function (str, pos) {
     // $.log($.syntax(pos));
+    //
+    if (pos > 0) {
+        $.highlight(0);
+    }
+
+    if (pos > 1) {
+        // $.select(1);
+    }
     
     var range = $.lineRange($.line());
     $.log(range.location + ':' + range.length + ':' + $.line());

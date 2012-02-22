@@ -18,6 +18,22 @@ if (!f) { \
     f = font; \
 }
 
+#define beginParagraphStyle(paragraphStyle) \
+NSDictionary *attributes = [[editor typingAttributes] mutableCopy]; \
+NSMutableParagraphStyle *paragraphStyle; \
+if ([editor defaultParagraphStyle]) { \
+    paragraphStyle = [[editor defaultParagraphStyle] mutableCopy]; \
+} else { \
+    paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy]; \
+}
+
+#define endParagraphStyle(paragraphStyle) \
+[attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName]; \
+[editor setTypingAttributes:attributes]; \
+[editor setDefaultParagraphStyle:paragraphStyle]; \
+attributes = nil; \
+paragraphStyle = nil; \
+
 @interface EditorViewController : NSViewController <EditorTextViewDelegate, NSTextStorageDelegate> {
     
     // parent window

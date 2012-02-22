@@ -996,7 +996,8 @@ $.styles = {
         'font-family'       :   'Monaco',
         'cursor-width'      :   2,
         'cursor-color'      :   '#777',
-        'line-height'       :   20
+        'line-height'       :   20,
+        'tab-stop'          :   4
     }
 
 };

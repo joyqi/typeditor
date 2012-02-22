@@ -158,6 +158,17 @@
     }
 }
 
+- (BOOL)textView:(NSTextView *)textView doCommandBySelector:(SEL)commandSelector
+{
+    if (commandSelector == @selector(insertTab:)) {
+        NSLog(@"asdf");
+        [textView insertTabIgnoringFieldEditor:self];
+        return NO;
+    }
+    
+    return NO;
+}
+
 - (void)setTextStyle:(int)location withLength:(int)length forType:(NSString *)type withValue:(v8::Local<v8::Value>)value
 {
     NSRange found = NSMakeRange(location, length);
@@ -173,17 +184,6 @@
     } else if ([type isEqualToString:@"underline-color"]) {
         v8::String::Utf8Value underline(value);
         [textStorage addAttribute:NSUnderlineColorAttributeName value:[self colorWithString:cstring(*underline)] range:found];
-    } else if ([type isEqualToString:@"font-family"]) {
-        font(currentFont);
-        v8::String::Utf8Value fontName(value);
-        NSFontManager *fontManager = [NSFontManager sharedFontManager];
-        NSFont *newFont = [fontManager fontWithFamily:cstring(*fontName)
-                                                  traits:[[currentFont fontDescriptor] symbolicTraits]
-                                                  weight:0
-                                                    size:[currentFont pointSize]];
-        if (newFont) {
-            [textStorage addAttribute:NSFontAttributeName value:newFont range:found];
-        }
     } else if ([type isEqualToString:@"font-size"]) {
         font(currentFont);
         NSFontManager *fontManager = [NSFontManager sharedFontManager];
@@ -301,25 +301,24 @@
         size.height = value->IntegerValue();
         [editor setTextContainerInset:size];
     } else if ([type isEqualToString:@"line-height"]) {
-        NSDictionary *attributes = [[editor typingAttributes] mutableCopy];
-        NSMutableParagraphStyle *paragraphStyle;
-        
-        if ([editor defaultParagraphStyle]) {
-            paragraphStyle = [[editor defaultParagraphStyle] mutableCopy];
-        } else {
-            paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
-        }
-        
+        beginParagraphStyle(paragraphStyle);
         [paragraphStyle setMaximumLineHeight:value->NumberValue()];
         [paragraphStyle setMinimumLineHeight:value->NumberValue()];
-        [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
-        [editor setTypingAttributes:attributes];
-        [editor setDefaultParagraphStyle:paragraphStyle];
+        endParagraphStyle(paragraphStyle);
     } else if ([type isEqualToString:@"cursor-width"]) {
         [editor setInsertionPointWidth:value->NumberValue()];
     } else if ([type isEqualToString:@"cursor-color"]) {
         v8::String::Utf8Value color(value);
         [editor setInsertionPointColor:[self colorWithString:cstring(*color)]];
+    } else if ([type isEqualToString:@"tab-stop"]) {
+        beginParagraphStyle(paragraphStyle);
+        
+        float spaceWidth = [[font screenFontWithRenderingMode:NSFontDefaultRenderingMode]
+                           advancementForGlyph:(NSGlyph) ' '].width;
+        
+        [paragraphStyle setTabStops:[NSArray array]];
+        [paragraphStyle setDefaultTabInterval:value->NumberValue() * spaceWidth];
+        endParagraphStyle(paragraphStyle);
     }
 }
          

@@ -122,6 +122,15 @@
 {
     editing = FALSE;
     
+    NSRange range = [editor selectedRange];
+    NSUInteger glyphIndex = [[editor layoutManager] glyphIndexForCharacterAtIndex:range.location - 1];
+    NSGlyph glyph = [[editor layoutManager] glyphAtIndex:glyphIndex];
+    // NSRect rect = [[editor layoutManager] lineFragmentUsedRectForGlyphAtIndex:range.location - 1 effectiveRange:nil];
+    
+    NSSize size = [[editor layoutManager] attachmentSizeForGlyphAtIndex:glyph];
+    NSRect rect = [[editor layoutManager] boundingRectForGlyphRange:NSMakeRange(glyphIndex, 1) inTextContainer:[editor textContainer]];
+    NSLog(@"%f, %f, %f", rect.size.width, rect.origin.x, rect.size.width / FONT_SPACE_WIDTH);
+    
     if (0 == [holdReplacement count]) {
         return;
     }
@@ -161,8 +170,10 @@
 - (BOOL)textView:(NSTextView *)textView doCommandBySelector:(SEL)commandSelector
 {
     if (commandSelector == @selector(insertTab:)) {
-        NSLog(@"asdf");
-        [textView insertTabIgnoringFieldEditor:self];
+        // NSLog(@"asdf");
+        // [textView insertTabIgnoringFieldEditor:self];
+        // return NO;
+        
         return NO;
     }
     
@@ -247,16 +258,14 @@
         v8::String::Utf8Value bg(value);
         [editor setBackgroundColor:[self colorWithString:cstring(*bg)]];
     } else if ([type isEqualToString:@"font-family"]) {
-        v8::String::Utf8Value fontName(value);
-        NSFontManager *fontManager = [NSFontManager sharedFontManager];
+        beginEditorFont(fontName);
+
         NSFont *newFont = [fontManager fontWithFamily:cstring(*fontName)
                                                traits:[[font fontDescriptor] symbolicTraits]
                                                weight:0
                                                  size:[font pointSize]];
-        if (newFont) {
-            font = newFont;
-            [editor setFont:font];
-        }
+
+        endEditorFont(newFont);
     } else if ([type isEqualToString:@"font-size"]) {
         NSFontManager *fontManager = [NSFontManager sharedFontManager];
         NSFont *newFont = [fontManager fontWithFamily:[font familyName]
@@ -264,34 +273,25 @@
                                                weight:0
                                                  size:value->NumberValue()];
         
-        if (newFont) {
-            font = newFont;
-            [editor setFont:font];
-        }
+        endEditorFont(newFont);
     } else if ([type isEqualToString:@"font-weight"]) {
-        v8::String::Utf8Value fontWeight(value);
-        NSFontManager *fontManager = [NSFontManager sharedFontManager];
+        beginEditorFont(fontWeight);
+
         NSFont *newFont = [fontManager fontWithFamily:[font familyName]
                                                traits:[[font fontDescriptor] symbolicTraits] | [cstring(*fontWeight) isEqualToString:@"bold"] ? NSBoldFontMask : NSUnboldFontMask
                                                weight:0
                                                  size:[font pointSize]];
         
-        if (newFont) {
-            font = newFont;
-            [editor setFont:font];
-        }
+        endEditorFont(newFont);
     } else if ([type isEqualToString:@"font-style"]) {
-        v8::String::Utf8Value fontStyle(value);
-        NSFontManager *fontManager = [NSFontManager sharedFontManager];
+        beginEditorFont(fontStyle);
+        
         NSFont *newFont = [fontManager fontWithFamily:[font familyName]
                                                traits:[[font fontDescriptor] symbolicTraits] | ([cstring(*fontStyle) isEqualToString:@"italic"] ? NSItalicFontMask : NSUnitalicFontMask)
                                                weight:0
                                                  size:[font pointSize]];
         
-        if (newFont) {
-            font = newFont;
-            [editor setFont:font];
-        }
+        endEditorFont(newFont);
     } else if ([type isEqualToString:@"padding-horizontal"]) {
         NSSize size = [editor textContainerInset];
         size.width = value->IntegerValue();
@@ -313,8 +313,7 @@
     } else if ([type isEqualToString:@"tab-stop"]) {
         beginParagraphStyle(paragraphStyle);
         
-        float spaceWidth = [[font screenFontWithRenderingMode:NSFontDefaultRenderingMode]
-                           advancementForGlyph:(NSGlyph) ' '].width;
+        float spaceWidth = FONT_SPACE_WIDTH;
         
         [paragraphStyle setTabStops:[NSArray array]];
         [paragraphStyle setDefaultTabInterval:value->NumberValue() * spaceWidth];

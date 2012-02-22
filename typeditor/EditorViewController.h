@@ -18,6 +18,9 @@ if (!f) { \
     f = font; \
 }
 
+#define FONT_SPACE_WIDTH \
+[[font screenFontWithRenderingMode:NSFontDefaultRenderingMode] advancementForGlyph:(NSGlyph) ' '].width
+
 #define beginParagraphStyle(paragraphStyle) \
 NSDictionary *attributes = [[editor typingAttributes] mutableCopy]; \
 NSMutableParagraphStyle *paragraphStyle; \
@@ -33,6 +36,17 @@ if ([editor defaultParagraphStyle]) { \
 [editor setDefaultParagraphStyle:paragraphStyle]; \
 attributes = nil; \
 paragraphStyle = nil; \
+
+#define beginEditorFont(type) \
+v8::String::Utf8Value type(value); \
+NSFontManager *fontManager = [NSFontManager sharedFontManager];
+
+#define  endEditorFont(newFont) \
+if (newFont) {\
+font = newFont;\
+[editor setFont:font];\
+[textStorage addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, [[textStorage string] length])];\
+}
 
 @interface EditorViewController : NSViewController <EditorTextViewDelegate, NSTextStorageDelegate> {
     

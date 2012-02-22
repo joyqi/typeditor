@@ -81,11 +81,10 @@
     // textStorage = [notification object];
     NSString *string = [textStorage string];
     NSRange range = NSMakeRange(0, [string length]);
-    NSColor *color = [editor textColor];
     
     // make a font copy
     [textStorage removeAttribute:NSForegroundColorAttributeName range:range];
-    [textStorage addAttribute:NSForegroundColorAttributeName value:color range:range];
+    [textStorage addAttribute:NSForegroundColorAttributeName value:[editor defaultColor] range:range];
     [textStorage removeAttribute:NSBackgroundColorAttributeName range:range];
     [textStorage removeAttribute:NSUnderlineStyleAttributeName range:range];
     [textStorage removeAttribute:NSUnderlineColorAttributeName range:range];
@@ -95,7 +94,7 @@
 
     
     v8::HandleScope handle_scope;
-    v8::Persistent<v8::Context> context = [self v8]->context;
+    v8::Persistent<v8::Context> context = v8->context;
     v8::Context::Scope context_scope(context);
     
     v8::Local<v8::Value> callback = context->Global()->GetHiddenValue(v8::String::New("lexerCallback"));
@@ -126,6 +125,7 @@
         [textStorage beginEditing];
         [textStorage replaceCharactersInRange:[replacement area] withString:[replacement string]];
         [textStorage endEditing];
+        [editor didChangeText];
     }
     
     [holdReplacement removeAllObjects];
@@ -158,21 +158,7 @@
 }
 
 - (BOOL)textView:(NSTextView *)textView doCommandBySelector:(SEL)commandSelector
-{
-    if (commandSelector == @selector(insertTab:)) {
-        // NSLog(@"asdf");
-        // [textView insertTabIgnoringFieldEditor:self];
-        // return NO;
-        
-        return NO;
-    } else if (commandSelector == @selector(insertBacktab:)) {
-        // NSLog(@"asdf");
-        // [textView insertTabIgnoringFieldEditor:self];
-        // return NO;
-        NSLog(@"asdf");
-        return NO;
-    }
-    
+{    
     return NO;
 }
 
@@ -183,7 +169,10 @@
     
     // if is not edting
     if (!editing) {
+        [textStorage beginEditing];
         [textStorage replaceCharactersInRange:area withString:string];
+        [textStorage endEditing];
+        [editor didChangeText];
     } else {
         // add to hold replacement
         EditorViewReplacement *replacement = [[EditorViewReplacement alloc] init:area replacementString:string];

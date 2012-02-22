@@ -68,6 +68,32 @@ v8::Handle<v8::Value> onEnter(const v8::Arguments &args)
     return v8::Undefined();
 }
 
+// register tab function
+v8::Handle<v8::Value> onTab(const v8::Arguments &args)
+{
+    importEditor(editor, context);
+    v8::Local<v8::String> key = v8::String::New("tabHandler");
+    
+    if (args.Length() >= 1 || args[0]->IsFunction()) {
+        context->Global()->SetHiddenValue(key, args[0]);
+    }
+    
+    return v8::Undefined();
+}
+
+// register tab function
+v8::Handle<v8::Value> onNewLine(const v8::Arguments &args)
+{
+    importEditor(editor, context);
+    v8::Local<v8::String> key = v8::String::New("newLineHandler");
+    
+    if (args.Length() >= 1 || args[0]->IsFunction()) {
+        context->Global()->SetHiddenValue(key, args[0]);
+    }
+    
+    return v8::Undefined();
+}
+
 // set style
 v8::Handle<v8::Value> style(const v8::Arguments &args)
 {
@@ -170,6 +196,40 @@ v8::Handle<v8::Value> selectedRange(const v8::Arguments &args)
     return result;
 }
 
+// highlight range
+v8::Handle<v8::Value> highlight(const v8::Arguments &args)
+{
+    importEditor(editor, context);
+    
+    if (2 <= args.Length() &&
+        args[0]->IsNumber() &&
+        args[1]->IsNumber()) {
+        [[editor editor] showFindIndicatorForRange:NSMakeRange(args[0]->IntegerValue(), args[0]->IntegerValue())];
+    } else if (1 <= args.Length() &&
+               args[0]->IsNumber()) {
+        [[editor editor] showFindIndicatorForRange:NSMakeRange(args[0]->IntegerValue(), 1)];
+    }
+    
+    return v8::Undefined();
+}
+
+// scroll to range
+v8::Handle<v8::Value> scrollTo(const v8::Arguments &args)
+{
+    importEditor(editor, context);
+    
+    if (2 <= args.Length() &&
+        args[0]->IsNumber() &&
+        args[1]->IsNumber()) {
+        [[editor editor] scrollRangeToVisible:NSMakeRange(args[0]->IntegerValue(), args[0]->IntegerValue())];
+    } else if (1 <= args.Length() &&
+               args[0]->IsNumber()) {
+        [[editor editor] scrollRangeToVisible:NSMakeRange(args[0]->IntegerValue(), 1)];
+    }
+    
+    return v8::Undefined();
+}
+
 // get current position
 v8::Handle<v8::Value> currentPosition(const v8::Arguments &args)
 {
@@ -179,11 +239,24 @@ v8::Handle<v8::Value> currentPosition(const v8::Arguments &args)
     return v8::Integer::New(range.location);
 }
 
+// get is softTab
+v8::Handle<v8::Value> isSoftTab(const v8::Arguments &args)
+{
+    importEditor(editor, context);
+    return v8::BooleanObject::New([(EditorTextView *)[editor editor] softTab]);
+}
+
+// get is softTab
+v8::Handle<v8::Value> tabStop(const v8::Arguments &args)
+{
+    importEditor(editor, context);
+    return v8::Integer::New([(EditorTextView *)[editor editor] tabStop]);
+}
+
 @implementation V8Cocoa
 
 - (void)dealloc
 {
-    // [super dealloc];
     context.Dispose();
 }
 
@@ -205,6 +278,7 @@ v8::Handle<v8::Value> currentPosition(const v8::Arguments &args)
             return FALSE;
         }
         
+        [(EditorTextView *)[(EditorViewController *)editor editor] setV8:self];
         return TRUE;
     }
     
@@ -232,6 +306,8 @@ v8::Handle<v8::Value> currentPosition(const v8::Arguments &args)
     proto_t->Set("log", v8::FunctionTemplate::New(log));
     proto_t->Set("lexer", v8::FunctionTemplate::New(lexer));
     proto_t->Set("onEnter", v8::FunctionTemplate::New(onEnter));
+    proto_t->Set("onTab", v8::FunctionTemplate::New(onTab));
+    proto_t->Set("onNewLine", v8::FunctionTemplate::New(onNewLine));
     proto_t->Set("style", v8::FunctionTemplate::New(style));
     proto_t->Set("editorStyle", v8::FunctionTemplate::New(editorStyle));
     proto_t->Set("text", v8::FunctionTemplate::New(text));
@@ -240,6 +316,10 @@ v8::Handle<v8::Value> currentPosition(const v8::Arguments &args)
     proto_t->Set("remove", v8::FunctionTemplate::New(remove));
     proto_t->Set("selectedRange", v8::FunctionTemplate::New(selectedRange));
     proto_t->Set("currentPosition", v8::FunctionTemplate::New(currentPosition));
+    proto_t->Set("highlight", v8::FunctionTemplate::New(highlight));
+    proto_t->Set("scrollTo", v8::FunctionTemplate::New(scrollTo));
+    proto_t->Set("tabStop", v8::FunctionTemplate::New(tabStop));
+    proto_t->Set("isSoftTab", v8::FunctionTemplate::New(isSoftTab));
     
     v8::Handle<v8::Function> ctor = templ->GetFunction();
     v8::Handle<v8::Object> obj = ctor->NewInstance();

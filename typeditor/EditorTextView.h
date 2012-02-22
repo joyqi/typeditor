@@ -16,6 +16,9 @@
     // default font
     NSFont *defaultFont;
     
+    // default color
+    NSColor *defaultColor;
+    
     // custorm cursor
     CGFloat insertionPointWidth;
     
@@ -25,6 +28,12 @@
     // tab stop
     NSUInteger tabStop;
     CGFloat tabInterval;
+    
+    // line ending
+    NSString *lineEndings;
+    
+    // v8 embed
+    V8Cocoa *v8;
 }
 
 @property (assign) CGFloat insertionPointWidth;
@@ -32,6 +41,8 @@
 @property (assign) CGFloat tabInterval;
 @property (assign) NSUInteger tabStop;
 @property (strong, nonatomic) NSFont *defaultFont;
+@property (strong, nonatomic) NSColor *defaultColor;
+@property (strong, nonatomic) V8Cocoa *v8;
 
 - (void)setTextStyle:(int)location withLength:(int)length forType:(NSString *)type withValue:(v8::Local<v8::Value>)value;
 - (void)setEditorStyle:(NSString *)type withValue:(v8::Local<v8::Value>)value;

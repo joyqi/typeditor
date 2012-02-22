@@ -990,14 +990,16 @@ $.styles = {
     
     // editor style
     'editor'    :   {
-        'background-color'  :   '#FFFFEE',
-        'color'             :   '#333',
-        'font-size'         :   13,
-        'font-family'       :   'Monaco',
-        'cursor-width'      :   2,
-        'cursor-color'      :   '#777',
-        'line-height'       :   20,
-        'tab-stop'          :   4
+        'background-color'              :   '#FFFFEE',
+        'selection-background-color'    :   '#000',
+        'selection-color'               :   '#FFF',
+        'color'                         :   '#333',
+        'font-size'                     :   13,
+        'font-family'                   :   'Monaco',
+        'cursor-width'                  :   2,
+        'cursor-color'                  :   '#777',
+        'line-height'                   :   20,
+        'tab-stop'                      :   4
     }
 
 };
@@ -1038,5 +1040,12 @@ $.lexer(function (str) {
 
 $.onEnter(function (str, pos) {
     $.log($.syntax(pos));
+});
+
+$.onNewLine(function (str, pos, line) {
+    $.log(pos + ' ' + line);
+
+    $.insert(pos, str);
+
 });
 

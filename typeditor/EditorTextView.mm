@@ -45,7 +45,7 @@
 
 @implementation EditorTextView
 
-@synthesize insertionPointWidth, softTab, tabInterval, tabStop, defaultFont;
+@synthesize insertionPointWidth, softTab, tabInterval, tabStop, defaultFont, defaultColor, v8;
 
 - (id) initWithFrame:(NSRect)frameRect
 {
@@ -54,11 +54,18 @@
     if (self) {
         insertionPointWidth = 2.0f;
         softTab = YES;
+        lineEndings = @"\n";
         
         if ([self font]) {
             [self setDefaultFont:[self font]];
         } else {
             [self setDefaultFont:[NSFont fontWithName:@"Helvetica" size:12.0f]];
+        }
+        
+        if ([self textColor]) {
+            [self setDefaultColor:[self textColor]];
+        } else {
+            [self setDefaultColor:[NSColor textColor]];
         }
     }
     
@@ -98,11 +105,47 @@
     [NSBezierPath fillRect:rect];
 }
 
-/*
-- (void)insertNewline:(id)sender {
-    NSLog(@"asas");
+- (void)insertTab:(id)sender {
+    v8::HandleScope handle_scope;
+    v8::Persistent<v8::Context> context = v8->context;
+    v8::Context::Scope context_scope(context);
+    
+    v8::Local<v8::Value> callback = context->Global()->GetHiddenValue(v8::String::New("tabHandler"));
+    
+    if (*callback && !callback->IsNull() && callback->IsFunction()) {        
+        v8::Local<v8::Function> func = v8::Local<v8::Function>::Cast(callback);
+        v8::Local<v8::Value> argv[2];
+        argv[0] = v8::Integer::New([self selectedRange].location);
+        argv[1] = v8::Integer::New([self lineCurrent]);
+        
+        func->Call(context->Global(), 2, argv);
+        return;
+    }
+    
+    [super insertTab:sender];
 }
- */
+
+- (void)insertNewline:(id)sender {
+    v8::HandleScope handle_scope;
+    v8::Persistent<v8::Context> context = v8->context;
+    v8::Context::Scope context_scope(context);
+    NSUInteger location = [self selectedRange].location;
+    
+    v8::Local<v8::Value> callback = context->Global()->GetHiddenValue(v8::String::New("newLineHandler"));
+    
+    if (*callback && !callback->IsNull() && callback->IsFunction()) {        
+        v8::Local<v8::Function> func = v8::Local<v8::Function>::Cast(callback);
+        v8::Local<v8::Value> argv[3];
+        argv[0] = v8::String::New([lineEndings cStringUsingEncoding:NSUTF8StringEncoding]);
+        argv[1] = v8::Integer::New(location);
+        argv[2] = v8::Integer::New([self lineCurrent]);
+        
+        func->Call(context->Global(), 3, argv);
+        return;
+    } else {
+        [self replaceCharactersInRange:NSMakeRange(location, 0) withString:lineEndings];
+    }
+}
 
 - (void)insertText:(id)insertString
 {
@@ -346,7 +389,7 @@
         v8::String::Utf8Value color(value);
         NSDictionary *attributes = [[self typingAttributes] mutableCopy];
         [attributes setValue:[self colorWithString:cstring(*color)] forKey:NSForegroundColorAttributeName];
-        [self setTextColor:[self colorWithString:cstring(*color)]];
+        [self setDefaultColor:[self colorWithString:cstring(*color)]];
         [self setTypingAttributes:attributes];
         
     } else if ([type isEqualToString:@"background-color"]) {
@@ -361,6 +404,7 @@
         v8::String::Utf8Value color(value);
         NSMutableDictionary *selectedTextAttributes = [[self selectedTextAttributes] mutableCopy];
         [selectedTextAttributes setValue:[self colorWithString:cstring(*color)] forKey:NSForegroundColorAttributeName];
+        [self setSelectedTextAttributes:selectedTextAttributes];
         selectedTextAttributes = nil;
         
     } else if ([type isEqualToString:@"selection-background-color"]) {
@@ -369,6 +413,7 @@
         v8::String::Utf8Value bg(value);
         NSMutableDictionary *selectedTextAttributes = [[self selectedTextAttributes] mutableCopy];
         [selectedTextAttributes setValue:[self colorWithString:cstring(*bg)] forKey:NSBackgroundColorAttributeName];
+        [self setSelectedTextAttributes:selectedTextAttributes];
         selectedTextAttributes = nil;
         
     } else if ([type isEqualToString:@"font-family"]) {
@@ -467,6 +512,19 @@
         tabStop = value->NumberValue();
         
         endParagraphStyle(paragraphStyle);
+    } else if ([type isEqualToString:@"soft-tab"]) {
+        softTab = value->BooleanValue();
+    } else if ([type isEqualToString:@"line-endings"]) {
+        v8::String::Utf8Value endingTypeValue(value);
+        NSString *endingType = [cstring(*endingTypeValue) uppercaseString];
+        
+        if ([endingType isEqualToString:@"CR"]) {
+            lineEndings = @"\r";
+        } else if ([endingType isEqualToString:@"CRLF"]) {
+            lineEndings = @"\r\n";
+        } else {
+            lineEndings = @"\n";
+        }
     }
 }
 

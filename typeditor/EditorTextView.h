@@ -35,6 +35,9 @@
     // line ending
     NSString *lineEndings;
     
+    // text styles
+    NSMutableDictionary *styles;
+    
     // v8 embed
     id editorViewController;
 }
@@ -45,6 +48,7 @@
 @property (assign) NSUInteger tabStop;
 @property (strong, nonatomic) NSFont *defaultFont;
 @property (strong, nonatomic) NSColor *defaultColor;
+@property (strong, nonatomic) NSMutableDictionary *styles;
 @property (strong, nonatomic) id editorViewController;
 
 - (void)setTextStyle:(int)location withLength:(int)length forType:(NSString *)type withValue:(v8::Local<v8::Value>)value;

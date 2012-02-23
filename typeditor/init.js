@@ -732,10 +732,10 @@
         var pos = decorations[i * 2], type = decorations[i * 2 + 1];
 
         if (pos != lastPos) {
-            renderSyntax(lastPos, pos - lastPos, lastType);
+            // renderSyntax(lastPos, pos - lastPos, lastType);
 
             // store result
-            result.push([lastPos, pos, lastType]);
+            result.push([lastPos, pos - lastPos, lastType]);
         }
 
         lastPos = pos;
@@ -743,10 +743,10 @@
     }
 
     if (lastPos != length) {
-        renderSyntax(lastPos, length - lastPos, lastType);
+        // renderSyntax(lastPos, length - lastPos, lastType);
         
         // store result
-        result.push([lastPos, length, lastType]);
+        result.push([lastPos, length - lastPos, lastType]);
     }
 
     return result;
@@ -925,7 +925,7 @@
       source: source,
       langExtension: opt_langExtension
     };
-    $.PR.result = applyDecorator(job);
+    return applyDecorator(job);
   }
 
   $['prettyPrintOne'] = prettyPrintOne;
@@ -968,13 +968,13 @@
             /** token style for an sgml tag. */
             'tag' : { color : '#F92672' },
             /** token style for a markup declaration such as a DOCTYPE. */
-            'dec' : {},
+            'dec' : { color : '#999', 'font-style' : 'italic', 'font-family' : 'Helvetica' },
             /** token style for embedded source. */
             'src' : {},
             /** token style for an sgml attribute name. */
             'atn' : {},
             /** token style for an sgml attribute value. */
-            'atv' : {},
+            'atv' : { 'font-size' : 18 },
 
             /**
              * A class that indicates a section of markup that is not code, e.g. to allow
@@ -1008,6 +1008,10 @@ $.styles = {
 
 };
 
+styles.editor = {
+    
+};
+
 $.syntax = function (pos) {
     var result = $.PR.result;
     pos = pos ? pos : $.currentPosition();
@@ -1033,20 +1037,23 @@ $.syntax = function (pos) {
         delete $.styles.editor;
     }
 
-    for (var i in $.styles) {
-        $.PR.styles[i] = $.styles[i];
+    for (var i in $.PR.styles) {
+        styles[i] = $.PR.styles[i];
     }
 })($);
 
 $.lexer(function (str) {
-    $.prettyPrintOne(str, 'php');
+    var r = $.prettyPrintOne(str, 'html');
+        $.log(r);
+    $.log(r.length);
+        return r;
 });
 
 $.onEnter(function (str, pos) {
     // $.log($.syntax(pos));
     //
     if (pos > 0) {
-        $.highlight(0);
+        // $.highlight(0);
     }
 
     if (pos > 1) {
@@ -1054,13 +1061,15 @@ $.onEnter(function (str, pos) {
     }
     
     var range = $.lineRange($.line());
-    $.log(range.location + ':' + range.length + ':' + $.line());
+    // $.log(range.location + ':' + range.length + ':' + $.line());
 });
 
 $.onNewLine(function (str, pos, line) {
-    $.log(pos + ' ' + line);
+    // $.log(pos + ' ' + line);
 
     $.insert(pos, str);
 
 });
+
+$.log($class);
 

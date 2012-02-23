@@ -11,9 +11,14 @@
 #import "EditorViewController.h"
 #import "EditorTextView.h"
 
+const char *LEXER_TYPE = "none boolean character number string conditional constant define delimiter float function "
+"indentifier keyword label macro special_char special_comment match operator class statement structure "
+"tag title todo typedef type comment";
+
 @interface V8Cocoa (Private)
 - (BOOL) createContext:(id)editor;
 - (BOOL) loadScript:(NSString *) file;
+- (void) createConstants:(const v8::Local<v8::Object> &) proto;
 @end
 
 # pragma Mark - v8 methods
@@ -424,6 +429,8 @@ v8::Handle<v8::Value> tabStop(const v8::Arguments &args)
     obj->SetInternalField(0, v8::External::New((__bridge void *)editor));
     context->Global()->Set(v8::String::New("$"), obj);
     
+    [self createConstants:context->Global()];
+    
     return TRUE;
 }
 
@@ -464,6 +471,27 @@ v8::Handle<v8::Value> tabStop(const v8::Arguments &args)
     }
     
     return TRUE;
+}
+
+- (void) createConstants:(const v8::Local<v8::Object> &) proto
+{
+    char *result, constants[1024], *q = constants, prefix[32] = "$";
+    v8::Handle<v8::ObjectTemplate> stylesTemplate = v8::ObjectTemplate::New();
+    v8::Local<v8::Object> styles = stylesTemplate->NewInstance();
+
+    strcpy(constants, LEXER_TYPE);
+    while ((result = strsep(&q, " ")) != NULL) {
+        // define constants
+        proto->Set(v8::String::New(strcat(prefix, result)), v8::String::New(result));
+        memset(prefix + 1, 0, 31);
+        
+        // define default styles
+        v8::Handle<v8::ObjectTemplate> styleTemplate = v8::ObjectTemplate::New();
+        v8::Local<v8::Object> style = styleTemplate->NewInstance();
+        styles->Set(v8::String::New(result), style);
+    }
+    
+    proto->Set(v8::String::New("styles"), styles);
 }
 
 @end

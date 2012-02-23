@@ -313,19 +313,18 @@
 - (void)setTextStyle:(int)location withLength:(int)length forType:(NSString *)type withValue:(v8::Local<v8::Value>)value
 {
     NSRange found = NSMakeRange(location, length);
-    NSTextStorage *textStorage = [self textStorage];
     
     if ([type isEqualToString:@"color"]) {
         v8::String::Utf8Value color(value);
-        [textStorage addAttribute:NSForegroundColorAttributeName value:[self colorWithString:cstring(*color)] range:found];
+        [_textStorage addAttribute:NSForegroundColorAttributeName value:[self colorWithString:cstring(*color)] range:found];
     } else if ([type isEqualToString:@"background-color"]) {
         v8::String::Utf8Value bg(value);
-        [textStorage addAttribute:NSBackgroundColorAttributeName value:[self colorWithString:cstring(*bg)] range:found];
+        [_textStorage addAttribute:NSBackgroundColorAttributeName value:[self colorWithString:cstring(*bg)] range:found];
     } else if ([type isEqualToString:@"underline"]) {
-        [textStorage addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:value->IntegerValue()] range:found];
+        [_textStorage addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:value->IntegerValue()] range:found];
     } else if ([type isEqualToString:@"underline-color"]) {
         v8::String::Utf8Value underline(value);
-        [textStorage addAttribute:NSUnderlineColorAttributeName value:[self colorWithString:cstring(*underline)] range:found];
+        [_textStorage addAttribute:NSUnderlineColorAttributeName value:[self colorWithString:cstring(*underline)] range:found];
     } else if ([type isEqualToString:@"font-family"]) {
         NSFont *currentFont = [self fontAt:location];
         NSFontManager *fontManager = [NSFontManager sharedFontManager];
@@ -337,7 +336,7 @@
                                                  size:[currentFont pointSize]];
         
         if (newFont) {
-            [textStorage addAttribute:NSFontAttributeName value:newFont range:found];
+            [_textStorage addAttribute:NSFontAttributeName value:newFont range:found];
         }
     } else if ([type isEqualToString:@"font-size"]) {
         NSFont *currentFont = [self fontAt:location];
@@ -349,7 +348,7 @@
                                                  size:value->NumberValue()];
         
         if (newFont) {
-            [textStorage addAttribute:NSFontAttributeName value:newFont range:found];
+            [_textStorage addAttribute:NSFontAttributeName value:newFont range:found];
         }
     } else if ([type isEqualToString:@"font-weight"]) {
         NSFont *currentFont = [self fontAt:location];
@@ -362,7 +361,7 @@
                                                  size:[currentFont pointSize]];
         
         if (newFont) {
-            [textStorage addAttribute:NSFontAttributeName value:newFont range:found];
+            [_textStorage addAttribute:NSFontAttributeName value:newFont range:found];
         }
     } else if ([type isEqualToString:@"font-style"]) {
         NSFont *currentFont = [self fontAt:location];
@@ -375,7 +374,7 @@
                                                  size:[currentFont pointSize]];
         
         if (newFont) {
-            [textStorage addAttribute:NSFontAttributeName value:newFont range:found];
+            [_textStorage addAttribute:NSFontAttributeName value:newFont range:found];
         }
     }
 }

@@ -29,6 +29,9 @@
     NSUInteger tabStop;
     CGFloat tabInterval;
     
+    // text storage
+    NSTextStorage *_textStorage;
+    
     // line ending
     NSString *lineEndings;
     

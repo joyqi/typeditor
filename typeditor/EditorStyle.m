@@ -10,16 +10,23 @@
 
 @implementation EditorStyle
 
-@synthesize font = _font, color = _color, backgroundColor = _backgroundColor;
+@synthesize type = _type, font = _font, color = _color, backgroundColor = _backgroundColor, attributes = _attributes;
 
-- (id) init:(NSFont *)font withColor:(NSColor *)color withBackgroundColor:(NSColor *)backgroundColor
+- (id) init:(NSString *)type withFont:(NSFont *)font withColor:(NSColor *)color withBackgroundColor:(NSColor *)backgroundColor
 {
     self = [super init];
     if (self) {
+        _type = type;
         _font = font;
         _color = color;
         _backgroundColor = backgroundColor;
+        _attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                       type, EditorStyleAttributeName,
+                       font, NSFontAttributeName,
+                       color, NSForegroundColorAttributeName,
+                       backgroundColor, NSBackgroundColorAttributeName, nil];
         
+        type = nil;
         font = nil;
         color = nil;
         backgroundColor = nil;

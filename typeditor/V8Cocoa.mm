@@ -44,12 +44,7 @@ v8::Handle<v8::Value> lexer(const v8::Arguments &args)
     v8::Local<v8::String> key = v8::String::New("lexerCallback");
     
     if (args.Length() >= 1 || args[0]->IsFunction()) {
-        if (!*(context->Global()->GetHiddenValue(key)) || context->Global()->GetHiddenValue(key)->IsNull()) {
-            context->Global()->SetHiddenValue(key, v8::Array::New());
-        }
-        
-        v8::Local<v8::Array> callback = v8::Local<v8::Array>::Cast(context->Global()->GetHiddenValue(key));
-        callback->Set(callback->Length(), args[0]);
+        context->Global()->SetHiddenValue(key, args[0]);
     }
     
     return v8::Undefined();
@@ -62,7 +57,7 @@ v8::Handle<v8::Value> onEnter(const v8::Arguments &args)
     v8::Local<v8::String> key = v8::String::New("enterCallback");
     
     if (args.Length() >= 1 || args[0]->IsFunction()) {
-        if (!*(context->Global()->GetHiddenValue(key)) || context->Global()->GetHiddenValue(key)->IsNull()) {
+        if (!*(context->Global()->GetHiddenValue(key)) || context->Global()->GetHiddenValue(key)->IsUndefined()) {
             context->Global()->SetHiddenValue(key, v8::Array::New());
         }
         
@@ -94,44 +89,6 @@ v8::Handle<v8::Value> onNewLine(const v8::Arguments &args)
     
     if (args.Length() >= 1 || args[0]->IsFunction()) {
         context->Global()->SetHiddenValue(key, args[0]);
-    }
-    
-    return v8::Undefined();
-}
-
-// set style
-v8::Handle<v8::Value> style(const v8::Arguments &args)
-{
-    importEditor(editor, context);
-    
-    if (4 <= args.Length() &&
-        args[0]->IsNumber() &&
-        args[1]->IsNumber() &&
-        args[2]->IsString() &&
-        !args[3]->IsNull()) {
-        
-        v8::Handle<v8::Value> arg = args[2];
-        v8::String::Utf8Value type(arg);
-        
-        [(EditorTextView *)[editor editor] setTextStyle:args[0]->IntegerValue() withLength:args[1]->IntegerValue() forType:cstring(*type) withValue:args[3]];
-    }
-    
-    return v8::Undefined();
-}
-
-// set default style
-v8::Handle<v8::Value> editorStyle(const v8::Arguments &args)
-{
-    importEditor(editor, context);
-    
-    if (2 <= args.Length() &&
-        args[0]->IsString() &&
-        !args[1]->IsNull()) {
-        
-        v8::Handle<v8::Value> arg = args[0];
-        v8::String::Utf8Value type(arg);
-        
-        [(EditorTextView *)[editor editor] setEditorStyle:cstring(*type) withValue:args[1]];
     }
     
     return v8::Undefined();
@@ -247,7 +204,7 @@ v8::Handle<v8::Value> replace(const v8::Arguments &args)
         v8::Handle<v8::Value> arg = args[2];
         v8::String::Utf8Value value(arg);
 
-        [editor setText:args[0]->IntegerValue() withLength:args[1]->IntegerValue() replacementString:cstring(*value)];
+        [(EditorTextView *)[editor editor] setText:args[0]->IntegerValue() withLength:args[1]->IntegerValue() replacementString:cstring(*value)];
     }
     
     return v8::Undefined();
@@ -262,7 +219,7 @@ v8::Handle<v8::Value> insert(const v8::Arguments &args)
         v8::Handle<v8::Value> arg = args[1];
         v8::String::Utf8Value value(arg);
         
-        [editor setText:args[0]->IntegerValue() withLength:0 replacementString:cstring(*value)];
+        [(EditorTextView *)[editor editor] setText:args[0]->IntegerValue() withLength:0 replacementString:cstring(*value)];
     }
     
     return v8::Undefined();
@@ -274,7 +231,7 @@ v8::Handle<v8::Value> remove(const v8::Arguments &args)
     importEditor(editor, context);
     
     if (2 <= args.Length()) {
-        [editor setText:args[0]->IntegerValue() withLength:args[1]->IntegerValue() replacementString:@""];
+        [(EditorTextView *)[editor editor] setText:args[0]->IntegerValue() withLength:args[1]->IntegerValue() replacementString:@""];
     }
     
     return v8::Undefined();
@@ -365,6 +322,9 @@ v8::Handle<v8::Value> tabStop(const v8::Arguments &args)
         // init v8
         v8::HandleScope handle_scope;
         
+        // setup v8 to text view
+        [(EditorTextView *)[editor editor] setV8:self];
+        
         if (![self createContext:editor]) {
             NSLog(@"Error creating context");
             return FALSE;
@@ -375,6 +335,16 @@ v8::Handle<v8::Value> tabStop(const v8::Arguments &args)
         if (![self loadScript:[[NSBundle mainBundle] pathForResource:@"init" ofType:@"js"]]) {
             NSLog(@"Error load init.js");
             return FALSE;
+        }
+        
+        v8::Local<v8::Value> styles = context->Global()->Get(v8::String::New("styles"));
+        
+        if (!styles->IsUndefined() && styles->IsObject()) {
+            // init editor
+            [(EditorTextView *)[editor editor] setUpEditorStyle:v8::Local<v8::Object>::Cast(styles)->Get(v8::String::New("editor"))];
+            
+            // init style
+            [(EditorTextView *)[editor editor] setUpStyles:styles];
         }
 
         return TRUE;
@@ -406,8 +376,6 @@ v8::Handle<v8::Value> tabStop(const v8::Arguments &args)
     proto_t->Set("onEnter", v8::FunctionTemplate::New(onEnter));
     proto_t->Set("onTab", v8::FunctionTemplate::New(onTab));
     proto_t->Set("onNewLine", v8::FunctionTemplate::New(onNewLine));
-    proto_t->Set("style", v8::FunctionTemplate::New(style));
-    proto_t->Set("editorStyle", v8::FunctionTemplate::New(editorStyle));
     proto_t->Set("string", v8::FunctionTemplate::New(string));
     proto_t->Set("line", v8::FunctionTemplate::New(line));
     proto_t->Set("lineRange", v8::FunctionTemplate::New(lineRange));
@@ -467,7 +435,6 @@ v8::Handle<v8::Value> tabStop(const v8::Arguments &args)
               try_catch.Message()->GetLineNumber(),
               try_catch.Message()->GetStartColumn(),
               cstring(*error));
-        return FALSE;
     }
     
     return TRUE;

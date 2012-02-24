@@ -32,14 +32,29 @@
     // text storage
     NSTextStorage *_textStorage;
     
+    // text storage
+    NSLayoutManager *_layoutManager;
+    
     // line ending
     NSString *lineEndings;
     
     // text styles
     NSMutableDictionary *styles;
     
+    // hold replacement
+    NSMutableArray *holdReplacement;
+    
+    // range for change
+    NSRange changeRange;
+    
     // v8 embed
     id editorViewController;
+    
+    // editing
+    BOOL editing;
+    
+    // v8 embed
+    V8Cocoa *v8;
 }
 
 @property (assign) CGFloat insertionPointWidth;
@@ -50,9 +65,11 @@
 @property (strong, nonatomic) NSColor *defaultColor;
 @property (strong, nonatomic) NSMutableDictionary *styles;
 @property (strong, nonatomic) id editorViewController;
+@property (strong, nonatomic) V8Cocoa *v8;
 
-- (void)setTextStyle:(int)location withLength:(int)length forType:(NSString *)type withValue:(v8::Local<v8::Value>)value;
-- (void)setEditorStyle:(NSString *)type withValue:(v8::Local<v8::Value>)value;
+- (void)setTextStyle:(int)location withLength:(int)length forType:(NSString *)type;
+- (void)applyTextStyles:(const v8::Local<v8::Value> &)value forRange:(NSRange)range;
+
 - (NSFont *)fontAt:(NSUInteger)location;
 - (NSString *)stringAt:(NSUInteger)location;
 - (NSString *)stringAt:(NSUInteger)location withLength:(NSUInteger)length;
@@ -64,4 +81,8 @@
 - (NSUInteger)countWidth:(NSRange)range;
 - (void)appendTab:(NSUInteger)location withWidth:(NSUInteger)width;
 - (void)replaceTab:(NSRange)range withWidth:(NSUInteger)width;
+- (void)setText:(int)location withLength:(int)length replacementString:(NSString *)string;
+
+- (void)setUpEditorStyle:(const v8::Local<v8::Value> &)editorStyle;
+- (void)setUpStyles:(const v8::Local<v8::Value> &)globalStyles;
 @end

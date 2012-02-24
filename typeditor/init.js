@@ -986,7 +986,7 @@
 })();
 
 // user custom style
-$.styles = {
+styles = {
     
     // editor style
     'editor'    :   {
@@ -994,7 +994,7 @@ $.styles = {
         'selection-background-color'    :   '#000',
         'selection-color'               :   '#FFF',
         'color'                         :   '#333',
-        'font-size'                     :   13,
+        'font-size'                     :   18,
         'font-family'                   :   'Monaco',
         'cursor-width'                  :   2,
         'cursor-color'                  :   '#777',
@@ -1006,10 +1006,6 @@ $.styles = {
         'line-number-font-size'         :   13
     }
 
-};
-
-styles.editor = {
-    
 };
 
 $.syntax = function (pos) {
@@ -1026,27 +1022,13 @@ $.syntax = function (pos) {
 
 // merge styles
 (function () {
-
-    // set editor style
-    if ($.styles.editor) {
-        var editorStyles = $.styles.editor;
-        for (var i in editorStyles) {
-            $.editorStyle(i, editorStyles[i]);
-        }
-
-        delete $.styles.editor;
-    }
-
     for (var i in $.PR.styles) {
         styles[i] = $.PR.styles[i];
     }
 })($);
 
 $.lexer(function (str) {
-    var r = $.prettyPrintOne(str, 'html');
-        $.log(r);
-    $.log(r.length);
-        return r;
+    return $.prettyPrintOne(str, 'html');
 });
 
 $.onEnter(function (str, pos) {

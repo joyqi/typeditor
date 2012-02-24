@@ -8,7 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+#define EditorStyleAttributeName @"EditorStyleAttributeName"
+
 @interface EditorStyle : NSObject {
+    
+    NSString *_type;
     
     // font name
     NSFont *_font;
@@ -18,11 +22,16 @@
     
     // backgourn color
     NSColor *_backgroundColor;
+    
+    // attributes
+    NSMutableDictionary *_attributes;
 }
 
+@property (strong, nonatomic) NSString *type;
 @property (strong, nonatomic) NSFont *font;
 @property (strong, nonatomic) NSColor *color;
 @property (strong, nonatomic) NSColor *backgroundColor;
+@property (strong, nonatomic) NSMutableDictionary *attributes;
 
-- (id) init:(NSFont *)font withColor:(NSColor *)color withBackgroundColor:(NSColor *)color;
+- (id) init:(NSString *)type withFont:(NSFont *)font withColor:(NSColor *)color withBackgroundColor:(NSColor *)backgroundColor;
 @end

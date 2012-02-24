@@ -8,6 +8,7 @@
 
 #import "EditorTextView.h"
 #import "EditorViewController.h"
+#import "EditorViewReplacement.h"
 #import "EditorStyle.h"
 
 #define beginParagraphStyle(paragraphStyle) \
@@ -51,12 +52,12 @@
 
 @interface EditorTextView (Private)
 - (NSColor *)colorWithString:(NSString *)stringColor;
-- (NSUInteger)findCloseByLineIndent:(NSInteger)location;
+- (NSRange)findLexerRange:(NSRange)range;
 @end
 
 @implementation EditorTextView
 
-@synthesize insertionPointWidth, softTab, tabInterval, tabStop, defaultFont, defaultColor, styles, editorViewController;
+@synthesize insertionPointWidth, softTab, tabInterval, tabStop, defaultFont, defaultColor, styles, editorViewController, v8;
 
 - (id) initWithFrame:(NSRect)frameRect
 {
@@ -66,7 +67,10 @@
         insertionPointWidth = 2.0f;
         lineEndings = @"\n";
         _textStorage = [self textStorage];
+        _layoutManager = [self layoutManager];
         styles = [NSMutableDictionary dictionary];
+        editing = NO;
+        holdReplacement = [NSMutableArray array];
         
         if ([self font]) {
             [self setDefaultFont:[self font]];
@@ -124,7 +128,7 @@
     
     v8::Local<v8::Value> callback = context->Global()->GetHiddenValue(v8::String::New("tabHandler"));
     
-    if (*callback && !callback->IsNull() && callback->IsFunction()) {        
+    if (*callback && !callback->IsUndefined() && callback->IsFunction()) {        
         v8::Local<v8::Function> func = v8::Local<v8::Function>::Cast(callback);
         v8::Local<v8::Value> argv[2];
         argv[0] = v8::Integer::New([self selectedRange].location);
@@ -145,7 +149,7 @@
     
     v8::Local<v8::Value> callback = context->Global()->GetHiddenValue(v8::String::New("newLineHandler"));
     
-    if (*callback && !callback->IsNull() && callback->IsFunction()) {        
+    if (*callback && !callback->IsUndefined() && callback->IsFunction()) {        
         v8::Local<v8::Function> func = v8::Local<v8::Function>::Cast(callback);
         v8::Local<v8::Value> argv[3];
         argv[0] = v8::String::New([lineEndings cStringUsingEncoding:NSUTF8StringEncoding]);
@@ -171,6 +175,81 @@
     
     if (nil != [self delegate]) {
         [(id<EditorTextViewDelegate>)[self delegate] insertText:insertString];
+    }
+}
+
+- (BOOL)shouldChangeTextInRange:(NSRange)affectedCharRange replacementString:(NSString *)replacementString
+{
+    // is editing
+    editing = YES;
+    changeRange = affectedCharRange;
+    return [super shouldChangeTextInRange:affectedCharRange replacementString:replacementString];
+}
+
+- (void)didChangeText
+{
+    // is editing
+    editing = NO;
+    
+    if (0 < [holdReplacement count]) {
+        [_textStorage beginEditing];
+        for (EditorViewReplacement *replacement in holdReplacement) {
+            [_textStorage replaceCharactersInRange:[replacement area] withString:[replacement string]];
+        }
+        [_textStorage endEditing];
+    }
+    
+    [holdReplacement removeAllObjects];
+    
+    // textStorage = [notification object];
+    NSString *string = [_textStorage string];
+    
+    // scroll to range
+    NSRange range = changeRange;
+    range.length = [_textStorage editedRange].length;
+    [self scrollRangeToVisible:range];
+    
+    // find range to highlight
+    NSRange lexerRange = [self findLexerRange:range];
+    NSString *lexerString = [string substringWithRange:lexerRange];
+    NSLog(@"%lu, %lu", lexerRange.location, lexerRange.length);
+    
+    v8::HandleScope handle_scope;
+    v8::Persistent<v8::Context> context = v8->context;
+    v8::Context::Scope context_scope(context);
+    
+    // do edit callback
+    v8::Local<v8::Value> callback = context->Global()->GetHiddenValue(v8::String::New("lexerCallback"));
+    v8::Local<v8::Value> argv[1];
+    argv[0] = v8::String::New([lexerString cStringUsingEncoding:NSUTF8StringEncoding]);
+    
+    if (callback->IsFunction()) {        
+        v8::Local<v8::Function> func = v8::Local<v8::Function>::Cast(callback);
+        v8::Local<v8::Value> value = func->Call(context->Global(), 1, argv);
+        
+        [self applyTextStyles:value forRange:lexerRange];
+    }
+    
+    [super didChangeText];
+}
+
+- (void)setText:(int)location withLength:(int)length replacementString:(NSString *)string
+{
+    NSRange area = NSMakeRange(location, length);
+    // NSRange append = NSMakeRange(location, 0);
+    
+    // if is not edting
+    if (!editing) {
+        [_textStorage beginEditing];
+        [_textStorage replaceCharactersInRange:area withString:string];
+        [_textStorage endEditing];
+        [super didChangeText];
+        [self scrollRangeToVisible:NSMakeRange(area.location + area.length, 0)];
+    } else {
+        // add to hold replacement
+        EditorViewReplacement *replacement = [[EditorViewReplacement alloc] init:area replacementString:string];
+        [holdReplacement addObject:replacement];
+        replacement = nil;
     }
 }
 
@@ -205,12 +284,11 @@
 
 - (NSUInteger)lineAt:(NSUInteger)location
 {
-    NSLayoutManager *layoutManager = [self layoutManager];
-    NSUInteger numberOfLines, index, numberOfGlyphs = [layoutManager numberOfGlyphs];
+    NSUInteger numberOfLines, index, numberOfGlyphs = [_layoutManager numberOfGlyphs];
     NSRange lineRange;
 
     for (numberOfLines = 0, index = 0; index < numberOfGlyphs; numberOfLines++){
-        (void) [layoutManager lineFragmentRectForGlyphAtIndex:index
+        (void) [_layoutManager lineFragmentRectForGlyphAtIndex:index
                                                effectiveRange:&lineRange];
         
         if (location >= lineRange.location && location <= (lineRange.location + lineRange.length)) {
@@ -233,12 +311,11 @@
 
 - (NSRange)lineRange:(NSUInteger)line
 {
-    NSLayoutManager *layoutManager = [self layoutManager];
-    NSUInteger numberOfLines, index, numberOfGlyphs = [layoutManager numberOfGlyphs];
+    NSUInteger numberOfLines, index, numberOfGlyphs = [_layoutManager numberOfGlyphs];
     NSRange lineRange;
     
     for (numberOfLines = 0, index = 0; index < numberOfGlyphs; numberOfLines++){
-        (void) [layoutManager lineFragmentRectForGlyphAtIndex:index
+        (void) [_layoutManager lineFragmentRectForGlyphAtIndex:index
                                                effectiveRange:&lineRange];
         
         if (numberOfLines == line - 1) {
@@ -267,18 +344,8 @@
 
 - (NSUInteger)countWidth:(NSRange)range
 {
-    NSUInteger startGlyphIndex = [[self layoutManager] glyphIndexForCharacterAtIndex:range.location];
-    /*
-    NSRange effectiveRange;
-    
-    // tansfer tab width with space
-    NSRect startRect = [[self layoutManager] lineFragmentUsedRectForGlyphAtIndex:startGlyphIndex effectiveRange:&effectiveRange];
-    NSUInteger stopPos = (effectiveRange.length >= range.length ? range.length : effectiveRange.length) + range.location;
-    NSUInteger stopGlyphIndex = [[self layoutManager] glyphIndexForCharacterAtIndex:stopPos];
-    NSRect stopRect = [[self layoutManager] lineFragmentUsedRectForGlyphAtIndex:stopGlyphIndex effectiveRange:&effectiveRange];
-     */
-    
-    NSRect rect = [[self layoutManager] boundingRectForGlyphRange:NSMakeRange(startGlyphIndex, range.length) inTextContainer:[self textContainer]];
+    NSUInteger startGlyphIndex = [_layoutManager glyphIndexForCharacterAtIndex:range.location];
+    NSRect rect = [_layoutManager boundingRectForGlyphRange:NSMakeRange(startGlyphIndex, range.length) inTextContainer:[self textContainer]];
     
     return round(rect.size.width / [self spaceWidth:range.location - 1]);
 }
@@ -341,13 +408,18 @@
             v8::String::Utf8Value styleNameChar(styleName);
             NSString *styleNameString = cstring(*styleNameChar);
             
-            if (style->IsObject() && !style->IsNull()) {
+            // ignore some style
+            if ([styleNameString isEqualToString:@"editor"]){
+                continue;
+            }
+            
+            if (style->IsObject() && !style->IsUndefined()) {
                 v8::Local<v8::Object> styleObject = v8::Local<v8::Object>::Cast(style);
                 
                 styleFontMask = [[defaultFont fontDescriptor] symbolicTraits];
                 
                 // set up foreground color
-                if (!styleObject->Get(propertyColor)->IsNull()) {
+                if (!styleObject->Get(propertyColor)->IsUndefined()) {
                     v8::String::Utf8Value color(styleObject->Get(propertyColor));
                     styleColor = [self colorWithString:cstring(*color)];
                 } else {
@@ -355,33 +427,33 @@
                 }
                 
                 // set up background color
-                if (!styleObject->Get(propertyBackgroundColor)->IsNull()) {
+                if (!styleObject->Get(propertyBackgroundColor)->IsUndefined()) {
                     v8::String::Utf8Value backgroundColor(styleObject->Get(propertyBackgroundColor));
                     styleBackgroundColor = [self colorWithString:cstring(*backgroundColor)];
                 } else {
-                    styleBackgroundColor = defaultColor;
+                    styleBackgroundColor = [self backgroundColor];
                 }
                 
                 // set up font styles
-                if (!styleObject->Get(propertyFontFamily)->IsNull()) {
+                if (!styleObject->Get(propertyFontFamily)->IsUndefined()) {
                     v8::String::Utf8Value fontFamily(styleObject->Get(propertyFontFamily));
                     styleFontFamily = cstring(*fontFamily);
                 } else {
                     styleFontFamily = [defaultFont familyName];
                 }
                 
-                if (!styleObject->Get(propertyFontSize)->IsNull()) {
+                if (!styleObject->Get(propertyFontSize)->IsUndefined()) {
                     styleFontSize = styleObject->Get(propertyFontFamily)->NumberValue();
                 } else {
                     styleFontSize = [defaultFont pointSize];
                 }
                 
-                if (!styleObject->Get(propertyFontWeight)->IsNull()) {
+                if (!styleObject->Get(propertyFontWeight)->IsUndefined()) {
                     v8::String::Utf8Value fontWeight(styleObject->Get(propertyFontWeight));
                     styleFontMask |= [cstring(*fontWeight) isEqualToString:@"bold"] ? NSBoldFontMask : NSUnboldFontMask;
                 }
                 
-                if (!styleObject->Get(propertyFontStyle)->IsNull()) {
+                if (!styleObject->Get(propertyFontStyle)->IsUndefined()) {
                     v8::String::Utf8Value fontStyle(styleObject->Get(propertyFontStyle));
                     styleFontMask |= [cstring(*fontStyle) isEqualToString:@"italic"] ? NSItalicFontMask : NSUnitalicFontMask;
                 }
@@ -391,7 +463,8 @@
                                                  weight:0
                                                    size:styleFontSize];
 
-                [styles setObject:[[EditorStyle alloc] init:styleFont 
+                [styles setObject:[[EditorStyle alloc] init:styleNameString
+                                                   withFont:styleFont 
                                                   withColor:styleColor 
                                         withBackgroundColor:styleBackgroundColor] 
                            forKey:styleNameString];
@@ -435,37 +508,37 @@
         styleFontMask = [[defaultFont fontDescriptor] symbolicTraits];
         
         // set up foreground color
-        if (!styleObject->Get(propertyColor)->IsNull()) {
+        if (!styleObject->Get(propertyColor)->IsUndefined()) {
             v8::String::Utf8Value color(styleObject->Get(propertyColor));
             [self setDefaultColor:[self colorWithString:cstring(*color)]];
         }
         
         // set up background color
-        if (!styleObject->Get(propertyBackgroundColor)->IsNull()) {
+        if (!styleObject->Get(propertyBackgroundColor)->IsUndefined()) {
             v8::String::Utf8Value backgroundColor(styleObject->Get(propertyBackgroundColor));
             [self setBackgroundColor:[self colorWithString:cstring(*backgroundColor)]];
         }
         
         // set up font styles
-        if (!styleObject->Get(propertyFontFamily)->IsNull()) {
+        if (!styleObject->Get(propertyFontFamily)->IsUndefined()) {
             v8::String::Utf8Value fontFamily(styleObject->Get(propertyFontFamily));
             styleFontFamily = cstring(*fontFamily);
         } else {
             styleFontFamily = [defaultFont familyName];
         }
         
-        if (!styleObject->Get(propertyFontSize)->IsNull()) {
-            styleFontSize = styleObject->Get(propertyFontFamily)->NumberValue();
+        if (!styleObject->Get(propertyFontSize)->IsUndefined()) {
+            styleFontSize = styleObject->Get(propertyFontSize)->NumberValue();
         } else {
             styleFontSize = [defaultFont pointSize];
         }
         
-        if (!styleObject->Get(propertyFontWeight)->IsNull()) {
+        if (!styleObject->Get(propertyFontWeight)->IsUndefined()) {
             v8::String::Utf8Value fontWeight(styleObject->Get(propertyFontWeight));
             styleFontMask |= [cstring(*fontWeight) isEqualToString:@"bold"] ? NSBoldFontMask : NSUnboldFontMask;
         }
         
-        if (!styleObject->Get(propertyFontStyle)->IsNull()) {
+        if (!styleObject->Get(propertyFontStyle)->IsUndefined()) {
             v8::String::Utf8Value fontStyle(styleObject->Get(propertyFontStyle));
             styleFontMask |= [cstring(*fontStyle) isEqualToString:@"italic"] ? NSItalicFontMask : NSUnitalicFontMask;
         }
@@ -477,12 +550,12 @@
         
         // selected styles
         NSMutableDictionary *selectedTextAttributes = [[self selectedTextAttributes] mutableCopy];
-        if (!styleObject->Get(propertySelectionColor)->IsNull()) {
+        if (!styleObject->Get(propertySelectionColor)->IsUndefined()) {
             v8::String::Utf8Value selectionColor(styleObject->Get(propertySelectionColor));
             [selectedTextAttributes setValue:[self colorWithString:cstring(*selectionColor)] forKey:NSForegroundColorAttributeName];
         }
         
-        if (!styleObject->Get(propertySelectionBackgroundColor)->IsNull()) {
+        if (!styleObject->Get(propertySelectionBackgroundColor)->IsUndefined()) {
             v8::String::Utf8Value selectionBackgroundColor(styleObject->Get(propertySelectionBackgroundColor));
             [selectedTextAttributes setValue:[self colorWithString:cstring(*selectionBackgroundColor)] forKey:NSBackgroundColorAttributeName];
         }
@@ -492,31 +565,31 @@
         
         // padding style
         NSSize paddingSize = [self textContainerInset];
-        if (!styleObject->Get(propertyPaddingHorizontal)->IsNull()) {
+        if (!styleObject->Get(propertyPaddingHorizontal)->IsUndefined()) {
             paddingSize.width = styleObject->Get(propertyPaddingHorizontal)->IntegerValue();
         }
         
-        if (!styleObject->Get(propertyPaddingVertical)->IsNull()) {
+        if (!styleObject->Get(propertyPaddingVertical)->IsUndefined()) {
             paddingSize.height = styleObject->Get(propertyPaddingVertical)->IntegerValue();
         }
         
         [self setTextContainerInset:paddingSize];
         
         // global set
-        if (!styleObject->Get(propertyCursorColor)->IsNull()) {
+        if (!styleObject->Get(propertyCursorColor)->IsUndefined()) {
             v8::String::Utf8Value cursorColor(styleObject->Get(propertyCursorColor));
             [self setInsertionPointColor:[self colorWithString:cstring(*cursorColor)]];
         }
         
-        if (!styleObject->Get(propertyCursorWidth)->IsNull()) {
+        if (!styleObject->Get(propertyCursorWidth)->IsUndefined()) {
             [self setInsertionPointWidth:styleObject->Get(propertyCursorWidth)->NumberValue()];
         }
         
-        if (!styleObject->Get(propertyIsSoftTab)->IsNull()) {
+        if (!styleObject->Get(propertyIsSoftTab)->IsUndefined()) {
             softTab = styleObject->Get(propertyIsSoftTab)->BooleanValue();
         }
         
-        if (!styleObject->Get(propertyEndingType)->IsNull()) {
+        if (!styleObject->Get(propertyEndingType)->IsUndefined()) {
             v8::String::Utf8Value endingTypeValue(styleObject->Get(propertyEndingType));
             NSString *endingType = [cstring(*endingTypeValue) uppercaseString];
             
@@ -538,7 +611,7 @@
             paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
         }
         
-        if (!styleObject->Get(propertyTabStop)->IsNull()) {
+        if (!styleObject->Get(propertyTabStop)->IsUndefined()) {
             float spaceWidth = [self spaceWidth:0];
             NSUInteger tabStopProperty = styleObject->Get(propertyTabStop)->IntegerValue();
             
@@ -548,7 +621,7 @@
             tabStop = tabStopProperty;
         }
         
-        if (!styleObject->Get(propertyLineHeight)->IsNull()) {
+        if (!styleObject->Get(propertyLineHeight)->IsUndefined()) {
             NSUInteger lineHeight = styleObject->Get(propertyLineHeight)->IntegerValue();
             
             [paragraphStyle setMaximumLineHeight:lineHeight];
@@ -562,32 +635,32 @@
         paragraphStyle = nil;
         
         // line number
-        if (!styleObject->Get(propertyLineNumber)->IsNull()) {
+        if (!styleObject->Get(propertyLineNumber)->IsUndefined()) {
             [[(EditorViewController *)[self editorViewController] scroll] 
              setRulersVisible:styleObject->Get(propertyLineNumber)->BooleanValue()];
         }
         
-        if (!styleObject->Get(propertyLineNumberColor)->IsNull()) {
+        if (!styleObject->Get(propertyLineNumberColor)->IsUndefined()) {
             v8::String::Utf8Value lineNumberColor(styleObject->Get(propertyLineNumberColor));
             [[(EditorViewController *)[self editorViewController] lineNumber] 
              setTextColor:[self colorWithString:cstring(*lineNumberColor)]];
         }
         
-        if (!styleObject->Get(propertyLineNumberBackgroundColor)->IsNull()) {
+        if (!styleObject->Get(propertyLineNumberBackgroundColor)->IsUndefined()) {
             v8::String::Utf8Value lineNumberBackgroundColor(styleObject->Get(propertyLineNumberBackgroundColor));
             [[(EditorViewController *)[self editorViewController] lineNumber] 
              setBackgroundColor:[self colorWithString:cstring(*lineNumberBackgroundColor)]];
         }
         
         // line number font
-        if (!styleObject->Get(propertyLineNumberFontFamily)->IsNull()) {
+        if (!styleObject->Get(propertyLineNumberFontFamily)->IsUndefined()) {
             v8::String::Utf8Value lineNumberFontFamily(styleObject->Get(propertyLineNumberFontFamily));
             styleFontFamily = cstring(*lineNumberFontFamily);
         } else {
             styleFontFamily = [[[(EditorViewController *)[self editorViewController] lineNumber] font] familyName];
         }
         
-        if (!styleObject->Get(propertyLineNumberFontSize)->IsNull()) {
+        if (!styleObject->Get(propertyLineNumberFontSize)->IsUndefined()) {
             styleFontSize = styleObject->Get(propertyLineNumberFontSize)->NumberValue();
         } else {
             styleFontSize = [[[(EditorViewController *)[self editorViewController] lineNumber] font] pointSize];
@@ -604,246 +677,52 @@
     }
 }
 
-- (void)setTextStyle:(int)location withLength:(int)length forType:(NSString *)type withValue:(v8::Local<v8::Value>)value
+- (void)setTextStyle:(int)location withLength:(int)length forType:(NSString *)type
 {
     NSRange found = NSMakeRange(location, length);
+    EditorStyle *style = [styles objectForKey:type];
     
-    if ([type isEqualToString:@"color"]) {
-        v8::String::Utf8Value color(value);
-        [_textStorage addAttribute:NSForegroundColorAttributeName value:[self colorWithString:cstring(*color)] range:found];
-    } else if ([type isEqualToString:@"background-color"]) {
-        v8::String::Utf8Value bg(value);
-        [_textStorage addAttribute:NSBackgroundColorAttributeName value:[self colorWithString:cstring(*bg)] range:found];
-    } else if ([type isEqualToString:@"underline"]) {
-        [_textStorage addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:value->IntegerValue()] range:found];
-    } else if ([type isEqualToString:@"underline-color"]) {
-        v8::String::Utf8Value underline(value);
-        [_textStorage addAttribute:NSUnderlineColorAttributeName value:[self colorWithString:cstring(*underline)] range:found];
-    } else if ([type isEqualToString:@"font-family"]) {
-        NSFont *currentFont = [self fontAt:location];
-        NSFontManager *fontManager = [NSFontManager sharedFontManager];
-        v8::String::Utf8Value fontFamily(value);
-        
-        NSFont *newFont = [fontManager fontWithFamily:cstring(*fontFamily)
-                                               traits:[[currentFont fontDescriptor] symbolicTraits]
-                                               weight:0
-                                                 size:[currentFont pointSize]];
-        
-        if (newFont) {
-            [_textStorage addAttribute:NSFontAttributeName value:newFont range:found];
-        }
-    } else if ([type isEqualToString:@"font-size"]) {
-        NSFont *currentFont = [self fontAt:location];
-        NSFontManager *fontManager = [NSFontManager sharedFontManager];
-        
-        NSFont *newFont = [fontManager fontWithFamily:[currentFont familyName]
-                                               traits:[[currentFont fontDescriptor] symbolicTraits]
-                                               weight:0
-                                                 size:value->NumberValue()];
-        
-        if (newFont) {
-            [_textStorage addAttribute:NSFontAttributeName value:newFont range:found];
-        }
-    } else if ([type isEqualToString:@"font-weight"]) {
-        NSFont *currentFont = [self fontAt:location];
-        v8::String::Utf8Value fontWeight(value);
-        
-        NSFontManager *fontManager = [NSFontManager sharedFontManager];
-        NSFont *newFont = [fontManager fontWithFamily:[currentFont familyName]
-                                               traits:[[currentFont fontDescriptor] symbolicTraits] | [cstring(*fontWeight) isEqualToString:@"bold"] ? NSBoldFontMask : NSUnboldFontMask
-                                               weight:0
-                                                 size:[currentFont pointSize]];
-        
-        if (newFont) {
-            [_textStorage addAttribute:NSFontAttributeName value:newFont range:found];
-        }
-    } else if ([type isEqualToString:@"font-style"]) {
-        NSFont *currentFont = [self fontAt:location];
-        v8::String::Utf8Value fontStyle(value);
-        
-        NSFontManager *fontManager = [NSFontManager sharedFontManager];
-        NSFont *newFont = [fontManager fontWithFamily:[currentFont familyName]
-                                               traits:[[currentFont fontDescriptor] symbolicTraits] | ([cstring(*fontStyle) isEqualToString:@"italic"] ? NSItalicFontMask : NSUnitalicFontMask)
-                                               weight:0
-                                                 size:[currentFont pointSize]];
-        
-        if (newFont) {
-            [_textStorage addAttribute:NSFontAttributeName value:newFont range:found];
-        }
+    if (style) {
+        [_textStorage addAttributes:[style attributes] range:found];
     }
 }
 
-- (void)setEditorStyle:(NSString *)type withValue:(v8::Local<v8::Value>)value
+- (void)applyTextStyles:(const v8::Local<v8::Value> &)value forRange:(NSRange)range
 {
-    if ([type isEqualToString:@"color"]) {
+    if (!value->IsNull() && value->IsArray()) {
+        // get current visibale range
+        NSRange visibleGlyphs = [_layoutManager glyphRangeForBoundingRect:[self visibleRect]
+                                                         inTextContainer:[self textContainer]];
+        NSRange visableRect = [_layoutManager characterRangeForGlyphRange:visibleGlyphs actualGlyphRange:NULL];
+        NSUInteger start = visableRect.location, stop = visableRect.location + visableRect.length;
         
-        // 编辑器默认颜色
-        v8::String::Utf8Value color(value);
-        NSDictionary *attributes = [[self typingAttributes] mutableCopy];
-        [attributes setValue:[self colorWithString:cstring(*color)] forKey:NSForegroundColorAttributeName];
-        [self setDefaultColor:[self colorWithString:cstring(*color)]];
-        [self setTypingAttributes:attributes];
+        [NSData dataWithBytes:(const void*)*value length:sizeof(&value)];
         
-    } else if ([type isEqualToString:@"background-color"]) {
+        // do syntax hightlight
+        v8::Local<v8::Array> valueArray = v8::Local<v8::Array>::Cast(value);
+        int pos, count = valueArray->Length();
+        // NSMutableArray *asyncRenderStyles = [NSMutableArray array];
         
-        // 编辑器默认背景
-        v8::String::Utf8Value bg(value);
-        [self setBackgroundColor:[self colorWithString:cstring(*bg)]];
-
-    } else if ([type isEqualToString:@"selection-color"]) {
-        
-        // 选择区默认背景
-        v8::String::Utf8Value color(value);
-        NSMutableDictionary *selectedTextAttributes = [[self selectedTextAttributes] mutableCopy];
-        [selectedTextAttributes setValue:[self colorWithString:cstring(*color)] forKey:NSForegroundColorAttributeName];
-        [self setSelectedTextAttributes:selectedTextAttributes];
-        selectedTextAttributes = nil;
-        
-    } else if ([type isEqualToString:@"selection-background-color"]) {
-        
-        // 选择区默认颜色
-        v8::String::Utf8Value bg(value);
-        NSMutableDictionary *selectedTextAttributes = [[self selectedTextAttributes] mutableCopy];
-        [selectedTextAttributes setValue:[self colorWithString:cstring(*bg)] forKey:NSBackgroundColorAttributeName];
-        [self setSelectedTextAttributes:selectedTextAttributes];
-        selectedTextAttributes = nil;
-        
-    } else if ([type isEqualToString:@"font-family"]) {
-        
-        // 默认字体
-        beginEditorFont(fontName);
-        
-        NSFont *newFont = [fontManager fontWithFamily:cstring(*fontName)
-                                               traits:[[defaultFont fontDescriptor] symbolicTraits]
-                                               weight:0
-                                                 size:[defaultFont pointSize]];
-        
-        endEditorFont(newFont);
-
-    } else if ([type isEqualToString:@"font-size"]) {
-        
-        // 默认字体大小
-        NSFontManager *fontManager = [NSFontManager sharedFontManager];
-        NSDictionary *attributes = [[self typingAttributes] mutableCopy]; \
-        
-        NSFont *newFont = [fontManager fontWithFamily:[defaultFont familyName]
-                                               traits:[[defaultFont fontDescriptor] symbolicTraits]
-                                               weight:0
-                                                 size:value->NumberValue()];
-        
-        endEditorFont(newFont);
-        
-    } else if ([type isEqualToString:@"font-weight"]) {
-        
-        // 默认粗体
-        beginEditorFont(fontWeight);
-        
-        NSFont *newFont = [fontManager fontWithFamily:[defaultFont familyName]
-                                               traits:[[defaultFont fontDescriptor] symbolicTraits] | [cstring(*fontWeight) isEqualToString:@"bold"] ? NSBoldFontMask : NSUnboldFontMask
-                                               weight:0
-                                                 size:[defaultFont pointSize]];
-        
-        endEditorFont(newFont);
-
-    } else if ([type isEqualToString:@"font-style"]) {
-        
-        // 默认斜体
-        beginEditorFont(fontStyle);
-        
-        NSFont *newFont = [fontManager fontWithFamily:[defaultFont familyName]
-                                               traits:[[defaultFont fontDescriptor] symbolicTraits] | ([cstring(*fontStyle) isEqualToString:@"italic"] ? NSItalicFontMask : NSUnitalicFontMask)
-                                               weight:0
-                                                 size:[defaultFont pointSize]];
-        
-        endEditorFont(newFont);
-
-    } else if ([type isEqualToString:@"padding-horizontal"]) {
-        
-        // 水平位移
-        NSSize size = [self textContainerInset];
-        size.width = value->IntegerValue();
-        [self setTextContainerInset:size];
-
-    } else if ([type isEqualToString:@"padding-vertical"]) {
-        
-        // 垂直位移
-        NSSize size = [self textContainerInset];
-        size.height = value->IntegerValue();
-        [self setTextContainerInset:size];
-
-    } else if ([type isEqualToString:@"line-height"]) {
-        
-        // 行高
-        beginParagraphStyle(paragraphStyle);
-        
-        [paragraphStyle setMaximumLineHeight:value->NumberValue()];
-        [paragraphStyle setMinimumLineHeight:value->NumberValue()];
-        
-        endParagraphStyle(paragraphStyle);
-
-    } else if ([type isEqualToString:@"cursor-width"]) {
-        
-        // 光标宽度
-        [self setInsertionPointWidth:value->NumberValue()];
-
-    } else if ([type isEqualToString:@"cursor-color"]) {
-        
-        // 光标颜色
-        v8::String::Utf8Value color(value);
-        [self setInsertionPointColor:[self colorWithString:cstring(*color)]];
-
-    } else if ([type isEqualToString:@"tab-stop"]) {
-        
-        // 缩进
-        beginParagraphStyle(paragraphStyle);
-        
-        float spaceWidth = [self spaceWidth:0];
-        [paragraphStyle setTabStops:[NSArray array]];
-        [paragraphStyle setDefaultTabInterval:value->NumberValue() * spaceWidth];
-        tabInterval = value->NumberValue() * spaceWidth;
-        tabStop = value->NumberValue();
-        
-        endParagraphStyle(paragraphStyle);
-    } else if ([type isEqualToString:@"soft-tab"]) {
-        softTab = value->BooleanValue();
-    } else if ([type isEqualToString:@"line-endings"]) {
-        v8::String::Utf8Value endingTypeValue(value);
-        NSString *endingType = [cstring(*endingTypeValue) uppercaseString];
-        
-        if ([endingType isEqualToString:@"CR"]) {
-            lineEndings = @"\r";
-        } else if ([endingType isEqualToString:@"CRLF"]) {
-            lineEndings = @"\r\n";
-        } else {
-            lineEndings = @"\n";
+        for (pos = 0; pos < count; pos ++) {
+            v8::Local<v8::Value> syntax = valueArray->Get(pos);
+            
+            // render syntax
+            if (syntax->IsArray()) {
+                v8::Local<v8::Array> syntaxArray = v8::Local<v8::Array>::Cast(syntax);
+                v8::Local<v8::String> styleName = syntaxArray->Get(2)->ToString();
+                v8::String::Utf8Value value(styleName);
+                
+                NSUInteger location = syntaxArray->Get(0)->IntegerValue(),
+                length = syntaxArray->Get(1)->IntegerValue();
+                NSString *type = cstring(*value);
+                
+                if (location + length > start && location < stop) {
+                    [self setTextStyle:location + range.location withLength:length forType:type];
+                } else {
+                    // [asyncRenderStyles addObjectsFromArray:[NSArray arrayWithObjects:*location, length, type, nil]];
+                }
+            }
         }
-    } else if ([type isEqualToString:@"line-number"]) {
-        [[(EditorViewController *)[self editorViewController] scroll] setRulersVisible:value->BooleanValue()];
-    } else if ([type isEqualToString:@"line-number-color"]) {
-        v8::String::Utf8Value color(value);
-        [[(EditorViewController *)[self editorViewController] lineNumber] setTextColor:[self colorWithString:cstring(*color)]];
-    } else if ([type isEqualToString:@"line-number-background-color"]) {
-        v8::String::Utf8Value color(value);
-        [[(EditorViewController *)[self editorViewController] lineNumber] setBackgroundColor:[self colorWithString:cstring(*color)]];
-    } else if ([type isEqualToString:@"line-number-font-family"]) {
-        beginLineNumberFont(font)
-
-        v8::String::Utf8Value fontFamily(value);
-        NSFont *newFont = [fontManager fontWithFamily:cstring(*fontFamily)
-                                               traits:[[font fontDescriptor] symbolicTraits]
-                                               weight:0
-                                                 size:[font pointSize]];
-        
-        endLineNumberFont(newFont);
-    } else if ([type isEqualToString:@"line-number-font-size"]) {
-        beginLineNumberFont(font)
-        
-        NSFont *newFont = [fontManager fontWithFamily:[font familyName]
-                                               traits:[[font fontDescriptor] symbolicTraits]
-                                               weight:0
-                                                 size:value->NumberValue()];
-        
-        endLineNumberFont(newFont);
     }
 }
 
@@ -875,6 +754,62 @@
     
     return [NSColor colorWithCalibratedRed:((float) r / 255.0f) 
                                      green:((float) g / 255.0f) blue:((float) b / 255.0f) alpha:1.0f];
+}
+
+- (NSRange)findLexerRange:(NSRange)range
+{
+    NSRange start, stop;
+    NSUInteger from = range.location, to = range.location + range.length;
+    NSUInteger max = [[_textStorage string] length];
+    NSString *firstStyle, *lastStyle;
+    
+    @try {
+        firstStyle = [_textStorage attribute:EditorStyleAttributeName atIndex:range.location effectiveRange:nil];
+        lastStyle = [_textStorage attribute:EditorStyleAttributeName atIndex:range.location effectiveRange:nil];
+    }
+    @catch (NSException *exception) {
+        firstStyle = nil;
+        lastStyle = nil;
+    }
+    
+    // find start point
+    while (from > 0) {
+        @try {
+            NSString *style = [_textStorage attribute:EditorStyleAttributeName atIndex:from effectiveRange:&start];
+            
+            if (([style isEqualToString:@"none"] && ![style isEqualToString:firstStyle]) || 0 == start.location) {
+                from = start.location;
+                break;
+            } else {
+                from = start.location - 1;
+            }
+            
+            firstStyle = style;
+        }
+        @catch (NSException *exception) {
+            break;
+        }
+    }
+    
+    // find stop point
+    while (to < max) {
+        @try {
+            NSString *style = [_textStorage attribute:EditorStyleAttributeName atIndex:to effectiveRange:&stop];
+            if (([style isEqualToString:@"none"] && ![style isEqualToString:lastStyle]) || stop.location + stop.length == max) {
+                to = stop.location + stop.length;
+                break;
+            } else {
+                to = stop.location + stop.length + 1;
+            }
+            
+            lastStyle = style;
+        }
+        @catch (NSException *exception) {
+            break;
+        }
+    }
+    
+    return NSMakeRange(from, to - from);
 }
 
 @end

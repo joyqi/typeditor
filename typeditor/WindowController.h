@@ -7,11 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "EditorViewController.h"
+#import "TETextViewController.h"
 #import "INAppStoreWindow.h"
 
 @interface WindowController : NSWindowController <NSWindowDelegate> {
-    EditorViewController *editor;
+    TETextViewController *editor;
     INAppStoreWindow *mainWindow;
 }
 

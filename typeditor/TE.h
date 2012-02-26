@@ -10,6 +10,7 @@
 #define typeditor_TE_h
 
 #import <Foundation/Foundation.h>
+#import "TEGlyphStyle.h"
 
 // 一次最多可以定义128种
 #define TE_MAX_GLYPH_STYLES_NUM 128
@@ -24,25 +25,8 @@
     "indentifier keyword label macro special_char special_comment match operator class statement structure " \
     "tag title todo typedef type comment"
 
-@interface TEGlyphStyle : NSObject {
-@public
-    
-    // font type
-    NSNumber *type;
-    
-    // font name
-    NSFont *font;
-    
-    // foreground color
-    NSColor *color;
-    
-    // backgourn color
-    NSColor *backgroundColor;
-    
-    // attributes
-    NSDictionary *attributes;
-}
-@end
+#define TEFontWidth(font) \
+    [[font screenFontWithRenderingMode:[font renderingMode]] advancementForGlyph:(NSGlyph) ' '].width
 
 // make glyph style
 NS_INLINE TEGlyphStyle *TEMakeGlyphStyle(NSUInteger _type, NSFont *_font, NSColor *_color, NSColor *_backgroundColor) {

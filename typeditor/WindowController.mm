@@ -16,7 +16,8 @@
     if (self) {
         mainWindow = (INAppStoreWindow *)[self window];
         
-        editor = [[EditorViewController alloc] initWithWindow:mainWindow];
+        // editor = [[EditorViewController alloc] initWithWindow:mainWindow];
+        editor = [[TETextViewController alloc] initWithWindow:mainWindow];
         
         // Initialization code here.
         [mainWindow setTrafficLightButtonsLeftMargin:7.0f];

@@ -985,73 +985,13 @@
   };
 })();
 
-// user custom style
-styles = {
-    
-    // editor style
-    'editor'    :   {
-        'background-color'              :   '#FFFFEE',
-        'selection-background-color'    :   '#000',
-        'selection-color'               :   '#FFF',
-        'color'                         :   '#333',
-        'font-size'                     :   18,
-        'font-family'                   :   'Monaco',
-        'cursor-width'                  :   2,
-        'cursor-color'                  :   '#777',
-        'line-height'                   :   20,
-        'tab-stop'                      :   4,
-        'line-number'                   :   true,
-        'line-number-background-color'  :   '#000',
-        'line-number-color'             :   '#FFF',
-        'line-number-font-size'         :   13
-    }
+styles.font = 'Monaco';
+styles.size = 15;
 
-};
-
-$.syntax = function (pos) {
-    var result = $.PR.result;
-    pos = pos ? pos : $.currentPosition();
-
-    for (var i = 0; i < result.length; i ++) {
-        var exp = result[i];
-        if (pos >= exp[0] && pos <= exp[1]) {
-            return exp[2];
-        }
-    }
-};
-
-// merge styles
-(function () {
-    for (var i in $.PR.styles) {
-        styles[i] = $.PR.styles[i];
-    }
-})($);
+styles[$class].size = 24;
+styles[$class].color = '#ddd';
 
 $.lexer(function (str) {
-    return $.prettyPrintOne(str, 'html');
+    return [0, str.length, $class];
 });
-
-$.onEnter(function (str, pos) {
-    // $.log($.syntax(pos));
-    //
-    if (pos > 0) {
-        // $.highlight(0);
-    }
-
-    if (pos > 1) {
-        // $.select(1);
-    }
-    
-    var range = $.lineRange($.line());
-    // $.log(range.location + ':' + range.length + ':' + $.line());
-});
-
-$.onNewLine(function (str, pos, line) {
-    // $.log(pos + ' ' + line);
-
-    $.insert(pos, str);
-
-});
-
-$.log($class);
 

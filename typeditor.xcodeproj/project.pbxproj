@@ -13,10 +13,11 @@
 		2058101814F3D46F00EAAD8E /* EditorLineNumberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2058101714F3D46F00EAAD8E /* EditorLineNumberView.m */; };
 		2058101C14F3D60300EAAD8E /* EditorLineNumberMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = 2058101B14F3D60300EAAD8E /* EditorLineNumberMarker.m */; };
 		2086D2A614F696FF0016BC47 /* EditorStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2086D2A514F696FF0016BC47 /* EditorStyle.m */; };
+		208CC71A14FA7CE100D64C4A /* TEGlyphStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 208CC71914FA7CE100D64C4A /* TEGlyphStyle.m */; };
 		208DFC1E14F2832C0067D6E1 /* EditorViewReplacement.m in Sources */ = {isa = PBXBuildFile; fileRef = 208DFC1D14F2832C0067D6E1 /* EditorViewReplacement.m */; };
-		20FDEC9014F8F2F300556F76 /* TETextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20FDEC8F14F8F2F300556F76 /* TETextView.m */; };
+		20FDEC9014F8F2F300556F76 /* TETextView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20FDEC8F14F8F2F300556F76 /* TETextView.mm */; };
 		20FDECA114F91F4800556F76 /* TEV8.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20FDECA014F91F4800556F76 /* TEV8.mm */; };
-		20FDECB014F9ED5700556F76 /* TETextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20FDECAE14F9ED5700556F76 /* TETextViewController.m */; };
+		20FDECB014F9ED5700556F76 /* TETextViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20FDECAE14F9ED5700556F76 /* TETextViewController.mm */; };
 		20FDECB114F9ED5700556F76 /* TETextViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20FDECAF14F9ED5700556F76 /* TETextViewController.xib */; };
 		2A3EEE2314F399CD007F0CE3 /* EditorTextView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A3EEE2214F399CD007F0CE3 /* EditorTextView.mm */; };
 		2AAA6DAF14F20B88000BF463 /* EditorViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2AAA6DAD14F20B88000BF463 /* EditorViewController.mm */; };
@@ -46,15 +47,17 @@
 		2058101D14F3F98800EAAD8E /* EditorTextViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorTextViewDelegate.h; sourceTree = "<group>"; };
 		2086D2A414F696FF0016BC47 /* EditorStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorStyle.h; sourceTree = "<group>"; };
 		2086D2A514F696FF0016BC47 /* EditorStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditorStyle.m; sourceTree = "<group>"; };
+		208CC71814FA7CE100D64C4A /* TEGlyphStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TEGlyphStyle.h; sourceTree = "<group>"; };
+		208CC71914FA7CE100D64C4A /* TEGlyphStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TEGlyphStyle.m; sourceTree = "<group>"; };
 		208DFC1C14F2832C0067D6E1 /* EditorViewReplacement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorViewReplacement.h; sourceTree = "<group>"; };
 		208DFC1D14F2832C0067D6E1 /* EditorViewReplacement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditorViewReplacement.m; sourceTree = "<group>"; };
 		20FDEC8D14F8F17700556F76 /* TE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TE.h; sourceTree = "<group>"; };
 		20FDEC8E14F8F2F300556F76 /* TETextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TETextView.h; sourceTree = "<group>"; };
-		20FDEC8F14F8F2F300556F76 /* TETextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TETextView.m; sourceTree = "<group>"; };
+		20FDEC8F14F8F2F300556F76 /* TETextView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TETextView.mm; sourceTree = "<group>"; };
 		20FDEC9F14F91F4800556F76 /* TEV8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TEV8.h; sourceTree = "<group>"; };
 		20FDECA014F91F4800556F76 /* TEV8.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TEV8.mm; sourceTree = "<group>"; };
 		20FDECAD14F9ED5700556F76 /* TETextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TETextViewController.h; sourceTree = "<group>"; };
-		20FDECAE14F9ED5700556F76 /* TETextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TETextViewController.m; sourceTree = "<group>"; };
+		20FDECAE14F9ED5700556F76 /* TETextViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TETextViewController.mm; sourceTree = "<group>"; };
 		20FDECAF14F9ED5700556F76 /* TETextViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TETextViewController.xib; sourceTree = "<group>"; };
 		2A3EEE2114F399CD007F0CE3 /* EditorTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorTextView.h; sourceTree = "<group>"; };
 		2A3EEE2214F399CD007F0CE3 /* EditorTextView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EditorTextView.mm; sourceTree = "<group>"; };
@@ -128,12 +131,14 @@
 			children = (
 				20FDEC8D14F8F17700556F76 /* TE.h */,
 				20FDEC8E14F8F2F300556F76 /* TETextView.h */,
-				20FDEC8F14F8F2F300556F76 /* TETextView.m */,
+				20FDEC8F14F8F2F300556F76 /* TETextView.mm */,
 				20FDEC9F14F91F4800556F76 /* TEV8.h */,
 				20FDECA014F91F4800556F76 /* TEV8.mm */,
 				20FDECAD14F9ED5700556F76 /* TETextViewController.h */,
-				20FDECAE14F9ED5700556F76 /* TETextViewController.m */,
+				20FDECAE14F9ED5700556F76 /* TETextViewController.mm */,
 				20FDECAF14F9ED5700556F76 /* TETextViewController.xib */,
+				208CC71814FA7CE100D64C4A /* TEGlyphStyle.h */,
+				208CC71914FA7CE100D64C4A /* TEGlyphStyle.m */,
 			);
 			name = "Editor Files";
 			sourceTree = "<group>";
@@ -315,9 +320,10 @@
 				2058101814F3D46F00EAAD8E /* EditorLineNumberView.m in Sources */,
 				2058101C14F3D60300EAAD8E /* EditorLineNumberMarker.m in Sources */,
 				2086D2A614F696FF0016BC47 /* EditorStyle.m in Sources */,
-				20FDEC9014F8F2F300556F76 /* TETextView.m in Sources */,
+				20FDEC9014F8F2F300556F76 /* TETextView.mm in Sources */,
 				20FDECA114F91F4800556F76 /* TEV8.mm in Sources */,
-				20FDECB014F9ED5700556F76 /* TETextViewController.m in Sources */,
+				20FDECB014F9ED5700556F76 /* TETextViewController.mm in Sources */,
+				208CC71A14FA7CE100D64C4A /* TEGlyphStyle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

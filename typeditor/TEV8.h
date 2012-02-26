@@ -8,11 +8,22 @@
 
 #import <Foundation/Foundation.h>
 #import "v8.h"
-#import "TE.h"
+#import "TETextViewController.h"
+
+#define TEV8GetController(controller, c) \
+    v8::HandleScope handle_scope; \
+    v8::Local<v8::Object> self = args.Holder(); \
+    if (self->InternalFieldCount() != 1) { \
+        return v8::Undefined(); \
+    } \
+    v8::Local<v8::External> wrap = v8::Local<v8::External>::Cast(self->GetInternalField(0)); \
+    TETextViewController *controller = (__bridge TETextViewController *) wrap->Value(); \
+    v8::Persistent<v8::Context> c = [controller v8]->context; \
+    v8::Context::Scope context_scope(c);
 
 // 把value转换成float
 NS_INLINE CGFloat TEV8FloatVaule(const v8::Local<v8::Value> &value) {
-    if (!value->IsUndefined() && value->IsNumber()) {
+    if (*value && !value->IsUndefined() && value->IsNumber()) {
         return value->NumberValue();
     }
     
@@ -20,7 +31,7 @@ NS_INLINE CGFloat TEV8FloatVaule(const v8::Local<v8::Value> &value) {
 }
 
 NS_INLINE NSInteger TEV8BooleanValue(const v8::Local<v8::Value> &value) {
-    if (!value->IsUndefined() && value->IsBoolean()) {
+    if (*value && !value->IsUndefined() && value->IsBoolean()) {
         return value->BooleanValue();
     }
     
@@ -28,7 +39,7 @@ NS_INLINE NSInteger TEV8BooleanValue(const v8::Local<v8::Value> &value) {
 }
 
 NS_INLINE NSString *TEV8StringValue(const v8::Local<v8::Value> &value) {
-    if (!value->IsUndefined() && value->IsString()) {
+    if (*value && !value->IsUndefined() && value->IsString()) {
         v8::String::Utf8Value string(value->ToString());
         return TEMakeString(*string);
     }
@@ -37,7 +48,7 @@ NS_INLINE NSString *TEV8StringValue(const v8::Local<v8::Value> &value) {
 }
 
 NS_INLINE NSColor *TEV8ColorValue(const v8::Local<v8::Value> &value, NSColor *color) {
-    if (!value->IsUndefined() && value->IsString()) {
+    if (*value && !value->IsUndefined() && value->IsString()) {
         v8::String::Utf8Value string(value->ToString());
         return TEMakeRGBColor(TEMakeString(*string));
     }
@@ -45,17 +56,17 @@ NS_INLINE NSColor *TEV8ColorValue(const v8::Local<v8::Value> &value, NSColor *co
     return color;
 }
 
-@class TETextView;
-
 @interface TEV8 : NSObject {
     
-    // v8 context
+@public
     v8::Persistent<v8::Context> context;
+    
+@private
+    TETextViewController *textViewController;
 }
 
-- (id) initWithTextView:(TETextView *)textView;
-@end
+@property (strong, nonatomic) TETextViewController *textViewController;
 
-@interface TEV8 (TETextView)
-- (void) initTextView:(TETextView *)textView;
+- (void) setController:(TETextViewController *)textViewController;
+- (void) textChangeCallback:(NSString *)string;
 @end

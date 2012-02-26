@@ -122,16 +122,16 @@
 {
     // 默认字体
     NSFont *defaultFont = TEMakeTextViewFont(NULL, 
-                                             TEV8StringValue(proto->Get(v8::String::New("font-family"))), 
-                                             TEV8FloatVaule(proto->Get(v8::String::New("font-size"))), 
-                                             TEV8BooleanValue(proto->Get(v8::String::New("font-bold"))), 
-                                             TEV8BooleanValue(proto->Get(v8::String::New("font-italic"))));
+                                             TEV8StringValue(proto->Get(v8::String::New("font"))), 
+                                             TEV8FloatVaule(proto->Get(v8::String::New("size"))), 
+                                             TEV8BooleanValue(proto->Get(v8::String::New("bold"))), 
+                                             TEV8BooleanValue(proto->Get(v8::String::New("italic"))));
     
     // 默认字体颜色
     NSColor *defaultColor = TEV8ColorValue(proto->Get(v8::String::New("color")), [NSColor textColor]);
     
     // 默认背景颜色
-    NSColor *defaultBackgroundColor = TEV8ColorValue(proto->Get(v8::String::New("background-color")), [NSColor textBackgroundColor]);
+    NSColor *defaultBackgroundColor = TEV8ColorValue(proto->Get(v8::String::New("background")), [NSColor textBackgroundColor]);
     
     // 设置所有style的颜色
     for (NSUInteger i = 0; i < length; i ++) {
@@ -139,12 +139,12 @@
         
         [textView defineGlyphStyle:TEMakeGlyphStyle(i, 
                                                     TEMakeTextViewFont(defaultFont, 
-                                                                       TEV8StringValue(style->Get(v8::String::New("font-family"))), 
-                                                                       TEV8FloatVaule(style->Get(v8::String::New("font-size"))), 
-                                                                       TEV8BooleanValue(style->Get(v8::String::New("font-bold"))), 
-                                                                       TEV8BooleanValue(style->Get(v8::String::New("font-italic")))), 
+                                                                       TEV8StringValue(style->Get(v8::String::New("font"))), 
+                                                                       TEV8FloatVaule(style->Get(v8::String::New("font"))), 
+                                                                       TEV8BooleanValue(style->Get(v8::String::New("bold"))), 
+                                                                       TEV8BooleanValue(style->Get(v8::String::New("italic")))), 
                                                     TEV8ColorValue(style->Get(v8::String::New("color")), defaultColor), 
-                                                    TEV8ColorValue(style->Get(v8::String::New("background-color")), defaultBackgroundColor)) withType:i];
+                                                    TEV8ColorValue(style->Get(v8::String::New("background")), defaultBackgroundColor)) withType:i];
     }
 }
 

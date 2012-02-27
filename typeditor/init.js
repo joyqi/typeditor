@@ -100,36 +100,36 @@
 
   // token style names.  correspond to css classes
   /** token style for a string literal */
-  var PR_STRING = 'str';
+  var PR_STRING = $string;
   /** token style for a keyword */
-  var PR_KEYWORD = 'kwd';
+  var PR_KEYWORD = $keyword;
   /** token style for a comment */
-  var PR_COMMENT = 'com';
+  var PR_COMMENT = $comment;
   /** token style for a type */
-  var PR_TYPE = 'typ';
+  var PR_TYPE = $type;
   /** token style for a literal value.  e.g. 1, null, true. */
-  var PR_LITERAL = 'lit';
+  var PR_LITERAL = $special_char;
   /** token style for a punctuation string. */
-  var PR_PUNCTUATION = 'pun';
+  var PR_PUNCTUATION = $none;
   /** token style for a punctuation string. */
-  var PR_PLAIN = 'pln';
+  var PR_PLAIN = $none;
 
   /** token style for an sgml tag. */
-  var PR_TAG = 'tag';
+  var PR_TAG = $tag;
   /** token style for a markup declaration such as a DOCTYPE. */
-  var PR_DECLARATION = 'dec';
+  var PR_DECLARATION = $define;
   /** token style for embedded source. */
-  var PR_SOURCE = 'src';
+  var PR_SOURCE = $none;
   /** token style for an sgml attribute name. */
-  var PR_ATTRIB_NAME = 'atn';
+  var PR_ATTRIB_NAME = $structure;
   /** token style for an sgml attribute value. */
-  var PR_ATTRIB_VALUE = 'atv';
+  var PR_ATTRIB_VALUE = $match;
 
   /**
    * A class that indicates a section of markup that is not code, e.g. to allow
    * embedding of line numbers within code listings.
    */
-  var PR_NOCODE = 'nocode';
+  var PR_NOCODE = $none;
 
   /** A set of tokens that can precede a regular expression literal in
     * javascript.
@@ -732,10 +732,7 @@
         var pos = decorations[i * 2], type = decorations[i * 2 + 1];
 
         if (pos != lastPos) {
-            // renderSyntax(lastPos, pos - lastPos, lastType);
-
-            // store result
-            result.push([lastPos, pos - lastPos, lastType]);
+            result.push(lastPos, pos - lastPos, lastType);
         }
 
         lastPos = pos;
@@ -743,21 +740,10 @@
     }
 
     if (lastPos != length) {
-        // renderSyntax(lastPos, length - lastPos, lastType);
-        
-        // store result
-        result.push([lastPos, length - lastPos, lastType]);
+        result.push(lastPos, length - lastPos, lastType);
     }
 
     return result;
-  }
-
-  /** render styntax by type */
-  function renderSyntax(start, length, type) {
-    var styles = $.PR.styles[type] ? $.PR.styles[type] : $.PR.styles[PR_NOCODE];
-    for (var i in styles) {
-      $.style(start, length, i, styles[i]); 
-    }
   }
 
   /** Maps language-specific file extensions to handlers. */
@@ -946,52 +932,23 @@
         'PR_SOURCE': PR_SOURCE,
         'PR_STRING': PR_STRING,
         'PR_TAG': PR_TAG,
-        'PR_TYPE': PR_TYPE,
-        'result': [],
-        'styles': {
-            // token style names.  correspond to css classes
-            /** token style for a string literal */
-            'str' : { color : '#E6DB74', 'font-size' : 19 },
-            /** token style for a keyword */
-            'kwd' : { color : '#F92672' },
-            /** token style for a comment */
-            'com' : { color : '#75715E' },
-            /** token style for a type */
-            'typ' : { color : '#66D9EF' },
-            /** token style for a literal value.  e.g. 1, null, true. */
-            'lit' : {},
-            /** token style for a punctuation string. */
-            'pun' : { color : '#000' },
-            /** token style for a punctuation string. */
-            'pln' : { color : '#000' },
-
-            /** token style for an sgml tag. */
-            'tag' : { color : '#F92672' },
-            /** token style for a markup declaration such as a DOCTYPE. */
-            'dec' : { color : '#999', 'font-style' : 'italic', 'font-family' : 'Helvetica' },
-            /** token style for embedded source. */
-            'src' : {},
-            /** token style for an sgml attribute name. */
-            'atn' : {},
-            /** token style for an sgml attribute value. */
-            'atv' : { 'font-size' : 18 },
-
-            /**
-             * A class that indicates a section of markup that is not code, e.g. to allow
-             * embedding of line numbers within code listings.
-             */
-            'nocode' : {}
-        }
+        'PR_TYPE': PR_TYPE
   };
 })();
 
 styles.font = 'Monaco';
 styles.size = 15;
 
-styles[$class].size = 24;
-styles[$class].color = '#ddd';
+styles[$define].color = '#aaa';
+styles[$structure].color = '#ccc';
 
 $.lexer(function (str) {
-    return [0, str.length, $class];
+    var r = $.prettyPrintOne(str, 'html');
+    if (0 == r.length) {
+        r = [0, str.length, $none];
+    }
+
+    $.log('asdf:' + r);
+    return r;
 });
 

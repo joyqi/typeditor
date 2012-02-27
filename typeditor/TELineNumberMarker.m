@@ -6,9 +6,9 @@
 //  Copyright (c) 2012年 MagnetJoy. All rights reserved.
 //
 
-#import "EditorLineNumberMarker.h"
+#import "TELineNumberMarker.h"
 
-@implementation EditorLineNumberMarker
+@implementation TELineNumberMarker
 
 - (id)initWithRulerView:(NSRulerView *)aRulerView lineNumber:(CGFloat)line image:(NSImage *)anImage imageOrigin:(NSPoint)imageOrigin
 {
@@ -37,7 +37,7 @@
 	{
 		if ([decoder allowsKeyedCoding])
 		{
-			_lineNumber = [[decoder decodeObjectForKey:EDITOR_LINE_CODING_KEY] unsignedIntegerValue];
+			_lineNumber = [[decoder decodeObjectForKey:TE_LINE_NUMBER_LINE_CODING_KEY] unsignedIntegerValue];
 		}
 		else
 		{
@@ -53,7 +53,7 @@
 	
 	if ([encoder allowsKeyedCoding])
 	{
-		[encoder encodeObject:[NSNumber numberWithUnsignedInteger:_lineNumber] forKey:EDITOR_LINE_CODING_KEY];
+		[encoder encodeObject:[NSNumber numberWithUnsignedInteger:_lineNumber] forKey:TE_LINE_NUMBER_LINE_CODING_KEY];
 	}
 	else
 	{

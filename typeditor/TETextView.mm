@@ -10,17 +10,18 @@
 
 @implementation TETextView
 
-@synthesize glyphRangesNum, color, lineHeight, tabStop, selectedColor, selectedBackgroundColor;
+@synthesize glyphRangesNum, color, lineHeight, tabStop, selectedColor, selectedBackgroundColor, shouldDrawText;
 
 - (void) defineGlyphStyle:(TEGlyphStyle *)style withType:(NSUInteger)type
 {
     if (type < TE_MAX_GLYPH_STYLES_NUM) {
-        definedGlyphStyles[type] = style;
+        [definedGlyphStyles insertObject:style atIndex:type];
     }
 }
 
 - (void) setGlyphRange:(TEGlyphRange)glyphRange withIndex:(NSUInteger)index
 {
+    TEGlyphRange *glyphRanges = (TEGlyphRange *)[glyphRangesData mutableBytes];
     if (index < TE_MAX_GLYPH_RANGES_NUM) {
         glyphRanges[index] = glyphRange;
     }
@@ -75,11 +76,28 @@
     TETextViewSetSelectedAttribute(obj, NSBackgroundColorAttributeName);
 }
 
+- (void) setPaddingX:(CGFloat)padingX
+{
+    NSSize paddingSize = [self textContainerInset];
+    paddingSize.width = padingX;
+    [self setTextContainerInset:paddingSize];
+}
+
+- (void) setPaddingY:(CGFloat)padingX
+{
+    NSSize paddingSize = [self textContainerInset];
+    paddingSize.height = padingX;
+    [self setTextContainerInset:paddingSize];
+}
+
 - (id) initWithFrame:(NSRect)frameRect
 {
     self = [super initWithFrame:frameRect];
     
     if (self) {
+        // glyphRanges = (TEGlyphRange *)malloc(sizeof(TEGlyphRange) * TE_MAX_GLYPH_RANGES_NUM);
+        glyphRangesData = [NSMutableData dataWithLength:sizeof(TEGlyphRange) * TE_MAX_GLYPH_RANGES_NUM];
+        definedGlyphStyles = [NSMutableArray arrayWithCapacity:TE_MAX_GLYPH_STYLES_NUM];
         // [NSTimer timerWithTimeInterval:1 target:self selector:@selector(cursorDrawCursor) userInfo:<#(id)#> repeats:<#(BOOL)#>
     }
     
@@ -88,8 +106,9 @@
 
 - (BOOL)shouldChangeTextInRange:(NSRange)affectedCharRange replacementString:(NSString *)replacementString
 {
+    BOOL should = [super shouldChangeTextInRange:affectedCharRange replacementString:replacementString];
     shouldDrawText = YES;
-    return YES;
+    return should;
 }
 
 - (NSRange) rectToGlyphRange:(NSRect)rect
@@ -97,8 +116,9 @@
     NSLayoutManager *lm = [self layoutManager];
     NSRange glyphRange = [lm glyphRangeForBoundingRect:rect inTextContainer:[self textContainer]];
     NSRange characterRange = [lm characterRangeForGlyphRange:glyphRange actualGlyphRange:NULL];
-    NSUInteger p = floor(glyphRangesNum / 2), q, from = characterRange.location,
+    NSUInteger p = floor((glyphRangesNum - 1) / 2), q = 0, from = characterRange.location,
     to = characterRange.location + characterRange.length;
+    TEGlyphRange *glyphRanges = (TEGlyphRange *)[glyphRangesData mutableBytes];
 
     // 使用二分法来查找当前的range的开始处
     do {
@@ -111,11 +131,10 @@
         } else if (from > stop) {
             p = p + ceil(p / 2);
         }
-        
     } while (p > 0 && p < glyphRangesNum - 1);
     
     // 找到开始处以后再用循环方法找到结尾处
-    for (q = p; q < glyphRangesNum; q ++) {
+    for (q = p; q < glyphRangesNum - 1; q ++) {
         if (to <= glyphRanges[p].location + glyphRanges[p].length) {
             break;
         }
@@ -154,13 +173,23 @@
         NSRange visibleGlyphRange = [lm glyphRangeForBoundingRect:[self visibleRect]
                                                   inTextContainer:[self textContainer]];
         NSRange visableCharacterRange = [lm characterRangeForGlyphRange:visibleGlyphRange actualGlyphRange:NULL];
+        TEGlyphRange *glyphRanges = (TEGlyphRange *)[glyphRangesData mutableBytes];
         
         for (NSUInteger i = from; i <= to; i ++) {
             TEGlyphRange gr = glyphRanges[i];
             
-            TEGlyphStyle *style = definedGlyphStyles[gr.styleType];
-            [ts setAttributes:style->attributes range:NSMakeRange(fmax(visableCharacterRange.location, gr.location),
-                                                                  fmin(gr.length + gr.location - visableCharacterRange.location, gr.length))];
+            // ignore failed
+            if (gr.styleType >= TE_MAX_GLYPH_STYLES_NUM) {
+                continue;
+            }
+            
+            TEGlyphStyle *style = [definedGlyphStyles objectAtIndex:gr.styleType];
+            
+            NSUInteger start = MAX(visableCharacterRange.location, gr.location);
+            NSUInteger stop = MIN(visableCharacterRange.length + visableCharacterRange.location, gr.location + gr.length);
+            
+            NSLog(@"%lu : %lu %@", start, stop, style->attributes);
+            [ts setAttributes:style->attributes range:NSMakeRange(start, stop - start)];
         }
         
         shouldDrawText = NO;

@@ -45,41 +45,38 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
 
 @synthesize textViewController;
 
-- (void) setController:(TETextViewController *)controller
+- (void) setTextViewController:(TETextViewController *)controller
 {
-    if (self) {
-        
-        textViewController = controller;
-        
-        // init v8
-        v8::HandleScope handle_scope;
-        v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New();
-        context = v8::Context::New(NULL, global);
-        
-        if (context.IsEmpty()) {
-            return;
-        }
-        
-        v8::Context::Scope context_scope(context);
-        
-        // init a editor object
-        v8::Handle<v8::FunctionTemplate> templ = v8::FunctionTemplate::New();
-        v8::Local<v8::ObjectTemplate> objInst = templ->InstanceTemplate();
-        objInst->SetInternalFieldCount(1);
-        
-        v8::Local<v8::Template> proto_t = templ->PrototypeTemplate();
-        proto_t->Set("lexer", v8::FunctionTemplate::New(TEV8Lexer));
-        proto_t->Set("log", v8::FunctionTemplate::New(TEV8Log));
-        
-        v8::Handle<v8::Function> ctor = templ->GetFunction();
-        v8::Handle<v8::Object> obj = ctor->NewInstance();
-        obj->SetInternalField(0, v8::External::New((__bridge void *)textViewController));
-        NSUInteger count = [self createConstants:context->Global()];
-        context->Global()->Set(v8::String::New("$"), obj);
-        
-        [self loadScript:[[NSBundle mainBundle] pathForResource:@"init" ofType:@"js"]];
-        [self setUpStyles:context->Global() withLength:count];
+    textViewController = controller;
+    
+    // init v8
+    v8::HandleScope handle_scope;
+    v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New();
+    context = v8::Context::New(NULL, global);
+    
+    if (context.IsEmpty()) {
+        return;
     }
+    
+    v8::Context::Scope context_scope(context);
+    
+    // init a editor object
+    v8::Handle<v8::FunctionTemplate> templ = v8::FunctionTemplate::New();
+    v8::Local<v8::ObjectTemplate> objInst = templ->InstanceTemplate();
+    objInst->SetInternalFieldCount(1);
+    
+    v8::Local<v8::Template> proto_t = templ->PrototypeTemplate();
+    proto_t->Set("lexer", v8::FunctionTemplate::New(TEV8Lexer));
+    proto_t->Set("log", v8::FunctionTemplate::New(TEV8Log));
+    
+    v8::Handle<v8::Function> ctor = templ->GetFunction();
+    v8::Handle<v8::Object> obj = ctor->NewInstance();
+    obj->SetInternalField(0, v8::External::New((__bridge void *)textViewController));
+    NSUInteger count = [self createConstants:context->Global()];
+    context->Global()->Set(v8::String::New("$"), obj);
+    
+    [self loadScript:[[NSBundle mainBundle] pathForResource:@"init" ofType:@"js"]];
+    [self setUpStyles:context->Global() withLength:count];
 }
 
 - (void) textChangeCallback:(NSString *)string
@@ -186,6 +183,7 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
     
     v8::Local<v8::Object> stylesObject = styles->ToObject();
     
+    // begin textView
     // 设置编辑器
     TETextView *textView = [textViewController textView];
     
@@ -205,9 +203,76 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
     NSColor *defaultBackgroundColor = TEV8ColorValue(stylesObject->Get(v8::String::New("background")), [NSColor textBackgroundColor]);
     [textView setBackgroundColor:defaultBackgroundColor];
     
+    // 设置行高
+    CGFloat lineHeight = TEV8FloatVaule(stylesObject->Get(v8::String::New("lineHeight")));
+    if (NSNotFound != lineHeight) {
+        [textView setLineHeight:lineHeight];
+    }
+    
+    // 设置选择的文本颜色
+    NSColor *selectedColor = TEV8ColorValue(stylesObject->Get(v8::String::New("selectedColor")), [NSColor selectedTextColor]);
+    [textView setSelectedColor:selectedColor];
+    
+    // 设置选择的背景颜色
+    NSColor *selectedBackground = TEV8ColorValue(stylesObject->Get(v8::String::New("selectedBackground")), [NSColor selectedTextBackgroundColor]);
+    [textView setSelectedBackgroundColor:selectedBackground];
+    
+    // 设置光标颜色
+    NSColor *cursorColor = TEV8ColorValue(stylesObject->Get(v8::String::New("cursorColor")), [NSColor blackColor]);
+    [textView setInsertionPointColor:cursorColor];
+    
+    // 设置水平位移
+    CGFloat paddingX = TEV8FloatVaule(stylesObject->Get(v8::String::New("paddingX")));
+    if (NSNotFound != paddingX) {
+        [textView setPaddingX:paddingX];
+    }
+    
+    // 设置垂直位移
+    CGFloat paddingY = TEV8FloatVaule(stylesObject->Get(v8::String::New("paddingY")));
+    if (NSNotFound != paddingY) {
+        [textView setPaddingY:paddingY];
+    }
+    
+    // 设置tab宽度
+    NSInteger tabStop = TEV8IntegerValue(stylesObject->Get(v8::String::New("tabStop")));
+    if (NSNotFound != tabStop) {
+        [textView setTabStop:tabStop];
+    }
+    
+    // end textView
+    
+    // begin lineNumber
+    TELineNumberView *lineNumberView = [textViewController lineNumberView];
+    NSScrollView *scrollView = [textViewController scrollView];
+    BOOL lineNumber = TEV8BooleanValue(stylesObject->Get(v8::String::New("lineNumber")));
+    if (NSNotFound != lineNumber) {
+        [scrollView setRulersVisible:lineNumber];
+    }
+    
+    // 设置行号颜色
+    NSColor *lineNumberColor = TEV8ColorValue(stylesObject->Get(v8::String::New("lineNumberColor")), [lineNumberView textColor]);
+    [lineNumberView setTextColor:lineNumberColor];
+    
+    // 设置行号背景颜色
+    NSColor *lineNumberBackground = TEV8ColorValue(stylesObject->Get(v8::String::New("lineNumberBackground")), [lineNumberView backgroundColor]);
+    [lineNumberView setBackgroundColor:lineNumberBackground];
+    
+    // 设置行号字体
+    NSFont *lineNumberFont = TEMakeTextViewFont([lineNumberView font], 
+                                                TEV8StringValue(stylesObject->Get(v8::String::New("lineNumberFont"))), 
+                                                TEV8FloatVaule(stylesObject->Get(v8::String::New("lineNumberSize"))), 
+                                                NO, NO);
+    [lineNumberView setFont:lineNumberFont];
+    
     // 设置所有style的颜色
     for (NSUInteger i = 0; i < length; i ++) {
-        v8::Local<v8::Object> style = v8::Local<v8::Object>::Cast(stylesObject->Get(v8::Integer::New(i)));
+        v8::Local<v8::Value> styleItem = stylesObject->Get(v8::Integer::New(i));
+        if (!*styleItem || styleItem->IsUndefined() || !styleItem->IsObject()) {
+            [textView defineGlyphStyle:TEMakeGlyphStyle(i, defaultFont, defaultColor, defaultBackgroundColor) withType:i];
+            continue;
+        }
+        
+        v8::Local<v8::Object> style = v8::Local<v8::Object>::Cast(styleItem);
         
         [textView defineGlyphStyle:TEMakeGlyphStyle(i, 
                                                     TEMakeTextViewFont(defaultFont, 

@@ -1,14 +1,14 @@
 //
-//  EditorLineNumberView.m
+//  TELineNumberView.m
 //  typeditor
 //
 //  Created by 宁 祁 on 12-2-21.
 //  Copyright (c) 2012年 MagnetJoy. All rights reserved.
 //
 
-#import "EditorLineNumberView.h"
+#import "TELineNumberView.h"
 
-@interface EditorLineNumberView (Private)
+@interface TELineNumberView (Private)
 
 - (NSMutableArray *)lineIndices;
 - (void)invalidateLineIndices;
@@ -19,7 +19,7 @@
 
 @end
 
-@implementation EditorLineNumberView
+@implementation TELineNumberView
 
 - (id)initWithScrollView: (NSScrollView *)aScrollView
 {
@@ -205,7 +205,7 @@
 	return NSNotFound;
 }
 
-- (EditorLineNumberMarker *)markerAtLine:(NSUInteger)line
+- (TELineNumberMarker *)markerAtLine:(NSUInteger)line
 {
 	return [_linesToMarkers objectForKey:[NSNumber numberWithUnsignedInteger:line - 1]];
 }
@@ -379,7 +379,7 @@
         CGFloat					ypos, yinset, x;
         NSDictionary			*textAttributes, *currentTextAttributes;
         NSSize					stringSize, markerSize;
-		EditorLineNumberMarker	*marker;
+		TELineNumberMarker	*marker;
 		NSImage					*markerImage;
 		NSMutableArray			*lines;
         
@@ -487,10 +487,10 @@
 
 - (void)addMarker:(NSRulerMarker *)aMarker
 {
-	if ([aMarker isKindOfClass:[EditorLineNumberMarker class]])
+	if ([aMarker isKindOfClass:[TELineNumberMarker class]])
 	{
 		[_linesToMarkers setObject:aMarker
-							forKey:[NSNumber numberWithUnsignedInteger:[(EditorLineNumberMarker *)aMarker lineNumber] - 1]];
+							forKey:[NSNumber numberWithUnsignedInteger:[(TELineNumberMarker *)aMarker lineNumber] - 1]];
 	}
 	else
 	{
@@ -500,9 +500,9 @@
 
 - (void)removeMarker:(NSRulerMarker *)aMarker
 {
-	if ([aMarker isKindOfClass:[EditorLineNumberMarker class]])
+	if ([aMarker isKindOfClass:[TELineNumberMarker class]])
 	{
-		[_linesToMarkers removeObjectForKey:[NSNumber numberWithUnsignedInteger:[(EditorLineNumberMarker *)aMarker lineNumber] - 1]];
+		[_linesToMarkers removeObjectForKey:[NSNumber numberWithUnsignedInteger:[(TELineNumberMarker *)aMarker lineNumber] - 1]];
 	}
 	else
 	{
@@ -518,10 +518,10 @@
 	{
 		if ([decoder allowsKeyedCoding])
 		{
-			_font = [decoder decodeObjectForKey:EDITOR_FONT_CODING_KEY];
-			_textColor = [decoder decodeObjectForKey:EDITOR_TEXT_COLOR_CODING_KEY];
-			_alternateTextColor = [decoder decodeObjectForKey:EDITOR_ALT_TEXT_COLOR_CODING_KEY];
-			_backgroundColor = [decoder decodeObjectForKey:EDITOR_BACKGROUND_COLOR_CODING_KEY];
+			_font = [decoder decodeObjectForKey:TE_LINE_NUMBER_FONT_CODING_KEY];
+			_textColor = [decoder decodeObjectForKey:TE_LINE_NUMBER_TEXT_COLOR_CODING_KEY];
+			_alternateTextColor = [decoder decodeObjectForKey:TE_LINE_NUMBER_ALT_TEXT_COLOR_CODING_KEY];
+			_backgroundColor = [decoder decodeObjectForKey:TE_LINE_NUMBER_BACKGROUND_COLOR_CODING_KEY];
 		}
 		else
 		{
@@ -542,10 +542,10 @@
 	
 	if ([encoder allowsKeyedCoding])
 	{
-		[encoder encodeObject:_font forKey:EDITOR_FONT_CODING_KEY];
-		[encoder encodeObject:_textColor forKey:EDITOR_TEXT_COLOR_CODING_KEY];
-		[encoder encodeObject:_alternateTextColor forKey:EDITOR_ALT_TEXT_COLOR_CODING_KEY];
-		[encoder encodeObject:_backgroundColor forKey:EDITOR_BACKGROUND_COLOR_CODING_KEY];
+		[encoder encodeObject:_font forKey:TE_LINE_NUMBER_FONT_CODING_KEY];
+		[encoder encodeObject:_textColor forKey:TE_LINE_NUMBER_TEXT_COLOR_CODING_KEY];
+		[encoder encodeObject:_alternateTextColor forKey:TE_LINE_NUMBER_ALT_TEXT_COLOR_CODING_KEY];
+		[encoder encodeObject:_backgroundColor forKey:TE_LINE_NUMBER_BACKGROUND_COLOR_CODING_KEY];
 	}
 	else
 	{

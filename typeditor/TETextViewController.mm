@@ -11,7 +11,7 @@
 
 @implementation TETextViewController
 
-@synthesize window, lineNumber, textView, scroll, v8;
+@synthesize window, lineNumberView, textView, scrollView, v8;
 
 // init with parent window
 - (id)initWithWindow:(NSWindow *)parent
@@ -21,14 +21,14 @@
     if (self) {
         window = parent;
         
-        scroll = [[NSScrollView alloc] initWithFrame:[[window contentView] frame]];
-        NSSize contentSize = [scroll contentSize];
+        scrollView = [[NSScrollView alloc] initWithFrame:[[window contentView] frame]];
+        NSSize contentSize = [scrollView contentSize];
         
-        [scroll setBorderType:NSNoBorder];
-        [scroll setHasVerticalScroller:YES];
-        [scroll setHasHorizontalScroller:NO];
-        [scroll setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-        [scroll setDrawsBackground:NO];
+        [scrollView setBorderType:NSNoBorder];
+        [scrollView setHasVerticalScroller:YES];
+        [scrollView setHasHorizontalScroller:NO];
+        [scrollView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+        [scrollView setDrawsBackground:NO];
         
         textView = [[TETextView alloc] initWithFrame:[[window contentView] frame]];
         // [textView setEditorViewController:self];
@@ -45,16 +45,16 @@
         [textView setRichText:NO];
         [textView setImportsGraphics:NO];
         
-        [scroll setDocumentView:textView];
-        [window setContentView:scroll];
+        [scrollView setDocumentView:textView];
+        [window setContentView:scrollView];
         [window makeKeyAndOrderFront:nil];
         [window makeFirstResponder:textView];
         
-        lineNumber = [[EditorLineNumberView alloc] initWithScrollView:scroll];
-        [scroll setVerticalRulerView:lineNumber];
+        lineNumberView = [[TELineNumberView alloc] initWithScrollView:scrollView];
+        [scrollView setVerticalRulerView:lineNumberView];
         
         v8 = [[TEV8 alloc] init];
-        [v8 setController:self];
+        [v8 setTextViewController:self];
         
         // set delegate
         [textView setDelegate:self];
@@ -64,10 +64,12 @@
     return self;
 }
 
-- (void)textStorageDidProcessEditing:(NSNotification *)notification
+- (BOOL)textView:(NSTextView *)currentTextView shouldChangeTextInRange:(NSRange)affectedCharRange replacementString:(NSString *)replacementString
 {
-    NSTextStorage *textStorage = [notification object];
-    [v8 textChangeCallback:[textStorage string]];
+    NSString *string = [[currentTextView string] stringByReplacingCharactersInRange:affectedCharRange withString:replacementString];
+    [v8 textChangeCallback:string];
+    
+    return YES;
 }
 
 @end

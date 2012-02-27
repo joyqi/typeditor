@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TETextView.h"
-#import "EditorLineNumberView.h"
+#import "TELineNumberView.h"
 
 @class TEV8;
 
@@ -18,21 +18,21 @@
     NSWindow *window;
     
     // line number
-    EditorLineNumberView *lineNumber;
+    TELineNumberView *lineNumberView;
     
     TETextView *textView;
     
     // scroll
-    NSScrollView *scroll;
+    NSScrollView *scrollView;
     
     // v8 embed
     TEV8 *v8;
 }
 
 @property (strong, nonatomic) NSWindow *window;
-@property (strong, nonatomic) EditorLineNumberView *lineNumber;
+@property (strong, nonatomic) TELineNumberView *lineNumberView;
 @property (strong, nonatomic) TETextView *textView;
-@property (strong, nonatomic) NSScrollView *scroll;
+@property (strong, nonatomic) NSScrollView *scrollView;
 @property (strong, nonatomic) TEV8 *v8;
 
 - (id)initWithWindow:(NSWindow *)parent;

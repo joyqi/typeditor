@@ -38,6 +38,14 @@ NS_INLINE NSInteger TEV8BooleanValue(const v8::Local<v8::Value> &value) {
     return NSNotFound;
 }
 
+NS_INLINE NSInteger TEV8IntegerValue(const v8::Local<v8::Value> &value) {
+    if (*value && !value->IsUndefined() && value->NumberValue()) {
+        return value->IntegerValue();
+    }
+    
+    return NSNotFound;
+}
+
 NS_INLINE NSString *TEV8StringValue(const v8::Local<v8::Value> &value) {
     if (*value && !value->IsUndefined() && value->IsString()) {
         v8::String::Utf8Value string(value->ToString());
@@ -67,6 +75,5 @@ NS_INLINE NSColor *TEV8ColorValue(const v8::Local<v8::Value> &value, NSColor *co
 
 @property (strong, nonatomic) TETextViewController *textViewController;
 
-- (void) setController:(TETextViewController *)textViewController;
 - (void) textChangeCallback:(NSString *)string;
 @end

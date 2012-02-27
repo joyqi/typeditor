@@ -36,10 +36,10 @@
 @interface TETextView : NSTextView {
     
     // 预定义的glyph style 数组
-    TEGlyphStyle *definedGlyphStyles[TE_MAX_GLYPH_STYLES_NUM];
+    NSMutableArray *definedGlyphStyles;
     
     // glyph的预定义缓冲区
-    TEGlyphRange glyphRanges[TE_MAX_GLYPH_RANGES_NUM];
+    NSMutableData *glyphRangesData;
     NSUInteger glyphRangesNum;
     
     NSColor *color;
@@ -62,10 +62,12 @@
 @property (assign, nonatomic) NSUInteger tabStop;
 @property (strong, nonatomic) NSColor *selectedColor;
 @property (strong, nonatomic) NSColor *selectedBackgroundColor;
+@property (assign, atomic) BOOL shouldDrawText;
 
 - (void) defineGlyphStyle:(TEGlyphStyle *)style withType:(NSUInteger)type;
 - (void) setGlyphRange:(TEGlyphRange)glyphRange withIndex:(NSUInteger)index;
 - (NSRange) rectToGlyphRange:(NSRect)rect;
-- (void) drawCursorRect;
+- (void) setPaddingX:(CGFloat)padingX;
+- (void) setPaddingY:(CGFloat)padingY;
 
 @end

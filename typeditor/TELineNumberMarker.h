@@ -8,9 +8,9 @@
 
 #import <AppKit/AppKit.h>
 
-#define EDITOR_LINE_CODING_KEY		@"line"
+#define TE_LINE_NUMBER_LINE_CODING_KEY		@"line"
 
-@interface EditorLineNumberMarker : NSRulerMarker {
+@interface TELineNumberMarker : NSRulerMarker {
     NSUInteger		_lineNumber;
 }
 

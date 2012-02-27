@@ -10,17 +10,13 @@
 		203AE70214F00DBD00D07E10 /* INAppStoreWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 203AE70114F00DBD00D07E10 /* INAppStoreWindow.m */; };
 		203AE70514F014A000D07E10 /* WindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 203AE70414F014A000D07E10 /* WindowController.mm */; };
 		203AE70714F02B1700D07E10 /* WindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 203AE70614F02B1700D07E10 /* WindowController.xib */; };
-		2058101814F3D46F00EAAD8E /* EditorLineNumberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2058101714F3D46F00EAAD8E /* EditorLineNumberView.m */; };
-		2058101C14F3D60300EAAD8E /* EditorLineNumberMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = 2058101B14F3D60300EAAD8E /* EditorLineNumberMarker.m */; };
-		2086D2A614F696FF0016BC47 /* EditorStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2086D2A514F696FF0016BC47 /* EditorStyle.m */; };
+		2058101C14F3D60300EAAD8E /* TELineNumberMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = 2058101B14F3D60300EAAD8E /* TELineNumberMarker.m */; };
 		208CC71A14FA7CE100D64C4A /* TEGlyphStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 208CC71914FA7CE100D64C4A /* TEGlyphStyle.m */; };
-		208DFC1E14F2832C0067D6E1 /* EditorViewReplacement.m in Sources */ = {isa = PBXBuildFile; fileRef = 208DFC1D14F2832C0067D6E1 /* EditorViewReplacement.m */; };
 		20FDEC9014F8F2F300556F76 /* TETextView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20FDEC8F14F8F2F300556F76 /* TETextView.mm */; };
 		20FDECA114F91F4800556F76 /* TEV8.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20FDECA014F91F4800556F76 /* TEV8.mm */; };
 		20FDECB014F9ED5700556F76 /* TETextViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20FDECAE14F9ED5700556F76 /* TETextViewController.mm */; };
 		20FDECB114F9ED5700556F76 /* TETextViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20FDECAF14F9ED5700556F76 /* TETextViewController.xib */; };
-		2A3EEE2314F399CD007F0CE3 /* EditorTextView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A3EEE2214F399CD007F0CE3 /* EditorTextView.mm */; };
-		2AAA6DAF14F20B88000BF463 /* EditorViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2AAA6DAD14F20B88000BF463 /* EditorViewController.mm */; };
+		2A17B9A014FB50A000B23641 /* TELineNumberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A17B99F14FB50A000B23641 /* TELineNumberView.m */; };
 		2AAA6DB014F20B88000BF463 /* EditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2AAA6DAE14F20B88000BF463 /* EditorViewController.xib */; };
 		2ABB27E614ECCF7100820C07 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB27E514ECCF7100820C07 /* Cocoa.framework */; };
 		2ABB27F014ECCF7100820C07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB27EE14ECCF7100820C07 /* InfoPlist.strings */; };
@@ -30,7 +26,6 @@
 		2ABB27FC14ECCF7200820C07 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB27FA14ECCF7200820C07 /* MainMenu.xib */; };
 		2ABB283814ECD69E00820C07 /* libv8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB283614ECD69E00820C07 /* libv8.a */; };
 		2ABB283914ECD69E00820C07 /* libv8preparser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB283714ECD69E00820C07 /* libv8preparser.a */; };
-		2AF4883614EE3CE500F07726 /* V8Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2AF4883514EE3CE500F07726 /* V8Cocoa.mm */; };
 		2AF4884014EE553C00F07726 /* init.js in Resources */ = {isa = PBXBuildFile; fileRef = 2AF4883E14EE54DE00F07726 /* init.js */; };
 /* End PBXBuildFile section */
 
@@ -40,10 +35,8 @@
 		203AE70314F014A000D07E10 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		203AE70414F014A000D07E10 /* WindowController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WindowController.mm; sourceTree = "<group>"; };
 		203AE70614F02B1700D07E10 /* WindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WindowController.xib; sourceTree = "<group>"; };
-		2058101614F3D46F00EAAD8E /* EditorLineNumberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorLineNumberView.h; sourceTree = "<group>"; };
-		2058101714F3D46F00EAAD8E /* EditorLineNumberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditorLineNumberView.m; sourceTree = "<group>"; };
-		2058101A14F3D60300EAAD8E /* EditorLineNumberMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorLineNumberMarker.h; sourceTree = "<group>"; };
-		2058101B14F3D60300EAAD8E /* EditorLineNumberMarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditorLineNumberMarker.m; sourceTree = "<group>"; };
+		2058101A14F3D60300EAAD8E /* TELineNumberMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TELineNumberMarker.h; sourceTree = "<group>"; };
+		2058101B14F3D60300EAAD8E /* TELineNumberMarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TELineNumberMarker.m; sourceTree = "<group>"; };
 		2058101D14F3F98800EAAD8E /* EditorTextViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorTextViewDelegate.h; sourceTree = "<group>"; };
 		2086D2A414F696FF0016BC47 /* EditorStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorStyle.h; sourceTree = "<group>"; };
 		2086D2A514F696FF0016BC47 /* EditorStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditorStyle.m; sourceTree = "<group>"; };
@@ -59,6 +52,8 @@
 		20FDECAD14F9ED5700556F76 /* TETextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TETextViewController.h; sourceTree = "<group>"; };
 		20FDECAE14F9ED5700556F76 /* TETextViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TETextViewController.mm; sourceTree = "<group>"; };
 		20FDECAF14F9ED5700556F76 /* TETextViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TETextViewController.xib; sourceTree = "<group>"; };
+		2A17B99E14FB50A000B23641 /* TELineNumberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TELineNumberView.h; sourceTree = "<group>"; };
+		2A17B99F14FB50A000B23641 /* TELineNumberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TELineNumberView.m; sourceTree = "<group>"; };
 		2A3EEE2114F399CD007F0CE3 /* EditorTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorTextView.h; sourceTree = "<group>"; };
 		2A3EEE2214F399CD007F0CE3 /* EditorTextView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EditorTextView.mm; sourceTree = "<group>"; };
 		2AAA6DAC14F20B88000BF463 /* EditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorViewController.h; sourceTree = "<group>"; };
@@ -102,14 +97,8 @@
 		203AE6FF14F00DA700D07E10 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				203AE70014F00DBD00D07E10 /* INAppStoreWindow.h */,
-				203AE70114F00DBD00D07E10 /* INAppStoreWindow.m */,
 				2A3EEE2114F399CD007F0CE3 /* EditorTextView.h */,
 				2A3EEE2214F399CD007F0CE3 /* EditorTextView.mm */,
-				2058101614F3D46F00EAAD8E /* EditorLineNumberView.h */,
-				2058101714F3D46F00EAAD8E /* EditorLineNumberView.m */,
-				2058101A14F3D60300EAAD8E /* EditorLineNumberMarker.h */,
-				2058101B14F3D60300EAAD8E /* EditorLineNumberMarker.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -130,6 +119,12 @@
 			isa = PBXGroup;
 			children = (
 				20FDEC8D14F8F17700556F76 /* TE.h */,
+				203AE70014F00DBD00D07E10 /* INAppStoreWindow.h */,
+				203AE70114F00DBD00D07E10 /* INAppStoreWindow.m */,
+				2A17B99E14FB50A000B23641 /* TELineNumberView.h */,
+				2A17B99F14FB50A000B23641 /* TELineNumberView.m */,
+				2058101A14F3D60300EAAD8E /* TELineNumberMarker.h */,
+				2058101B14F3D60300EAAD8E /* TELineNumberMarker.m */,
 				20FDEC8E14F8F2F300556F76 /* TETextView.h */,
 				20FDEC8F14F8F2F300556F76 /* TETextView.mm */,
 				20FDEC9F14F91F4800556F76 /* TEV8.h */,
@@ -139,6 +134,9 @@
 				20FDECAF14F9ED5700556F76 /* TETextViewController.xib */,
 				208CC71814FA7CE100D64C4A /* TEGlyphStyle.h */,
 				208CC71914FA7CE100D64C4A /* TEGlyphStyle.m */,
+				203AE70314F014A000D07E10 /* WindowController.h */,
+				203AE70414F014A000D07E10 /* WindowController.mm */,
+				203AE70614F02B1700D07E10 /* WindowController.xib */,
 			);
 			name = "Editor Files";
 			sourceTree = "<group>";
@@ -214,9 +212,6 @@
 		2ABB283F14ECDC8F00820C07 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				203AE70314F014A000D07E10 /* WindowController.h */,
-				203AE70414F014A000D07E10 /* WindowController.mm */,
-				203AE70614F02B1700D07E10 /* WindowController.xib */,
 				2AAA6DAC14F20B88000BF463 /* EditorViewController.h */,
 				2AAA6DAD14F20B88000BF463 /* EditorViewController.mm */,
 				2AAA6DAE14F20B88000BF463 /* EditorViewController.xib */,
@@ -311,19 +306,14 @@
 			files = (
 				2ABB27F214ECCF7100820C07 /* main.m in Sources */,
 				2ABB27F914ECCF7100820C07 /* SFAppDelegate.mm in Sources */,
-				2AF4883614EE3CE500F07726 /* V8Cocoa.mm in Sources */,
 				203AE70214F00DBD00D07E10 /* INAppStoreWindow.m in Sources */,
 				203AE70514F014A000D07E10 /* WindowController.mm in Sources */,
-				2AAA6DAF14F20B88000BF463 /* EditorViewController.mm in Sources */,
-				208DFC1E14F2832C0067D6E1 /* EditorViewReplacement.m in Sources */,
-				2A3EEE2314F399CD007F0CE3 /* EditorTextView.mm in Sources */,
-				2058101814F3D46F00EAAD8E /* EditorLineNumberView.m in Sources */,
-				2058101C14F3D60300EAAD8E /* EditorLineNumberMarker.m in Sources */,
-				2086D2A614F696FF0016BC47 /* EditorStyle.m in Sources */,
+				2058101C14F3D60300EAAD8E /* TELineNumberMarker.m in Sources */,
 				20FDEC9014F8F2F300556F76 /* TETextView.mm in Sources */,
 				20FDECA114F91F4800556F76 /* TEV8.mm in Sources */,
 				20FDECB014F9ED5700556F76 /* TETextViewController.mm in Sources */,
 				208CC71A14FA7CE100D64C4A /* TEGlyphStyle.m in Sources */,
+				2A17B9A014FB50A000B23641 /* TELineNumberView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

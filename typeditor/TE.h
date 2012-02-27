@@ -32,12 +32,11 @@
 NS_INLINE TEGlyphStyle *TEMakeGlyphStyle(NSUInteger _type, NSFont *_font, NSColor *_color, NSColor *_backgroundColor) {
     TEGlyphStyle *style = [[TEGlyphStyle alloc] init];
     
-    style->type = [NSNumber numberWithInteger:_type];
+    style->type = _type;
     style->font = _font;
     style->color = _color;
     style->backgroundColor = _backgroundColor;
     style->attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                         style->type, TEGlyphStyleAttributeName, 
                          style->font, NSFontAttributeName,
                          style->color, NSForegroundColorAttributeName,
                          style->backgroundColor, NSBackgroundColorAttributeName, nil];

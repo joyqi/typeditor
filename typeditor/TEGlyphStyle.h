@@ -12,7 +12,7 @@
 @public
     
     // font type
-    NSNumber *type;
+    NSUInteger type;
     
     // font name
     NSFont *font;

@@ -10,7 +10,7 @@
 
 @implementation TETextView
 
-@synthesize glyphRangesNum, color, lineHeight, tabStop, selectedColor, selectedBackgroundColor, shouldDrawText;
+@synthesize glyphRangesNum, color, lineHeight, tabStop, selectedColor, selectedBackgroundColor;
 
 - (void) defineGlyphStyle:(TEGlyphStyle *)style withType:(NSUInteger)type
 {
@@ -95,10 +95,8 @@
     self = [super initWithFrame:frameRect];
     
     if (self) {
-        // glyphRanges = (TEGlyphRange *)malloc(sizeof(TEGlyphRange) * TE_MAX_GLYPH_RANGES_NUM);
         glyphRangesData = [NSMutableData dataWithLength:sizeof(TEGlyphRange) * TE_MAX_GLYPH_RANGES_NUM];
         definedGlyphStyles = [NSMutableArray arrayWithCapacity:TE_MAX_GLYPH_STYLES_NUM];
-        // [NSTimer timerWithTimeInterval:1 target:self selector:@selector(cursorDrawCursor) userInfo:<#(id)#> repeats:<#(BOOL)#>
     }
     
     return self;
@@ -111,36 +109,40 @@
     return should;
 }
 
-- (NSRange) rectToGlyphRange:(NSRect)rect
+- (NSRange) rectToGlyphRange:(NSRect)rect effectiveRange:(NSRange *)range
 {
     NSLayoutManager *lm = [self layoutManager];
     NSRange glyphRange = [lm glyphRangeForBoundingRect:rect inTextContainer:[self textContainer]];
     NSRange characterRange = [lm characterRangeForGlyphRange:glyphRange actualGlyphRange:NULL];
-    NSUInteger p = floor((glyphRangesNum - 1) / 2), q = 0, from = characterRange.location,
-    to = characterRange.location + characterRange.length;
+    NSUInteger p = 0, q = glyphRangesNum - 1, m = 0, n = 0,
+    from = characterRange.location, to = characterRange.location + characterRange.length;
     TEGlyphRange *glyphRanges = (TEGlyphRange *)[glyphRangesData mutableBytes];
-
-    // 使用二分法来查找当前的range的开始处
-    do {
-        NSUInteger start = glyphRanges[p].location, stop = glyphRanges[p].location + glyphRanges[p].length;
+    
+    range->location = characterRange.location;
+    range->length = characterRange.length;
+    
+    while (p <= q) {
+        m = (p + q) / 2;
+        
+        NSUInteger start = glyphRanges[m].location, stop = glyphRanges[m].location + glyphRanges[m].length;
         
         if (from >= start && from <= stop) {
             break;
         } else if (from < start) {
-            p = floor(p / 2);
+            q = m - 1;
         } else if (from > stop) {
-            p = p + ceil(p / 2);
+            p = m + 1;
         }
-    } while (p > 0 && p < glyphRangesNum - 1);
+    }
     
     // 找到开始处以后再用循环方法找到结尾处
-    for (q = p; q < glyphRangesNum - 1; q ++) {
-        if (to <= glyphRanges[p].location + glyphRanges[p].length) {
+    for (n = m; n < glyphRangesNum - 1; n ++) {
+        if (to <= glyphRanges[n].location + glyphRanges[n].length) {
             break;
         }
     }
     
-    return NSMakeRange(p, q - p);
+    return NSMakeRange(m, n - m);
 }
 
 - (void)drawInsertionPointInRect:(NSRect)rect color:(NSColor *)cursorColor turnedOn:(BOOL)flag
@@ -160,19 +162,34 @@
     NSRectFill(rect);
 }
 
+- (void) viewDidEndLiveResize
+{
+    [super viewDidEndLiveResize];
+    shouldDrawText = YES;
+}
+
+- (void) didScroll:(NSRect)rect
+{
+    lastScrollTime = [NSDate timeIntervalSinceReferenceDate];
+    shouldDrawTextThroughScroll = YES;
+}
+
 // refresh rect with higthlight color
 - (void)drawRect:(NSRect)dirtyRect
 {
-    NSRange range = [self rectToGlyphRange:dirtyRect];
-    NSUInteger from = range.location, to = range.location + range.length;
-    NSTextStorage *ts = [self textStorage];
-    NSLayoutManager *lm = [self layoutManager];
+    if (shouldDrawTextThroughScroll 
+        && [NSDate timeIntervalSinceReferenceDate] - lastScrollTime >= TE_SCROLL_RELEASE_TIME) {
+        shouldDrawText = YES;
+        shouldDrawTextThroughScroll = NO;
+    }
     
     // 重新渲染
     if (shouldDrawText) {
-        NSRange visibleGlyphRange = [lm glyphRangeForBoundingRect:[self visibleRect]
-                                                  inTextContainer:[self textContainer]];
-        NSRange visableCharacterRange = [lm characterRangeForGlyphRange:visibleGlyphRange actualGlyphRange:NULL];
+        NSRange effectiveRange;
+        NSRange range = [self rectToGlyphRange:dirtyRect effectiveRange:&effectiveRange];
+        NSUInteger from = range.location, to = range.location + range.length;
+        NSTextStorage *ts = [self textStorage];
+
         TEGlyphRange *glyphRanges = (TEGlyphRange *)[glyphRangesData mutableBytes];
         
         for (NSUInteger i = from; i <= to; i ++) {
@@ -184,12 +201,7 @@
             }
             
             TEGlyphStyle *style = [definedGlyphStyles objectAtIndex:gr.styleType];
-            
-            NSUInteger start = MAX(visableCharacterRange.location, gr.location);
-            NSUInteger stop = MIN(visableCharacterRange.length + visableCharacterRange.location, gr.location + gr.length);
-            
-            NSLog(@"%lu : %lu %@", start, stop, style->attributes);
-            [ts setAttributes:style->attributes range:NSMakeRange(start, stop - start)];
+            [ts setAttributes:style->attributes range:NSMakeRange(gr.location, gr.length)];
         }
         
         shouldDrawText = NO;

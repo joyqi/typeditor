@@ -53,6 +53,10 @@
         lineNumberView = [[TELineNumberView alloc] initWithScrollView:scrollView];
         [scrollView setVerticalRulerView:lineNumberView];
         
+        // scroll view changed
+        [[scrollView contentView] setPostsBoundsChangedNotifications:YES];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(boundsDidChange:) name:NSViewBoundsDidChangeNotification object:[scrollView contentView]];
+        
         v8 = [[TEV8 alloc] init];
         [v8 setTextViewController:self];
         
@@ -70,6 +74,14 @@
     [v8 textChangeCallback:string];
     
     return YES;
+}
+
+- (void)boundsDidChange:(NSNotification *)aNotification
+{
+    NSClipView *contentView = [aNotification object];
+    NSRect rect = [contentView documentVisibleRect];
+    
+    [textView didScroll:rect];
 }
 
 @end

@@ -25,6 +25,9 @@
     // scroll
     NSScrollView *scrollView;
     
+    // changed
+    BOOL textViewChanged;
+    
     // v8 embed
     TEV8 *v8;
 }
@@ -36,5 +39,6 @@
 @property (strong, nonatomic) TEV8 *v8;
 
 - (id)initWithWindow:(NSWindow *)parent;
+- (void)boundsDidChange:(NSNotification *)aNotification;
 
 @end

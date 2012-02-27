@@ -52,8 +52,11 @@
     
     NSColor *selectedBackgroundColor;
     
+    NSTimeInterval lastScrollTime;
+    
     // draw mode
     BOOL shouldDrawText;
+    BOOL shouldDrawTextThroughScroll;
 }
 
 @property (assign) NSUInteger glyphRangesNum;
@@ -62,12 +65,12 @@
 @property (assign, nonatomic) NSUInteger tabStop;
 @property (strong, nonatomic) NSColor *selectedColor;
 @property (strong, nonatomic) NSColor *selectedBackgroundColor;
-@property (assign, atomic) BOOL shouldDrawText;
 
 - (void) defineGlyphStyle:(TEGlyphStyle *)style withType:(NSUInteger)type;
 - (void) setGlyphRange:(TEGlyphRange)glyphRange withIndex:(NSUInteger)index;
-- (NSRange) rectToGlyphRange:(NSRect)rect;
+- (NSRange) rectToGlyphRange:(NSRect)rect effectiveRange:(NSRange *)range;
 - (void) setPaddingX:(CGFloat)padingX;
 - (void) setPaddingY:(CGFloat)padingY;
+- (void) didScroll:(NSRect)rect;
 
 @end

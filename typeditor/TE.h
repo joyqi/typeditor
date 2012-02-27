@@ -16,6 +16,7 @@
 #define TE_MAX_GLYPH_STYLES_NUM 128
 #define TEGlyphStyleAttributeName @"EditorStyleAttributeName"
 #define TE_MAX_GLYPH_RANGES_NUM 1024 * 1024 * 64
+#define TE_SCROLL_RELEASE_TIME 0.05f
 
 #define TEMakeString(str) \
     [[NSString alloc] initWithCString:str encoding:NSUTF8StringEncoding]

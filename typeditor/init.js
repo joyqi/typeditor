@@ -943,12 +943,10 @@ styles[$define].color = '#aaa';
 styles[$structure].color = '#ccc';
 
 $.lexer(function (str) {
-    var r = $.prettyPrintOne(str, 'html');
-    if (0 == r.length) {
-        r = [0, str.length, $none];
+    // var r = $.prettyPrintOne(str, 'html');
+    if (true) {
+        return [0, str.length, $none];
     }
 
-    $.log('asdf:' + r);
     return r;
 });
-

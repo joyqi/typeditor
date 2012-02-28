@@ -21,7 +21,6 @@
 
 - (void) setGlyphRange:(TEGlyphRange)glyphRange withIndex:(NSUInteger)index
 {
-    TEGlyphRange *glyphRanges = (TEGlyphRange *)[glyphRangesData mutableBytes];
     if (index < TE_MAX_GLYPH_RANGES_NUM) {
         glyphRanges[index] = glyphRange;
     }
@@ -95,11 +94,17 @@
     self = [super initWithFrame:frameRect];
     
     if (self) {
-        glyphRangesData = [NSMutableData dataWithLength:sizeof(TEGlyphRange) * TE_MAX_GLYPH_RANGES_NUM];
+        glyphRanges = (TEGlyphRange *)malloc(sizeof(TEGlyphRange) * TE_MAX_GLYPH_RANGES_NUM);
         definedGlyphStyles = [NSMutableArray arrayWithCapacity:TE_MAX_GLYPH_STYLES_NUM];
+        layoutManager = [self layoutManager];
     }
     
     return self;
+}
+
+- (void) dealloc
+{
+    free(glyphRanges);
 }
 
 - (BOOL)shouldChangeTextInRange:(NSRange)affectedCharRange replacementString:(NSString *)replacementString
@@ -116,7 +121,6 @@
     NSRange characterRange = [lm characterRangeForGlyphRange:glyphRange actualGlyphRange:NULL];
     NSUInteger p = 0, q = glyphRangesNum - 1, m = 0, n = 0,
     from = characterRange.location, to = characterRange.location + characterRange.length;
-    TEGlyphRange *glyphRanges = (TEGlyphRange *)[glyphRangesData mutableBytes];
     
     range->location = characterRange.location;
     range->length = characterRange.length;
@@ -157,12 +161,11 @@
 
 - (void)_drawInsertionPointInRect:(NSRect)rect color:(NSColor *)cursorColor
 {
-    
     [cursorColor set];
     NSRectFill(rect);
 }
 
-- (void) viewDidEndLiveResize
+- (void) viewDidEndLiveResizect
 {
     [super viewDidEndLiveResize];
     shouldDrawText = YES;
@@ -170,30 +173,24 @@
 
 - (void) didScroll:(NSRect)rect
 {
-    lastScrollTime = [NSDate timeIntervalSinceReferenceDate];
-    shouldDrawTextThroughScroll = YES;
+    shouldDrawText = YES;
+    [self drawRect:rect];
 }
 
 // refresh rect with higthlight color
 - (void)drawRect:(NSRect)dirtyRect
 {
-    if (shouldDrawTextThroughScroll 
-        && [NSDate timeIntervalSinceReferenceDate] - lastScrollTime >= TE_SCROLL_RELEASE_TIME) {
-        shouldDrawText = YES;
-        shouldDrawTextThroughScroll = NO;
-    }
-    
     // 重新渲染
     if (shouldDrawText) {
         NSRange effectiveRange;
         NSRange range = [self rectToGlyphRange:dirtyRect effectiveRange:&effectiveRange];
         NSUInteger from = range.location, to = range.location + range.length;
-        NSTextStorage *ts = [self textStorage];
-
-        TEGlyphRange *glyphRanges = (TEGlyphRange *)[glyphRangesData mutableBytes];
         
         for (NSUInteger i = from; i <= to; i ++) {
             TEGlyphRange gr = glyphRanges[i];
+            
+            NSUInteger start = MAX(gr.location, effectiveRange.location),
+            stop = MIN(gr.location + gr.length, effectiveRange.location + effectiveRange.length);
             
             // ignore failed
             if (gr.styleType >= TE_MAX_GLYPH_STYLES_NUM) {
@@ -201,7 +198,7 @@
             }
             
             TEGlyphStyle *style = [definedGlyphStyles objectAtIndex:gr.styleType];
-            [ts setAttributes:style->attributes range:NSMakeRange(gr.location, gr.length)];
+            [layoutManager setTemporaryAttributes:style->attributes forCharacterRange:NSMakeRange(start, stop - start)];
         }
         
         shouldDrawText = NO;

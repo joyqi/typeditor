@@ -39,8 +39,10 @@
     NSMutableArray *definedGlyphStyles;
     
     // glyph的预定义缓冲区
-    NSMutableData *glyphRangesData;
+    TEGlyphRange *glyphRanges;
     NSUInteger glyphRangesNum;
+    
+    NSLayoutManager *layoutManager;
     
     NSColor *color;
     

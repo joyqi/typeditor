@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "TETextView.h"
 #import "TELineNumberView.h"
+#import "TEScrollView.h"
 
 @class TEV8;
 
@@ -23,7 +24,7 @@
     TETextView *textView;
     
     // scroll
-    NSScrollView *scrollView;
+    TEScrollView *scrollView;
     
     // changed
     BOOL textViewChanged;

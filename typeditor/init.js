@@ -936,17 +936,19 @@
   };
 })();
 
-styles.font = 'Monaco';
-styles.size = 15;
+styles.font = 'DejaVu Sans Mono';
+styles.size = 13;
 
+styles[$tag].color = '#0000FF';
+styles[$match].color = '#FF0000';
 styles[$define].color = '#aaa';
-styles[$structure].color = '#ccc';
+styles[$define].italic = true;
+styles[$structure].bold = true;
 
 $.lexer(function (str) {
-    // var r = $.prettyPrintOne(str, 'html');
-    if (true) {
+    if (0 == str.length) {
         return [0, str.length, $none];
     }
 
-    return r;
+    return $.prettyPrintOne(str, 'html');
 });

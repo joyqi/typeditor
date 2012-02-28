@@ -24,8 +24,8 @@
         [mainWindow setFullScreenButtonRightMargin:7.0f];
         [mainWindow setHideTitleBarInFullScreen:NO];
         [mainWindow setCenterFullScreenButton:YES];
-        [mainWindow setTitleBarHeight:40.0f];
-        [mainWindow setShowsBaselineSeparator:NO];
+        [mainWindow setTitleBarHeight:25.0f];
+        [mainWindow setShowsBaselineSeparator:YES];
         [mainWindow setDelegate:self];
     }
     

@@ -21,6 +21,8 @@
 
 @implementation TELineNumberView
 
+@synthesize currentLineNumber;
+
 - (id)initWithScrollView: (NSScrollView *)aScrollView
 {
     return [self initWithScrollView:aScrollView orientation:NSVerticalRuler];  
@@ -238,6 +240,8 @@
             numberOfLines++;
         }
         while (index < stringLength);
+        
+        currentLineNumber = numberOfLines;
         
         // Check if text ends with a new line.
         [text getLineStart:NULL end:&lineEnd contentsEnd:&contentEnd forRange:NSMakeRange([[_lineIndices lastObject] unsignedIntegerValue], 0)];

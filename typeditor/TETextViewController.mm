@@ -30,7 +30,6 @@
         [scrollView setHasVerticalScroller:YES];
         [scrollView setHasHorizontalScroller:NO];
         [scrollView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-        [scrollView setAutohidesScrollers:YES];
         
         textView = [[TETextView alloc] initWithFrame:[[window contentView] frame]];
         // [textView setEditorViewController:self];

@@ -27,6 +27,7 @@
 	NSColor				*_alternateTextColor;
 	NSColor				*_backgroundColor;
     float               value;
+    NSUInteger          currentLineNumber;
 }
 
 - (id)initWithScrollView:(NSScrollView *)aScrollView;
@@ -47,5 +48,7 @@
 
 - (NSUInteger)lineNumberForLocation:(CGFloat)location;
 - (TELineNumberMarker *)markerAtLine:(NSUInteger)line;
+
+@property (assign, nonatomic) NSUInteger currentLineNumber;
 
 @end

@@ -8,7 +8,6 @@
 
 #import "TETextViewController.h"
 #import "TEV8.h"
-#import "TEScroller.h"
 
 @implementation TETextViewController
 
@@ -22,10 +21,9 @@
     if (self) {
         window = parent;
         
-        scrollView = [[TEScrollView alloc] initWithFrame:[[window contentView] frame]];
+        scrollView = [[NSScrollView alloc] initWithFrame:[[window contentView] frame]];
         NSSize contentSize = [scrollView contentSize];
         
-        [scrollView setVerticalScroller:[[TEScroller alloc] init]];
         [scrollView setBorderType:NSNoBorder];
         [scrollView setHasVerticalScroller:YES];
         [scrollView setHasHorizontalScroller:NO];

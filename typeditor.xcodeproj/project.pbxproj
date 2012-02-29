@@ -10,7 +10,9 @@
 		203AE70214F00DBD00D07E10 /* INAppStoreWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 203AE70114F00DBD00D07E10 /* INAppStoreWindow.m */; };
 		203AE70514F014A000D07E10 /* WindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 203AE70414F014A000D07E10 /* WindowController.mm */; };
 		203AE70714F02B1700D07E10 /* WindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 203AE70614F02B1700D07E10 /* WindowController.xib */; };
+		204E759A14FE71F8009E9997 /* ParseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2072498514FE6D2C00501B28 /* ParseKit.framework */; };
 		2058101C14F3D60300EAAD8E /* TELineNumberMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = 2058101B14F3D60300EAAD8E /* TELineNumberMarker.m */; };
+		2072499614FE6D9700501B28 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2072499514FE6D9700501B28 /* libicucore.dylib */; };
 		208CC71A14FA7CE100D64C4A /* TEGlyphStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 208CC71914FA7CE100D64C4A /* TEGlyphStyle.m */; };
 		20FDEC9014F8F2F300556F76 /* TETextView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20FDEC8F14F8F2F300556F76 /* TETextView.mm */; };
 		20FDECA114F91F4800556F76 /* TEV8.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20FDECA014F91F4800556F76 /* TEV8.mm */; };
@@ -29,6 +31,16 @@
 		2AF4884014EE553C00F07726 /* init.js in Resources */ = {isa = PBXBuildFile; fileRef = 2AF4883E14EE54DE00F07726 /* init.js */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		2072498414FE6D2C00501B28 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2072497414FE6D2C00501B28 /* ParseKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = ParseKit;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		203AE70014F00DBD00D07E10 /* INAppStoreWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INAppStoreWindow.h; sourceTree = "<group>"; };
 		203AE70114F00DBD00D07E10 /* INAppStoreWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INAppStoreWindow.m; sourceTree = "<group>"; };
@@ -38,6 +50,8 @@
 		2058101A14F3D60300EAAD8E /* TELineNumberMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TELineNumberMarker.h; sourceTree = "<group>"; };
 		2058101B14F3D60300EAAD8E /* TELineNumberMarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TELineNumberMarker.m; sourceTree = "<group>"; };
 		2058101D14F3F98800EAAD8E /* EditorTextViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorTextViewDelegate.h; sourceTree = "<group>"; };
+		2072497414FE6D2C00501B28 /* ParseKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ParseKit.xcodeproj; path = parsekit/ParseKit.xcodeproj; sourceTree = "<group>"; };
+		2072499514FE6D9700501B28 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		2086D2A414F696FF0016BC47 /* EditorStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorStyle.h; sourceTree = "<group>"; };
 		2086D2A514F696FF0016BC47 /* EditorStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditorStyle.m; sourceTree = "<group>"; };
 		208CC71814FA7CE100D64C4A /* TEGlyphStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TEGlyphStyle.h; sourceTree = "<group>"; };
@@ -85,6 +99,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				204E759A14FE71F8009E9997 /* ParseKit.framework in Frameworks */,
+				2072499614FE6D9700501B28 /* libicucore.dylib in Frameworks */,
 				2ABB27E614ECCF7100820C07 /* Cocoa.framework in Frameworks */,
 				2ABB283814ECD69E00820C07 /* libv8.a in Frameworks */,
 				2ABB283914ECD69E00820C07 /* libv8preparser.a in Frameworks */,
@@ -101,6 +117,14 @@
 				2A3EEE2214F399CD007F0CE3 /* EditorTextView.mm */,
 			);
 			name = View;
+			sourceTree = "<group>";
+		};
+		2072497514FE6D2C00501B28 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2072498514FE6D2C00501B28 /* ParseKit.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		208DFC1A14F282DC0067D6E1 /* Class */ = {
@@ -144,6 +168,7 @@
 		2ABB27D614ECCF7100820C07 = {
 			isa = PBXGroup;
 			children = (
+				2072497414FE6D2C00501B28 /* ParseKit.xcodeproj */,
 				2ABB27EB14ECCF7100820C07 /* typeditor */,
 				2ABB27E414ECCF7100820C07 /* Frameworks */,
 				2ABB27E214ECCF7100820C07 /* Products */,
@@ -161,6 +186,7 @@
 		2ABB27E414ECCF7100820C07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2072499514FE6D9700501B28 /* libicucore.dylib */,
 				2ABB283614ECD69E00820C07 /* libv8.a */,
 				2ABB283714ECD69E00820C07 /* libv8preparser.a */,
 				2ABB27E514ECCF7100820C07 /* Cocoa.framework */,
@@ -275,12 +301,28 @@
 			mainGroup = 2ABB27D614ECCF7100820C07;
 			productRefGroup = 2ABB27E214ECCF7100820C07 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 2072497514FE6D2C00501B28 /* Products */;
+					ProjectRef = 2072497414FE6D2C00501B28 /* ParseKit.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				2ABB27E014ECCF7100820C07 /* typeditor */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		2072498514FE6D2C00501B28 /* ParseKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ParseKit.framework;
+			remoteRef = 2072498414FE6D2C00501B28 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		2ABB27DF14ECCF7100820C07 /* Resources */ = {
@@ -402,12 +444,16 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = "${SRCROOT}/v8/include/**";
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/parsekit/include/**",
+					"${SRCROOT}/v8/include/**",
+				);
 				INFOPLIST_FILE = "typeditor/typeditor-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/v8/lib\"",
 				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSION_INFO_SUFFIX = Typeditor;
 				WRAPPER_EXTENSION = app;
@@ -422,12 +468,16 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = "${SRCROOT}/v8/include/**";
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/parsekit/include/**",
+					"${SRCROOT}/v8/include/**",
+				);
 				INFOPLIST_FILE = "typeditor/typeditor-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/v8/lib\"",
 				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSION_INFO_SUFFIX = Typeditor;
 				WRAPPER_EXTENSION = app;

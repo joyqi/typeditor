@@ -8,6 +8,7 @@
 
 #import <AppKit/AppKit.h>
 #import "TE.h"
+#import <ParseKit/ParseKit.h>
 
 #define TETextViewSetTypingAttribute(value, key) \
     NSMutableDictionary *attributes = [[self typingAttributes] mutableCopy]; \

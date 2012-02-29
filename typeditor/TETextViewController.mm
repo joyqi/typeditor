@@ -77,10 +77,11 @@
 
 - (void)boundsDidChange:(NSNotification *)aNotification
 {
-    NSClipView *contentView = [aNotification object];
-    NSRect rect = [contentView documentVisibleRect];
+    // NSView *clipView = [[[scrollView documentView] enclosingScrollView] contentView];
+    // NSClipView *clipView = [aNotification object];
+    // NSRect rect = [scrollView convertRect:[clipView visibleRect] fromView:clipView];
     
-    [textView didScroll:rect];
+    [textView didScroll:[textView visibleRect]];
 }
 
 @end

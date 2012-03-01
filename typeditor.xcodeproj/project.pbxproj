@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2001408F14FF3AA9006AE993 /* JSObjects.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2001408A14FF3AA9006AE993 /* JSObjects.mm */; };
+		2001409014FF3AA9006AE993 /* NSObject+bridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2001408C14FF3AA9006AE993 /* NSObject+bridge.m */; };
+		2001409114FF3AA9006AE993 /* v8_objc_bridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2001408E14FF3AA9006AE993 /* v8_objc_bridge.mm */; };
 		203AE70214F00DBD00D07E10 /* INAppStoreWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 203AE70114F00DBD00D07E10 /* INAppStoreWindow.m */; };
 		203AE70514F014A000D07E10 /* WindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 203AE70414F014A000D07E10 /* WindowController.mm */; };
 		203AE70714F02B1700D07E10 /* WindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 203AE70614F02B1700D07E10 /* WindowController.xib */; };
@@ -30,6 +33,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2001408914FF3AA9006AE993 /* JSObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSObjects.h; sourceTree = "<group>"; };
+		2001408A14FF3AA9006AE993 /* JSObjects.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSObjects.mm; sourceTree = "<group>"; };
+		2001408B14FF3AA9006AE993 /* NSObject+bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+bridge.h"; sourceTree = "<group>"; };
+		2001408C14FF3AA9006AE993 /* NSObject+bridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+bridge.m"; sourceTree = "<group>"; };
+		2001408D14FF3AA9006AE993 /* v8_objc_bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = v8_objc_bridge.h; sourceTree = "<group>"; };
+		2001408E14FF3AA9006AE993 /* v8_objc_bridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = v8_objc_bridge.mm; sourceTree = "<group>"; };
 		203AE70014F00DBD00D07E10 /* INAppStoreWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INAppStoreWindow.h; sourceTree = "<group>"; };
 		203AE70114F00DBD00D07E10 /* INAppStoreWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INAppStoreWindow.m; sourceTree = "<group>"; };
 		203AE70314F014A000D07E10 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
@@ -100,6 +109,19 @@
 			children = (
 			);
 			name = res;
+			sourceTree = "<group>";
+		};
+		2001408814FF3A5F006AE993 /* bridge */ = {
+			isa = PBXGroup;
+			children = (
+				2001408914FF3AA9006AE993 /* JSObjects.h */,
+				2001408A14FF3AA9006AE993 /* JSObjects.mm */,
+				2001408B14FF3AA9006AE993 /* NSObject+bridge.h */,
+				2001408C14FF3AA9006AE993 /* NSObject+bridge.m */,
+				2001408D14FF3AA9006AE993 /* v8_objc_bridge.h */,
+				2001408E14FF3AA9006AE993 /* v8_objc_bridge.mm */,
+			);
+			name = bridge;
 			sourceTree = "<group>";
 		};
 		203AE6FF14F00DA700D07E10 /* View */ = {
@@ -192,6 +214,7 @@
 		2ABB27EB14ECCF7100820C07 /* typeditor */ = {
 			isa = PBXGroup;
 			children = (
+				2001408814FF3A5F006AE993 /* bridge */,
 				2001408414FF19BB006AE993 /* res */,
 				20FDEC8C14F8F00200556F76 /* src */,
 				208DFC1A14F282DC0067D6E1 /* Class */,
@@ -324,6 +347,9 @@
 				20FDECB014F9ED5700556F76 /* TETextViewController.mm in Sources */,
 				208CC71A14FA7CE100D64C4A /* TEGlyphStyle.m in Sources */,
 				2A17B9A014FB50A000B23641 /* TELineNumberView.m in Sources */,
+				2001408F14FF3AA9006AE993 /* JSObjects.mm in Sources */,
+				2001409014FF3AA9006AE993 /* NSObject+bridge.m in Sources */,
+				2001409114FF3AA9006AE993 /* v8_objc_bridge.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

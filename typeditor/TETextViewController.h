@@ -40,5 +40,6 @@
 
 - (id)initWithWindow:(NSWindow *)parent;
 - (void)boundsDidChange:(NSNotification *)aNotification;
+- (void)frameDidChange:(NSNotification *)aNotification;
 
 @end

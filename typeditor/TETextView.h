@@ -8,7 +8,6 @@
 
 #import <AppKit/AppKit.h>
 #import "TE.h"
-#import <JavaScriptCore/JavaScriptCore.h>
 
 #define TETextViewSetTypingAttribute(value, key) \
     NSMutableDictionary *attributes = [[self typingAttributes] mutableCopy]; \
@@ -68,12 +67,12 @@
 @property (assign, nonatomic) NSUInteger tabStop;
 @property (strong, nonatomic) NSColor *selectedColor;
 @property (strong, nonatomic) NSColor *selectedBackgroundColor;
+@property (assign, nonatomic) BOOL shouldDrawText;
 
 - (void) defineGlyphStyle:(TEGlyphStyle *)style withType:(NSUInteger)type;
 - (void) setGlyphRange:(TEGlyphRange)glyphRange withIndex:(NSUInteger)index;
 - (NSRange) rectToGlyphRange:(NSRect)rect effectiveRange:(NSRange *)range;
 - (void) setPaddingX:(CGFloat)padingX;
 - (void) setPaddingY:(CGFloat)padingY;
-- (void) didScroll:(NSRect)rect;
 
 @end

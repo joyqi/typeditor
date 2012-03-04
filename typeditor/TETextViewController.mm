@@ -52,18 +52,16 @@
         lineNumberView = [[TELineNumberView alloc] initWithScrollView:scrollView];
         [scrollView setVerticalRulerView:lineNumberView];
         
+        // scroll view changed
+        [[scrollView contentView] setPostsBoundsChangedNotifications:YES];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(boundsDidChange:) name:NSViewBoundsDidChangeNotification object:[scrollView contentView]];
+        
         v8 = [[TEV8 alloc] init];
         [v8 setTextViewController:self];
         
         // set delegate
         [textView setDelegate:self];
         [[textView textStorage] setDelegate:self];
-        
-        // scroll view changed
-        [[scrollView contentView] setPostsBoundsChangedNotifications:YES];
-        [[scrollView contentView] setPostsFrameChangedNotifications:YES];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(boundsDidChange:) name:NSViewBoundsDidChangeNotification object:[scrollView contentView]];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSViewFrameDidChangeNotification object:[scrollView contentView]];
     }
     
     return self;
@@ -79,12 +77,11 @@
 
 - (void)boundsDidChange:(NSNotification *)aNotification
 {
-    [textView setShouldDrawText:YES];
-}
-
-- (void)frameDidChange:(NSNotification *)aNotification
-{
-    [textView setShouldDrawText:YES];
+    // NSView *clipView = [[[scrollView documentView] enclosingScrollView] contentView];
+    // NSClipView *clipView = [aNotification object];
+    // NSRect rect = [scrollView convertRect:[clipView visibleRect] fromView:clipView];
+    
+    [textView didScroll:[textView visibleRect]];
 }
 
 @end

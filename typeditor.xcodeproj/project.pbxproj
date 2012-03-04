@@ -7,18 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2001408F14FF3AA9006AE993 /* JSObjects.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2001408A14FF3AA9006AE993 /* JSObjects.mm */; };
+		2001409014FF3AA9006AE993 /* NSObject+bridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2001408C14FF3AA9006AE993 /* NSObject+bridge.m */; };
+		2001409114FF3AA9006AE993 /* v8_objc_bridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2001408E14FF3AA9006AE993 /* v8_objc_bridge.mm */; };
 		203AE70214F00DBD00D07E10 /* INAppStoreWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 203AE70114F00DBD00D07E10 /* INAppStoreWindow.m */; };
 		203AE70514F014A000D07E10 /* WindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 203AE70414F014A000D07E10 /* WindowController.mm */; };
 		203AE70714F02B1700D07E10 /* WindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 203AE70614F02B1700D07E10 /* WindowController.xib */; };
 		2058101C14F3D60300EAAD8E /* TELineNumberMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = 2058101B14F3D60300EAAD8E /* TELineNumberMarker.m */; };
 		208CC71A14FA7CE100D64C4A /* TEGlyphStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 208CC71914FA7CE100D64C4A /* TEGlyphStyle.m */; };
-		20E4235E14FFC2A600E43771 /* lpeg.so in Resources */ = {isa = PBXBuildFile; fileRef = 20E4235D14FFC2A600E43771 /* lpeg.so */; };
-		20E4236514FFC31F00E43771 /* grammar.lua in Resources */ = {isa = PBXBuildFile; fileRef = 20E4236114FFC31E00E43771 /* grammar.lua */; };
-		20E4236614FFC31F00E43771 /* init.lua in Resources */ = {isa = PBXBuildFile; fileRef = 20E4236214FFC31E00E43771 /* init.lua */; };
-		20E4236714FFC31F00E43771 /* parser.lua in Resources */ = {isa = PBXBuildFile; fileRef = 20E4236314FFC31E00E43771 /* parser.lua */; };
-		20E4236814FFC31F00E43771 /* scanner.lua in Resources */ = {isa = PBXBuildFile; fileRef = 20E4236414FFC31E00E43771 /* scanner.lua */; };
-		20E4236C14FFC40F00E43771 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20E4236B14FFC40F00E43771 /* liblua.a */; };
-		20E4236F14FFC50D00E43771 /* TELua.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E4236E14FFC50D00E43771 /* TELua.m */; };
 		20FDEC9014F8F2F300556F76 /* TETextView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20FDEC8F14F8F2F300556F76 /* TETextView.mm */; };
 		20FDECA114F91F4800556F76 /* TEV8.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20FDECA014F91F4800556F76 /* TEV8.mm */; };
 		20FDECB014F9ED5700556F76 /* TETextViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20FDECAE14F9ED5700556F76 /* TETextViewController.mm */; };
@@ -31,10 +27,18 @@
 		2ABB27F614ECCF7100820C07 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB27F414ECCF7100820C07 /* Credits.rtf */; };
 		2ABB27F914ECCF7100820C07 /* SFAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB27F814ECCF7100820C07 /* SFAppDelegate.mm */; };
 		2ABB27FC14ECCF7200820C07 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB27FA14ECCF7200820C07 /* MainMenu.xib */; };
+		2ABB283814ECD69E00820C07 /* libv8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB283614ECD69E00820C07 /* libv8.a */; };
+		2ABB283914ECD69E00820C07 /* libv8preparser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB283714ECD69E00820C07 /* libv8preparser.a */; };
 		2AF4884014EE553C00F07726 /* init.js in Resources */ = {isa = PBXBuildFile; fileRef = 2AF4883E14EE54DE00F07726 /* init.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2001408914FF3AA9006AE993 /* JSObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSObjects.h; sourceTree = "<group>"; };
+		2001408A14FF3AA9006AE993 /* JSObjects.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSObjects.mm; sourceTree = "<group>"; };
+		2001408B14FF3AA9006AE993 /* NSObject+bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+bridge.h"; sourceTree = "<group>"; };
+		2001408C14FF3AA9006AE993 /* NSObject+bridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+bridge.m"; sourceTree = "<group>"; };
+		2001408D14FF3AA9006AE993 /* v8_objc_bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = v8_objc_bridge.h; sourceTree = "<group>"; };
+		2001408E14FF3AA9006AE993 /* v8_objc_bridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = v8_objc_bridge.mm; sourceTree = "<group>"; };
 		203AE70014F00DBD00D07E10 /* INAppStoreWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INAppStoreWindow.h; sourceTree = "<group>"; };
 		203AE70114F00DBD00D07E10 /* INAppStoreWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INAppStoreWindow.m; sourceTree = "<group>"; };
 		203AE70314F014A000D07E10 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
@@ -43,20 +47,13 @@
 		2058101A14F3D60300EAAD8E /* TELineNumberMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TELineNumberMarker.h; sourceTree = "<group>"; };
 		2058101B14F3D60300EAAD8E /* TELineNumberMarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TELineNumberMarker.m; sourceTree = "<group>"; };
 		2058101D14F3F98800EAAD8E /* EditorTextViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorTextViewDelegate.h; sourceTree = "<group>"; };
+		2072499514FE6D9700501B28 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		2086D2A414F696FF0016BC47 /* EditorStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorStyle.h; sourceTree = "<group>"; };
 		2086D2A514F696FF0016BC47 /* EditorStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditorStyle.m; sourceTree = "<group>"; };
 		208CC71814FA7CE100D64C4A /* TEGlyphStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TEGlyphStyle.h; sourceTree = "<group>"; };
 		208CC71914FA7CE100D64C4A /* TEGlyphStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TEGlyphStyle.m; sourceTree = "<group>"; };
 		208DFC1C14F2832C0067D6E1 /* EditorViewReplacement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorViewReplacement.h; sourceTree = "<group>"; };
 		208DFC1D14F2832C0067D6E1 /* EditorViewReplacement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditorViewReplacement.m; sourceTree = "<group>"; };
-		20E4235D14FFC2A600E43771 /* lpeg.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.bundle"; path = lpeg.so; sourceTree = "<group>"; };
-		20E4236114FFC31E00E43771 /* grammar.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = grammar.lua; sourceTree = "<group>"; };
-		20E4236214FFC31E00E43771 /* init.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = init.lua; sourceTree = "<group>"; };
-		20E4236314FFC31E00E43771 /* parser.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = parser.lua; sourceTree = "<group>"; };
-		20E4236414FFC31E00E43771 /* scanner.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scanner.lua; sourceTree = "<group>"; };
-		20E4236B14FFC40F00E43771 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = lua/lib/liblua.a; sourceTree = "<group>"; };
-		20E4236D14FFC50D00E43771 /* TELua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TELua.h; sourceTree = "<group>"; };
-		20E4236E14FFC50D00E43771 /* TELua.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TELua.m; sourceTree = "<group>"; };
 		20FDEC8D14F8F17700556F76 /* TE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TE.h; sourceTree = "<group>"; };
 		20FDEC8E14F8F2F300556F76 /* TETextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TETextView.h; sourceTree = "<group>"; };
 		20FDEC8F14F8F2F300556F76 /* TETextView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TETextView.mm; sourceTree = "<group>"; };
@@ -86,6 +83,8 @@
 		2ABB27F814ECCF7100820C07 /* SFAppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = SFAppDelegate.mm; sourceTree = "<group>"; };
 		2ABB27FB14ECCF7200820C07 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		2ABB280314ECCF7200820C07 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		2ABB283614ECD69E00820C07 /* libv8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libv8.a; path = v8/lib/libv8.a; sourceTree = "<group>"; };
+		2ABB283714ECD69E00820C07 /* libv8preparser.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libv8preparser.a; path = v8/lib/libv8preparser.a; sourceTree = "<group>"; };
 		2AF4883414EE3CE500F07726 /* V8Cocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = V8Cocoa.h; sourceTree = "<group>"; };
 		2AF4883514EE3CE500F07726 /* V8Cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = V8Cocoa.mm; sourceTree = "<group>"; };
 		2AF4883E14EE54DE00F07726 /* init.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = init.js; sourceTree = "<group>"; };
@@ -97,7 +96,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2ABB27E614ECCF7100820C07 /* Cocoa.framework in Frameworks */,
-				20E4236C14FFC40F00E43771 /* liblua.a in Frameworks */,
+				2ABB283814ECD69E00820C07 /* libv8.a in Frameworks */,
+				2ABB283914ECD69E00820C07 /* libv8preparser.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,6 +109,19 @@
 			children = (
 			);
 			name = res;
+			sourceTree = "<group>";
+		};
+		2001408814FF3A5F006AE993 /* bridge */ = {
+			isa = PBXGroup;
+			children = (
+				2001408914FF3AA9006AE993 /* JSObjects.h */,
+				2001408A14FF3AA9006AE993 /* JSObjects.mm */,
+				2001408B14FF3AA9006AE993 /* NSObject+bridge.h */,
+				2001408C14FF3AA9006AE993 /* NSObject+bridge.m */,
+				2001408D14FF3AA9006AE993 /* v8_objc_bridge.h */,
+				2001408E14FF3AA9006AE993 /* v8_objc_bridge.mm */,
+			);
+			name = bridge;
 			sourceTree = "<group>";
 		};
 		203AE6FF14F00DA700D07E10 /* View */ = {
@@ -130,42 +143,6 @@
 				2086D2A514F696FF0016BC47 /* EditorStyle.m */,
 			);
 			name = Class;
-			sourceTree = "<group>";
-		};
-		20E4235B14FFC20700E43771 /* lua */ = {
-			isa = PBXGroup;
-			children = (
-				20E4235F14FFC31E00E43771 /* lib */,
-				20E4235C14FFC2A600E43771 /* ext */,
-			);
-			name = lua;
-			sourceTree = "<group>";
-		};
-		20E4235C14FFC2A600E43771 /* ext */ = {
-			isa = PBXGroup;
-			children = (
-				20E4235D14FFC2A600E43771 /* lpeg.so */,
-			);
-			path = ext;
-			sourceTree = "<group>";
-		};
-		20E4235F14FFC31E00E43771 /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				20E4236014FFC31E00E43771 /* leg */,
-			);
-			path = lib;
-			sourceTree = "<group>";
-		};
-		20E4236014FFC31E00E43771 /* leg */ = {
-			isa = PBXGroup;
-			children = (
-				20E4236114FFC31E00E43771 /* grammar.lua */,
-				20E4236214FFC31E00E43771 /* init.lua */,
-				20E4236314FFC31E00E43771 /* parser.lua */,
-				20E4236414FFC31E00E43771 /* scanner.lua */,
-			);
-			path = leg;
 			sourceTree = "<group>";
 		};
 		20FDEC8C14F8F00200556F76 /* src */ = {
@@ -190,8 +167,6 @@
 				203AE70314F014A000D07E10 /* WindowController.h */,
 				203AE70414F014A000D07E10 /* WindowController.mm */,
 				203AE70614F02B1700D07E10 /* WindowController.xib */,
-				20E4236D14FFC50D00E43771 /* TELua.h */,
-				20E4236E14FFC50D00E43771 /* TELua.m */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -216,7 +191,9 @@
 		2ABB27E414ECCF7100820C07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				20E4236B14FFC40F00E43771 /* liblua.a */,
+				2072499514FE6D9700501B28 /* libicucore.dylib */,
+				2ABB283614ECD69E00820C07 /* libv8.a */,
+				2ABB283714ECD69E00820C07 /* libv8preparser.a */,
 				2ABB27E514ECCF7100820C07 /* Cocoa.framework */,
 				2ABB280314ECCF7200820C07 /* SenTestingKit.framework */,
 				2ABB27E714ECCF7100820C07 /* Other Frameworks */,
@@ -237,7 +214,7 @@
 		2ABB27EB14ECCF7100820C07 /* typeditor */ = {
 			isa = PBXGroup;
 			children = (
-				20E4235B14FFC20700E43771 /* lua */,
+				2001408814FF3A5F006AE993 /* bridge */,
 				2001408414FF19BB006AE993 /* res */,
 				20FDEC8C14F8F00200556F76 /* src */,
 				208DFC1A14F282DC0067D6E1 /* Class */,
@@ -350,11 +327,6 @@
 				203AE70714F02B1700D07E10 /* WindowController.xib in Resources */,
 				2AAA6DB014F20B88000BF463 /* EditorViewController.xib in Resources */,
 				20FDECB114F9ED5700556F76 /* TETextViewController.xib in Resources */,
-				20E4235E14FFC2A600E43771 /* lpeg.so in Resources */,
-				20E4236514FFC31F00E43771 /* grammar.lua in Resources */,
-				20E4236614FFC31F00E43771 /* init.lua in Resources */,
-				20E4236714FFC31F00E43771 /* parser.lua in Resources */,
-				20E4236814FFC31F00E43771 /* scanner.lua in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,7 +347,9 @@
 				20FDECB014F9ED5700556F76 /* TETextViewController.mm in Sources */,
 				208CC71A14FA7CE100D64C4A /* TEGlyphStyle.m in Sources */,
 				2A17B9A014FB50A000B23641 /* TELineNumberView.m in Sources */,
-				20E4236F14FFC50D00E43771 /* TELua.m in Sources */,
+				2001408F14FF3AA9006AE993 /* JSObjects.mm in Sources */,
+				2001409014FF3AA9006AE993 /* NSObject+bridge.m in Sources */,
+				2001409114FF3AA9006AE993 /* v8_objc_bridge.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,11 +438,11 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = "${SRCROOT}/lua/include/**";
+				HEADER_SEARCH_PATHS = "${SRCROOT}/v8/include/**";
 				INFOPLIST_FILE = "typeditor/typeditor-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
-					"$(SRCROOT)/lua/lib",
 					"$(inherited)",
+					"\"$(SRCROOT)/v8/lib\"",
 				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -485,11 +459,11 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = "${SRCROOT}/lua/include/**";
+				HEADER_SEARCH_PATHS = "${SRCROOT}/v8/include/**";
 				INFOPLIST_FILE = "typeditor/typeditor-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
-					"$(SRCROOT)/lua/lib",
 					"$(inherited)",
+					"\"$(SRCROOT)/v8/lib\"",
 				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";

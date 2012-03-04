@@ -10,7 +10,7 @@
 
 @implementation TETextView
 
-@synthesize glyphRangesNum, color, lineHeight, tabStop, selectedColor, selectedBackgroundColor, shouldDrawText;
+@synthesize glyphRangesNum, color, lineHeight, tabStop, selectedColor, selectedBackgroundColor;
 
 - (void) defineGlyphStyle:(TEGlyphStyle *)style withType:(NSUInteger)type
 {
@@ -119,7 +119,7 @@
     NSLayoutManager *lm = [self layoutManager];
     NSRange glyphRange = [lm glyphRangeForBoundingRect:rect inTextContainer:[self textContainer]];
     NSRange characterRange = [lm characterRangeForGlyphRange:glyphRange actualGlyphRange:NULL];
-    NSInteger p = 0, q = glyphRangesNum - 1, m = 0, n = 0,
+    NSUInteger p = 0, q = glyphRangesNum - 1, m = 0, n = 0,
     from = characterRange.location, to = characterRange.location + characterRange.length;
     
     range->location = characterRange.location;
@@ -163,6 +163,18 @@
 {
     [cursorColor set];
     NSRectFill(rect);
+}
+
+- (void) viewDidEndLiveResizect
+{
+    [super viewDidEndLiveResize];
+    shouldDrawText = YES;
+}
+
+- (void) didScroll:(NSRect)rect
+{
+    shouldDrawText = YES;
+    [self drawRect:rect];
 }
 
 // refresh rect with higthlight color

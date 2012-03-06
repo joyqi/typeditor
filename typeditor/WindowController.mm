@@ -21,12 +21,13 @@
         
         // Initialization code here.
         [mainWindow setTrafficLightButtonsLeftMargin:7.0f];
-        [mainWindow setFullScreenButtonRightMargin:7.0f];
+        [mainWindow setCenterTrafficLightButtons:NO];
         [mainWindow setHideTitleBarInFullScreen:NO];
         [mainWindow setCenterFullScreenButton:YES];
-        [mainWindow setTitleBarHeight:40.0f];
-        [mainWindow setShowsBaselineSeparator:YES];
+        [mainWindow setTitleBarHeight:43.0f];
+        [mainWindow setShowsBaselineSeparator:NO];
         [mainWindow setDelegate:self];
+;
     }
     
     return self;

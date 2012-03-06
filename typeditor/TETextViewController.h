@@ -11,11 +11,15 @@
 #import "TELineNumberView.h"
 
 @class TEV8;
+@class PSMTabBarControl;
 
 @interface TETextViewController : NSViewController <NSTextStorageDelegate, NSTextViewDelegate> {
     
     // parent window
     NSWindow *window;
+    
+    // containter box
+    NSView *containter;
     
     // line number
     TELineNumberView *lineNumberView;
@@ -27,6 +31,9 @@
     
     // changed
     BOOL textViewChanged;
+    
+    NSTabView *tabView;
+    PSMTabBarControl *tabBar;
     
     // v8 embed
     TEV8 *v8;

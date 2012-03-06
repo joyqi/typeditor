@@ -17,6 +17,19 @@
 		20FDECB014F9ED5700556F76 /* TETextViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20FDECAE14F9ED5700556F76 /* TETextViewController.mm */; };
 		20FDECB114F9ED5700556F76 /* TETextViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20FDECAF14F9ED5700556F76 /* TETextViewController.xib */; };
 		2A17B9A014FB50A000B23641 /* TELineNumberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A17B99F14FB50A000B23641 /* TELineNumberView.m */; };
+		2A9A80891505E1F30072781A /* NSBezierPath_AMShading.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A806F1505E1F30072781A /* NSBezierPath_AMShading.m */; };
+		2A9A808A1505E1F30072781A /* NSString_AITruncation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A80711505E1F30072781A /* NSString_AITruncation.m */; };
+		2A9A808B1505E1F30072781A /* PSMMetalTabStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A80731505E1F30072781A /* PSMMetalTabStyle.m */; };
+		2A9A808C1505E1F30072781A /* PSMOverflowPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A80751505E1F30072781A /* PSMOverflowPopUpButton.m */; };
+		2A9A808D1505E1F30072781A /* PSMProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A80771505E1F30072781A /* PSMProgressIndicator.m */; };
+		2A9A808E1505E1F30072781A /* PSMRolloverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A80791505E1F30072781A /* PSMRolloverButton.m */; };
+		2A9A808F1505E1F30072781A /* PSMTabBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A807B1505E1F30072781A /* PSMTabBarCell.m */; };
+		2A9A80901505E1F30072781A /* PSMTabBarControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A807D1505E1F30072781A /* PSMTabBarControl.m */; };
+		2A9A80911505E1F30072781A /* PSMTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A807F1505E1F30072781A /* PSMTabBarController.m */; };
+		2A9A80921505E1F30072781A /* PSMTabDragAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A80811505E1F30072781A /* PSMTabDragAssistant.m */; };
+		2A9A80931505E1F30072781A /* PSMTabDragView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A80831505E1F30072781A /* PSMTabDragView.m */; };
+		2A9A80941505E1F30072781A /* PSMTabDragWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A80851505E1F30072781A /* PSMTabDragWindow.m */; };
+		2A9A80951505E1F30072781A /* PSMTabDragWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A80871505E1F30072781A /* PSMTabDragWindowController.m */; };
 		2AAA6DB014F20B88000BF463 /* EditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2AAA6DAE14F20B88000BF463 /* EditorViewController.xib */; };
 		2ABB27E614ECCF7100820C07 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB27E514ECCF7100820C07 /* Cocoa.framework */; };
 		2ABB27F014ECCF7100820C07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB27EE14ECCF7100820C07 /* InfoPlist.strings */; };
@@ -57,6 +70,34 @@
 		2A17B99F14FB50A000B23641 /* TELineNumberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TELineNumberView.m; sourceTree = "<group>"; };
 		2A3EEE2114F399CD007F0CE3 /* EditorTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorTextView.h; sourceTree = "<group>"; };
 		2A3EEE2214F399CD007F0CE3 /* EditorTextView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EditorTextView.mm; sourceTree = "<group>"; };
+		2A9A806D1505E1F30072781A /* Framework_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Framework_Prefix.pch; sourceTree = "<group>"; };
+		2A9A806E1505E1F30072781A /* NSBezierPath_AMShading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSBezierPath_AMShading.h; sourceTree = "<group>"; };
+		2A9A806F1505E1F30072781A /* NSBezierPath_AMShading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBezierPath_AMShading.m; sourceTree = "<group>"; };
+		2A9A80701505E1F30072781A /* NSString_AITruncation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSString_AITruncation.h; sourceTree = "<group>"; };
+		2A9A80711505E1F30072781A /* NSString_AITruncation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSString_AITruncation.m; sourceTree = "<group>"; };
+		2A9A80721505E1F30072781A /* PSMMetalTabStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMMetalTabStyle.h; sourceTree = "<group>"; };
+		2A9A80731505E1F30072781A /* PSMMetalTabStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMMetalTabStyle.m; sourceTree = "<group>"; };
+		2A9A80741505E1F30072781A /* PSMOverflowPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMOverflowPopUpButton.h; sourceTree = "<group>"; };
+		2A9A80751505E1F30072781A /* PSMOverflowPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMOverflowPopUpButton.m; sourceTree = "<group>"; };
+		2A9A80761505E1F30072781A /* PSMProgressIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMProgressIndicator.h; sourceTree = "<group>"; };
+		2A9A80771505E1F30072781A /* PSMProgressIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMProgressIndicator.m; sourceTree = "<group>"; };
+		2A9A80781505E1F30072781A /* PSMRolloverButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMRolloverButton.h; sourceTree = "<group>"; };
+		2A9A80791505E1F30072781A /* PSMRolloverButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMRolloverButton.m; sourceTree = "<group>"; };
+		2A9A807A1505E1F30072781A /* PSMTabBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMTabBarCell.h; sourceTree = "<group>"; };
+		2A9A807B1505E1F30072781A /* PSMTabBarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMTabBarCell.m; sourceTree = "<group>"; };
+		2A9A807C1505E1F30072781A /* PSMTabBarControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMTabBarControl.h; sourceTree = "<group>"; };
+		2A9A807D1505E1F30072781A /* PSMTabBarControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMTabBarControl.m; sourceTree = "<group>"; };
+		2A9A807E1505E1F30072781A /* PSMTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMTabBarController.h; sourceTree = "<group>"; };
+		2A9A807F1505E1F30072781A /* PSMTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMTabBarController.m; sourceTree = "<group>"; };
+		2A9A80801505E1F30072781A /* PSMTabDragAssistant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMTabDragAssistant.h; sourceTree = "<group>"; };
+		2A9A80811505E1F30072781A /* PSMTabDragAssistant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMTabDragAssistant.m; sourceTree = "<group>"; };
+		2A9A80821505E1F30072781A /* PSMTabDragView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMTabDragView.h; sourceTree = "<group>"; };
+		2A9A80831505E1F30072781A /* PSMTabDragView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMTabDragView.m; sourceTree = "<group>"; };
+		2A9A80841505E1F30072781A /* PSMTabDragWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMTabDragWindow.h; sourceTree = "<group>"; };
+		2A9A80851505E1F30072781A /* PSMTabDragWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMTabDragWindow.m; sourceTree = "<group>"; };
+		2A9A80861505E1F30072781A /* PSMTabDragWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMTabDragWindowController.h; sourceTree = "<group>"; };
+		2A9A80871505E1F30072781A /* PSMTabDragWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMTabDragWindowController.m; sourceTree = "<group>"; };
+		2A9A80881505E1F30072781A /* PSMTabStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMTabStyle.h; sourceTree = "<group>"; };
 		2AAA6DAC14F20B88000BF463 /* EditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorViewController.h; sourceTree = "<group>"; };
 		2AAA6DAD14F20B88000BF463 /* EditorViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EditorViewController.mm; sourceTree = "<group>"; };
 		2AAA6DAE14F20B88000BF463 /* EditorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditorViewController.xib; sourceTree = "<group>"; };
@@ -126,6 +167,7 @@
 		20FDEC8C14F8F00200556F76 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				2A9A806C1505E1F30072781A /* PSMTabBarControl */,
 				20FDEC8D14F8F17700556F76 /* TE.h */,
 				203AE70014F00DBD00D07E10 /* INAppStoreWindow.h */,
 				203AE70114F00DBD00D07E10 /* INAppStoreWindow.m */,
@@ -147,6 +189,41 @@
 				203AE70614F02B1700D07E10 /* WindowController.xib */,
 			);
 			name = src;
+			sourceTree = "<group>";
+		};
+		2A9A806C1505E1F30072781A /* PSMTabBarControl */ = {
+			isa = PBXGroup;
+			children = (
+				2A9A806D1505E1F30072781A /* Framework_Prefix.pch */,
+				2A9A806E1505E1F30072781A /* NSBezierPath_AMShading.h */,
+				2A9A806F1505E1F30072781A /* NSBezierPath_AMShading.m */,
+				2A9A80701505E1F30072781A /* NSString_AITruncation.h */,
+				2A9A80711505E1F30072781A /* NSString_AITruncation.m */,
+				2A9A80721505E1F30072781A /* PSMMetalTabStyle.h */,
+				2A9A80731505E1F30072781A /* PSMMetalTabStyle.m */,
+				2A9A80741505E1F30072781A /* PSMOverflowPopUpButton.h */,
+				2A9A80751505E1F30072781A /* PSMOverflowPopUpButton.m */,
+				2A9A80761505E1F30072781A /* PSMProgressIndicator.h */,
+				2A9A80771505E1F30072781A /* PSMProgressIndicator.m */,
+				2A9A80781505E1F30072781A /* PSMRolloverButton.h */,
+				2A9A80791505E1F30072781A /* PSMRolloverButton.m */,
+				2A9A807A1505E1F30072781A /* PSMTabBarCell.h */,
+				2A9A807B1505E1F30072781A /* PSMTabBarCell.m */,
+				2A9A807C1505E1F30072781A /* PSMTabBarControl.h */,
+				2A9A807D1505E1F30072781A /* PSMTabBarControl.m */,
+				2A9A807E1505E1F30072781A /* PSMTabBarController.h */,
+				2A9A807F1505E1F30072781A /* PSMTabBarController.m */,
+				2A9A80801505E1F30072781A /* PSMTabDragAssistant.h */,
+				2A9A80811505E1F30072781A /* PSMTabDragAssistant.m */,
+				2A9A80821505E1F30072781A /* PSMTabDragView.h */,
+				2A9A80831505E1F30072781A /* PSMTabDragView.m */,
+				2A9A80841505E1F30072781A /* PSMTabDragWindow.h */,
+				2A9A80851505E1F30072781A /* PSMTabDragWindow.m */,
+				2A9A80861505E1F30072781A /* PSMTabDragWindowController.h */,
+				2A9A80871505E1F30072781A /* PSMTabDragWindowController.m */,
+				2A9A80881505E1F30072781A /* PSMTabStyle.h */,
+			);
+			path = PSMTabBarControl;
 			sourceTree = "<group>";
 		};
 		2ABB27D614ECCF7100820C07 = {
@@ -324,6 +401,19 @@
 				20FDECB014F9ED5700556F76 /* TETextViewController.mm in Sources */,
 				208CC71A14FA7CE100D64C4A /* TEGlyphStyle.m in Sources */,
 				2A17B9A014FB50A000B23641 /* TELineNumberView.m in Sources */,
+				2A9A80891505E1F30072781A /* NSBezierPath_AMShading.m in Sources */,
+				2A9A808A1505E1F30072781A /* NSString_AITruncation.m in Sources */,
+				2A9A808B1505E1F30072781A /* PSMMetalTabStyle.m in Sources */,
+				2A9A808C1505E1F30072781A /* PSMOverflowPopUpButton.m in Sources */,
+				2A9A808D1505E1F30072781A /* PSMProgressIndicator.m in Sources */,
+				2A9A808E1505E1F30072781A /* PSMRolloverButton.m in Sources */,
+				2A9A808F1505E1F30072781A /* PSMTabBarCell.m in Sources */,
+				2A9A80901505E1F30072781A /* PSMTabBarControl.m in Sources */,
+				2A9A80911505E1F30072781A /* PSMTabBarController.m in Sources */,
+				2A9A80921505E1F30072781A /* PSMTabDragAssistant.m in Sources */,
+				2A9A80931505E1F30072781A /* PSMTabDragView.m in Sources */,
+				2A9A80941505E1F30072781A /* PSMTabDragWindow.m in Sources */,
+				2A9A80951505E1F30072781A /* PSMTabDragWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,7 +7,9 @@
 //
 
 #import "TETextViewController.h"
+#import "PSMTabBarControl.h"
 #import "TEV8.h"
+#import "INAppStoreWindow.h"
 
 @implementation TETextViewController
 
@@ -20,8 +22,31 @@
     
     if (self) {
         window = parent;
+        NSRect windowFrame = [[window contentView] frame], 
+        scrollFrame = { { 0, 0}, windowFrame.size },
+        tabFrame = { {0, 0}, {windowFrame.size.width, 22.0f} };
         
-        scrollView = [[NSScrollView alloc] initWithFrame:[[window contentView] frame]];
+        containter = [[NSView alloc] initWithFrame:windowFrame];
+        [containter setAutoresizesSubviews:YES];
+        [containter setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+        [window setContentView:containter];
+        
+        // init tabbar
+        tabView = [[NSTabView alloc] initWithFrame:NSZeroRect];
+        tabBar = [[PSMTabBarControl alloc] initWithFrame:tabFrame];
+        
+        [tabBar setStyleNamed:@"Unified"];
+        
+        [tabView setDelegate:(id)tabBar];
+        [tabBar setTabView:tabView];
+        [tabBar setDelegate:self];
+        [[(INAppStoreWindow *)window titleBarView] addSubview:tabBar];
+        
+        NSTabViewItem *item = [[NSTabViewItem alloc] initWithIdentifier:@"test"];
+        [item setLabel:@"dddd"];
+        [tabView addTabViewItem:item];
+        
+        scrollView = [[NSScrollView alloc] initWithFrame:scrollFrame];
         NSSize contentSize = [scrollView contentSize];
         
         [scrollView setBorderType:NSNoBorder];
@@ -29,7 +54,7 @@
         [scrollView setHasHorizontalScroller:NO];
         [scrollView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
         
-        textView = [[TETextView alloc] initWithFrame:[[window contentView] frame]];
+        textView = [[TETextView alloc] initWithFrame:scrollFrame];
         // [textView setEditorViewController:self];
         [textView setMinSize:NSMakeSize(0.0, contentSize.height)];
         [textView setMaxSize:NSMakeSize(FLT_MAX, FLT_MAX)];
@@ -45,9 +70,9 @@
         [textView setImportsGraphics:NO];
         
         [scrollView setDocumentView:textView];
-        [window setContentView:scrollView];
         [window makeKeyAndOrderFront:nil];
         [window makeFirstResponder:textView];
+        [containter addSubview:scrollView];
         
         lineNumberView = [[TELineNumberView alloc] initWithScrollView:scrollView];
         [scrollView setVerticalRulerView:lineNumberView];
@@ -85,6 +110,7 @@
 - (void)frameDidChange:(NSNotification *)aNotification
 {
     [textView setShouldDrawText:YES];
+    [tabBar setFrameSize:NSMakeSize([window frame].size.width, 22.0f)];
 }
 
 @end

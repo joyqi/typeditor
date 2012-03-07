@@ -27,7 +27,12 @@
         [mainWindow setTitleBarHeight:43.0f];
         [mainWindow setShowsBaselineSeparator:NO];
         [mainWindow setDelegate:self];
-;
+        
+        NSPoint pos = [mainWindow frame].origin;
+        pos.x += 1.0f;
+        pos.y += 21.0f;
+        
+        [mainWindow setMinSize:NSMakeSize(100.0f, 100.0f)];
     }
     
     return self;

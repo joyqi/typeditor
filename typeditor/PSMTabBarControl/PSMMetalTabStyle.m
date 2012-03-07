@@ -27,17 +27,17 @@
 - (id) init
 {
     if ( (self = [super init]) ) {
-        metalCloseButton = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"TabClose_Front"]];
-        metalCloseButtonDown = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"TabClose_Front_Pressed"]];
-        metalCloseButtonOver = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"TabClose_Front_Rollover"]];
+        metalCloseButton = [NSImage imageNamed:@"TabClose_Front.png"];
+        metalCloseButtonDown = [NSImage imageNamed:@"TabClose_Front_Pressed.png"];
+        metalCloseButtonOver = [NSImage imageNamed:@"TabClose_Front_Rollover.png"];
 
-        metalCloseDirtyButton = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"TabClose_Dirty"]];
-        metalCloseDirtyButtonDown = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"TabClose_Dirty_Pressed"]];
-        metalCloseDirtyButtonOver = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"TabClose_Dirty_Rollover"]];
+        metalCloseDirtyButton = [NSImage imageNamed:@"TabClose_Dirty.png"];
+        metalCloseDirtyButtonDown = [NSImage imageNamed:@"TabClose_Dirty_Pressed.png"];
+        metalCloseDirtyButtonOver = [NSImage imageNamed:@"TabClose_Dirty_Rollover.png"];
                 
-        _addTabButtonImage = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"TabNewMetal"]];
-        _addTabButtonPressedImage = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"TabNewMetalPressed"]];
-        _addTabButtonRolloverImage = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"TabNewMetalRollover"]];
+        _addTabButtonImage = [NSImage imageNamed:@"TabNewMetal.png"];
+        _addTabButtonPressedImage = [NSImage imageNamed:@"TabNewMetalPressed.png"];
+        _addTabButtonRolloverImage = [NSImage imageNamed:@"TabNewMetalRollover.png"];
 		
 		_objectCountStringAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:[[NSFontManager sharedFontManager] convertFont:[NSFont fontWithName:@"Helvetica" size:11.0] toHaveTrait:NSBoldFontMask], NSFontAttributeName,
 																					[[NSColor whiteColor] colorWithAlphaComponent:0.85], NSForegroundColorAttributeName,
@@ -342,7 +342,7 @@
   {
     // selected tab
     NSRect tabRect = NSOffsetRect(NSInsetRect(cellFrame, 0.5, -10), 0, -10.5);
-    bezier = [NSBezierPath bezierPathWithRoundedRect:tabRect xRadius:5 yRadius:5];
+    bezier = [NSBezierPath bezierPathWithRect:tabRect];
     [lineColor set];
     [bezier setLineWidth:1.0];
     
@@ -356,7 +356,14 @@
       // background
       [NSGraphicsContext saveGraphicsState];
       [bezier addClip];
-      NSDrawWindowBackground(cellFrame);
+      // NSDrawWindowBackground(cellFrame);
+      if ([[tabBar window] isMainWindow]) {
+        [[NSColor gridColor] set];
+        NSRectFill( cellFrame );
+      } else {
+        NSDrawWindowBackground(cellFrame);
+      }
+      
       [NSGraphicsContext restoreGraphicsState];
       
       [bezier stroke];

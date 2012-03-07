@@ -70,7 +70,7 @@
 + (NSBundle *)bundle;
 {
     static NSBundle *bundle = nil;
-    if (!bundle) bundle = [NSBundle bundleForClass:[PSMTabBarControl class]];
+    if (!bundle) bundle = [NSBundle mainBundle];
     return bundle;
 }
 

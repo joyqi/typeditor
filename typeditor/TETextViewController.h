@@ -12,11 +12,12 @@
 
 @class TEV8;
 @class PSMTabBarControl;
+@class INAppStoreWindow;
 
 @interface TETextViewController : NSViewController <NSTextStorageDelegate, NSTextViewDelegate> {
     
     // parent window
-    NSWindow *window;
+    INAppStoreWindow *window;
     
     // containter box
     NSView *containter;
@@ -39,13 +40,13 @@
     TEV8 *v8;
 }
 
-@property (strong, nonatomic) NSWindow *window;
+@property (strong, nonatomic) INAppStoreWindow *window;
 @property (strong, nonatomic) TELineNumberView *lineNumberView;
 @property (strong, nonatomic) TETextView *textView;
 @property (strong, nonatomic) NSScrollView *scrollView;
 @property (strong, nonatomic) TEV8 *v8;
 
-- (id)initWithWindow:(NSWindow *)parent;
+- (id)initWithWindow:(INAppStoreWindow *)parent;
 - (void)boundsDidChange:(NSNotification *)aNotification;
 - (void)frameDidChange:(NSNotification *)aNotification;
 

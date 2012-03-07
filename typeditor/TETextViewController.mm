@@ -16,7 +16,7 @@
 @synthesize window, lineNumberView, textView, scrollView, v8;
 
 // init with parent window
-- (id)initWithWindow:(NSWindow *)parent
+- (id)initWithWindow:(INAppStoreWindow *)parent
 {
     self = [super initWithNibName:[self className] bundle:nil];
     
@@ -34,17 +34,27 @@
         // init tabbar
         tabView = [[NSTabView alloc] initWithFrame:NSZeroRect];
         tabBar = [[PSMTabBarControl alloc] initWithFrame:tabFrame];
-        
-        [tabBar setStyleNamed:@"Unified"];
+        [tabBar setStyleNamed:@"Metal"];
         
         [tabView setDelegate:(id)tabBar];
         [tabBar setTabView:tabView];
         [tabBar setDelegate:self];
-        [[(INAppStoreWindow *)window titleBarView] addSubview:tabBar];
+        [tabBar setShowAddTabButton:YES];
+        [[window titleBarView] addSubview:tabBar];
         
         NSTabViewItem *item = [[NSTabViewItem alloc] initWithIdentifier:@"test"];
         [item setLabel:@"dddd"];
+        
+        
+        NSTabViewItem *item2 = [[NSTabViewItem alloc] initWithIdentifier:@"test"];
+        [item2 setLabel:@"dddd"];
+        
+        NSTabViewItem *item3 = [[NSTabViewItem alloc] initWithIdentifier:@"test"];
+        [item3 setLabel:@"dddd"];
+        
         [tabView addTabViewItem:item];
+        [tabView addTabViewItem:item2];
+        [tabView addTabViewItem:item3];
         
         scrollView = [[NSScrollView alloc] initWithFrame:scrollFrame];
         NSSize contentSize = [scrollView contentSize];

@@ -19,6 +19,12 @@
 #define TE_SCROLL_RELEASE_TIME 0.05f
 #define TE_CHANGE_RELEASE_TIME 0.1f
 
+#define TE_WINDOW_TITLE_HEIGHT 44.0f
+#define TE_WINDOW_BOTTOM_HEIGHT 22.0f
+#define TE_WINDOW_TAB_HEIGHT 22.0f
+#define TE_WINDOW_MIN_WIDTH 100.0f
+#define TE_WINDOW_MIN_HEIGHT 100.0f
+
 #define TEMakeString(str) \
     [[NSString alloc] initWithCString:str encoding:NSUTF8StringEncoding]
 

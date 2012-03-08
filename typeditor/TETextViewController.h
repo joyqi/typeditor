@@ -11,7 +11,6 @@
 #import "TELineNumberView.h"
 
 @class TEV8;
-@class PSMTabBarControl;
 @class INAppStoreWindow;
 
 @interface TETextViewController : NSViewController <NSTextStorageDelegate, NSTextViewDelegate> {
@@ -21,6 +20,9 @@
     
     // containter box
     NSView *containter;
+    
+    // tabview belongs to
+    NSTabViewItem *tabViewItem;
     
     // line number
     TELineNumberView *lineNumberView;
@@ -32,9 +34,7 @@
     
     // changed
     BOOL textViewChanged;
-    
-    NSTabView *tabView;
-    PSMTabBarControl *tabBar;
+    BOOL focused;
     
     // v8 embed
     TEV8 *v8;
@@ -45,9 +45,13 @@
 @property (strong, nonatomic) TETextView *textView;
 @property (strong, nonatomic) NSScrollView *scrollView;
 @property (strong, nonatomic) TEV8 *v8;
+@property (strong, nonatomic) NSTabViewItem *tabViewItem;
+@property (readonly, nonatomic) NSView *containter;
 
 - (id)initWithWindow:(INAppStoreWindow *)parent;
 - (void)boundsDidChange:(NSNotification *)aNotification;
 - (void)frameDidChange:(NSNotification *)aNotification;
+- (void)focus;
+- (void)blur;
 
 @end

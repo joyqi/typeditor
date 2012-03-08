@@ -55,6 +55,7 @@
 		20FDECB014F9ED5700556F76 /* TETextViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20FDECAE14F9ED5700556F76 /* TETextViewController.mm */; };
 		20FDECB114F9ED5700556F76 /* TETextViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20FDECAF14F9ED5700556F76 /* TETextViewController.xib */; };
 		2A17B9A014FB50A000B23641 /* TELineNumberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A17B99F14FB50A000B23641 /* TELineNumberView.m */; };
+		2A6561C91508B9700091A209 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2A6561C81508B9700091A209 /* Localizable.strings */; };
 		2A9A80891505E1F30072781A /* NSBezierPath_AMShading.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A806F1505E1F30072781A /* NSBezierPath_AMShading.m */; };
 		2A9A808A1505E1F30072781A /* NSString_AITruncation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A80711505E1F30072781A /* NSString_AITruncation.m */; };
 		2A9A808B1505E1F30072781A /* PSMMetalTabStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A80731505E1F30072781A /* PSMMetalTabStyle.m */; };
@@ -147,6 +148,7 @@
 		2A17B99F14FB50A000B23641 /* TELineNumberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TELineNumberView.m; sourceTree = "<group>"; };
 		2A3EEE2114F399CD007F0CE3 /* EditorTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorTextView.h; sourceTree = "<group>"; };
 		2A3EEE2214F399CD007F0CE3 /* EditorTextView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EditorTextView.mm; sourceTree = "<group>"; };
+		2A6561C81508B9700091A209 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		2A9A806D1505E1F30072781A /* Framework_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Framework_Prefix.pch; sourceTree = "<group>"; };
 		2A9A806E1505E1F30072781A /* NSBezierPath_AMShading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSBezierPath_AMShading.h; sourceTree = "<group>"; };
 		2A9A806F1505E1F30072781A /* NSBezierPath_AMShading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBezierPath_AMShading.m; sourceTree = "<group>"; };
@@ -416,6 +418,7 @@
 				2ABB27F114ECCF7100820C07 /* main.m */,
 				2ABB27F314ECCF7100820C07 /* typeditor-Prefix.pch */,
 				2ABB27F414ECCF7100820C07 /* Credits.rtf */,
+				2A6561C81508B9700091A209 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -542,6 +545,7 @@
 				202C991D1507A6D300F031BA /* TabNewMetalPressed.png in Resources */,
 				202C991E1507A6D300F031BA /* TabNewMetalRollover.png in Resources */,
 				202C991F1507A6D300F031BA /* Warning.png in Resources */,
+				2A6561C91508B9700091A209 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

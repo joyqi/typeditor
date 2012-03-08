@@ -7,13 +7,23 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "TETextViewController.h"
 #import "INAppStoreWindow.h"
 
+@class PSMTabBarControl;
+
 @interface WindowController : NSWindowController <NSWindowDelegate> {
-    TETextViewController *editor;
     INAppStoreWindow *mainWindow;
+    
+    // editor的tab
+    NSMutableDictionary *tabEditors;
+    
+    NSString *focusedTabIdentifier;
+    
+    NSTabView *tabView;
+    PSMTabBarControl *tabBar;
 }
+
+@property (readonly, nonatomic) NSMutableDictionary *tabEditors;
 
 - (id)initWithApp:(NSObject *)app;
 @end

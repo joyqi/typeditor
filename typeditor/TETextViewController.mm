@@ -7,13 +7,12 @@
 //
 
 #import "TETextViewController.h"
-#import "PSMTabBarControl.h"
 #import "TEV8.h"
 #import "INAppStoreWindow.h"
 
 @implementation TETextViewController
 
-@synthesize window, lineNumberView, textView, scrollView, v8;
+@synthesize window, lineNumberView, textView, scrollView, v8, tabViewItem, containter;
 
 // init with parent window
 - (id)initWithWindow:(INAppStoreWindow *)parent
@@ -22,39 +21,18 @@
     
     if (self) {
         window = parent;
-        NSRect windowFrame = [[window contentView] frame], 
-        scrollFrame = { { 0, 0}, windowFrame.size },
-        tabFrame = { {0, 0}, {windowFrame.size.width, 22.0f} };
+        NSRect windowFrame = [[window contentView] frame];
+        windowFrame.origin.y += TE_WINDOW_BOTTOM_HEIGHT;
+        windowFrame.size.height -= TE_WINDOW_BOTTOM_HEIGHT;
+        
+        NSRect scrollFrame = {{0, 0}, windowFrame.size};
         
         containter = [[NSView alloc] initWithFrame:windowFrame];
+        [containter setHidden:YES];
         [containter setAutoresizesSubviews:YES];
         [containter setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-        [window setContentView:containter];
-        
-        // init tabbar
-        tabView = [[NSTabView alloc] initWithFrame:NSZeroRect];
-        tabBar = [[PSMTabBarControl alloc] initWithFrame:tabFrame];
-        [tabBar setStyleNamed:@"Metal"];
-        
-        [tabView setDelegate:(id)tabBar];
-        [tabBar setTabView:tabView];
-        [tabBar setDelegate:self];
-        [tabBar setShowAddTabButton:YES];
-        [[window titleBarView] addSubview:tabBar];
-        
-        NSTabViewItem *item = [[NSTabViewItem alloc] initWithIdentifier:@"test"];
-        [item setLabel:@"dddd"];
-        
-        
-        NSTabViewItem *item2 = [[NSTabViewItem alloc] initWithIdentifier:@"test"];
-        [item2 setLabel:@"dddd"];
-        
-        NSTabViewItem *item3 = [[NSTabViewItem alloc] initWithIdentifier:@"test"];
-        [item3 setLabel:@"dddd"];
-        
-        [tabView addTabViewItem:item];
-        [tabView addTabViewItem:item2];
-        [tabView addTabViewItem:item3];
+        [[window contentView] addSubview:containter];
+        focused = NO;
         
         scrollView = [[NSScrollView alloc] initWithFrame:scrollFrame];
         NSSize contentSize = [scrollView contentSize];
@@ -80,8 +58,6 @@
         [textView setImportsGraphics:NO];
         
         [scrollView setDocumentView:textView];
-        [window makeKeyAndOrderFront:nil];
-        [window makeFirstResponder:textView];
         [containter addSubview:scrollView];
         
         lineNumberView = [[TELineNumberView alloc] initWithScrollView:scrollView];
@@ -93,8 +69,12 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(boundsDidChange:) name:NSViewBoundsDidChangeNotification object:[scrollView contentView]];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSViewFrameDidChangeNotification object:[scrollView contentView]];
         
-        v8 = [[TEV8 alloc] init];
-        [v8 setTextViewController:self];
+        // 将v8引擎作为独立线程载入
+        dispatch_queue_t queue = dispatch_queue_create("com.example.CriticalTaskQueue", NULL);
+        dispatch_async(queue, ^{
+            v8 = [[TEV8 alloc] init];
+            [v8 setTextViewController:self];
+        });
         
         // set delegate
         [textView setDelegate:self];
@@ -104,10 +84,16 @@
     return self;
 }
 
+- (void) setTabViewItem:(NSTabViewItem *)_tabViewItem
+{
+    tabViewItem = _tabViewItem;
+    [containter setIdentifier:[_tabViewItem identifier]];
+}
+
 - (BOOL)textView:(NSTextView *)currentTextView shouldChangeTextInRange:(NSRange)affectedCharRange replacementString:(NSString *)replacementString
 {
     NSString *string = [[currentTextView string] stringByReplacingCharactersInRange:affectedCharRange withString:replacementString];
-    [v8 textChangeCallback:string];
+    [v8 sendMessage:TEV8_MSG_TEXT_CHANGE withObject:string];
     
     return YES;
 }
@@ -120,7 +106,20 @@
 - (void)frameDidChange:(NSNotification *)aNotification
 {
     [textView setShouldDrawText:YES];
-    [tabBar setFrameSize:NSMakeSize([window frame].size.width, 22.0f)];
+}
+
+- (void)focus
+{
+    [containter setHidden:NO];
+    [window makeKeyAndOrderFront:nil];
+    [window makeFirstResponder:textView];
+    focused = YES;
+}
+
+- (void)blur
+{
+    [containter setHidden:YES];
+    focused = NO;
 }
 
 @end

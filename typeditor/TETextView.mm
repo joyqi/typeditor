@@ -169,7 +169,7 @@
 - (void)drawRect:(NSRect)dirtyRect
 {
     // 重新渲染
-    if (shouldDrawText) {
+    if (shouldDrawText && glyphRangesNum > 0) {
         NSRange effectiveRange;
         NSRange range = [self rectToGlyphRange:dirtyRect effectiveRange:&effectiveRange];
         NSUInteger from = range.location, to = range.location + range.length;

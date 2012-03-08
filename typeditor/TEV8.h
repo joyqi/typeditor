@@ -10,6 +10,8 @@
 #import "v8.h"
 #import "TETextViewController.h"
 
+#define TEV8_MSG_TEXT_CHANGE @"text-change"
+
 #define TEV8GetController(controller, c) \
     v8::HandleScope handle_scope; \
     v8::Local<v8::Object> self = args.Holder(); \
@@ -71,9 +73,11 @@ NS_INLINE NSColor *TEV8ColorValue(const v8::Local<v8::Value> &value, NSColor *co
     
 @private
     TETextViewController *textViewController;
+    NSMutableDictionary *messages;
 }
 
 @property (strong, nonatomic) TETextViewController *textViewController;
 
 - (void) textChangeCallback:(NSString *)string;
+- (void) sendMessage:(NSString *)msgType withObject:(id)obj;
 @end

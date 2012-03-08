@@ -45,11 +45,25 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
 
 @synthesize textViewController;
 
+- (id) init
+{
+    self = [super init];
+    
+    if (self) {
+        messages = [NSMutableDictionary dictionary];
+    }
+    
+    return self;
+}
+
 - (void) setTextViewController:(TETextViewController *)controller
 {
     textViewController = controller;
     
     // init v8
+    v8::Isolate* isolate = v8::Isolate::New();
+    v8::Isolate::Scope iscope(isolate);
+    
     v8::HandleScope handle_scope;
     v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New();
     context = v8::Context::New(NULL, global);
@@ -77,6 +91,25 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
     
     [self loadScript:[[NSBundle mainBundle] pathForResource:@"init" ofType:@"js"]];
     [self setUpStyles:context->Global() withLength:count];
+    
+    // life cycle
+    while (true) {
+        if ([messages count] > 0) {
+            NSEnumerator *keys = [messages keyEnumerator];
+            
+            for (NSString *msg in keys) {
+                if ([msg isEqualToString:TEV8_MSG_TEXT_CHANGE]) {
+                    [self textChangeCallback:[messages objectForKey:msg]];
+                    [messages removeObjectForKey:msg];
+                }
+            }
+        }
+    }
+}
+
+- (void) sendMessage:(NSString *)msgType withObject:(id)obj
+{
+    [messages setValue:obj forKey:msgType];
 }
 
 - (void) textChangeCallback:(NSString *)string
@@ -105,6 +138,7 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
             }
             
             [textView setGlyphRangesNum:length];
+            [textView setShouldDrawText:YES];
         }
     }
 }

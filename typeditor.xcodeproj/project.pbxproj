@@ -70,6 +70,7 @@
 		2A9A80941505E1F30072781A /* PSMTabDragWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A80851505E1F30072781A /* PSMTabDragWindow.m */; };
 		2A9A80951505E1F30072781A /* PSMTabDragWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A80871505E1F30072781A /* PSMTabDragWindowController.m */; };
 		2AAA6DB014F20B88000BF463 /* EditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2AAA6DAE14F20B88000BF463 /* EditorViewController.xib */; };
+		2AB5F1A51509C941000EDD54 /* TETabStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5F1A41509C941000EDD54 /* TETabStorage.m */; };
 		2ABB27E614ECCF7100820C07 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB27E514ECCF7100820C07 /* Cocoa.framework */; };
 		2ABB27F014ECCF7100820C07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2ABB27EE14ECCF7100820C07 /* InfoPlist.strings */; };
 		2ABB27F214ECCF7100820C07 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB27F114ECCF7100820C07 /* main.m */; };
@@ -180,6 +181,8 @@
 		2AAA6DAC14F20B88000BF463 /* EditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorViewController.h; sourceTree = "<group>"; };
 		2AAA6DAD14F20B88000BF463 /* EditorViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EditorViewController.mm; sourceTree = "<group>"; };
 		2AAA6DAE14F20B88000BF463 /* EditorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditorViewController.xib; sourceTree = "<group>"; };
+		2AB5F1A31509C941000EDD54 /* TETabStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TETabStorage.h; sourceTree = "<group>"; };
+		2AB5F1A41509C941000EDD54 /* TETabStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TETabStorage.m; sourceTree = "<group>"; };
 		2ABB27E114ECCF7100820C07 /* typeditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = typeditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ABB27E514ECCF7100820C07 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		2ABB27E814ECCF7100820C07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -312,6 +315,8 @@
 				203AE70614F02B1700D07E10 /* WindowController.xib */,
 				202C98CD1507A4B600F031BA /* TETabStyle.h */,
 				202C98CE1507A4B600F031BA /* TETabStyle.m */,
+				2AB5F1A31509C941000EDD54 /* TETabStorage.h */,
+				2AB5F1A41509C941000EDD54 /* TETabStorage.m */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -580,6 +585,7 @@
 				2A9A80941505E1F30072781A /* PSMTabDragWindow.m in Sources */,
 				2A9A80951505E1F30072781A /* PSMTabDragWindowController.m in Sources */,
 				202C98CF1507A4B600F031BA /* TETabStyle.m in Sources */,
+				2AB5F1A51509C941000EDD54 /* TETabStorage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

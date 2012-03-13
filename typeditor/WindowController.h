@@ -10,20 +10,18 @@
 #import "INAppStoreWindow.h"
 
 @class PSMTabBarControl;
+@class TETextViewController;
 
 @interface WindowController : NSWindowController <NSWindowDelegate> {
     INAppStoreWindow *mainWindow;
     
-    // editor的tab
-    NSMutableDictionary *tabEditors;
+    TETextViewController *textViewController;
     
-    NSString *focusedTabIdentifier;
+    NSUInteger autoIncrementId;
     
     NSTabView *tabView;
     PSMTabBarControl *tabBar;
 }
-
-@property (readonly, nonatomic) NSMutableDictionary *tabEditors;
 
 - (id)initWithApp:(NSObject *)app;
 @end

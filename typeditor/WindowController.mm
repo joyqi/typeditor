@@ -13,18 +13,16 @@
 #import "TETabStyle.h"
 
 @interface WindowController (Private)
-- (void) createTabNamed:(NSString *)name withText:(NSString *)text isFocus:(BOOL)focus;
+- (void)createTabNamed:(NSString *)name withText:(NSString *)text isFocus:(BOOL)focus;
 @end
 
 @implementation WindowController
-
-@synthesize tabEditors;
 
 - (id)initWithApp:(NSObject *)app
 {
     self = [super initWithWindowNibName:@"WindowController"];
     if (self) {
-        tabEditors = [NSMutableDictionary dictionary];
+        autoIncrementId = 0;
         mainWindow = (INAppStoreWindow *)[self window];
         
         // init tab
@@ -56,9 +54,9 @@
         [mainWindow setShowsBaselineSeparator:NO];
         [mainWindow setAutorecalculatesContentBorderThickness:YES forEdge:NSMinYEdge];
         [mainWindow setContentBorderThickness:TE_WINDOW_BOTTOM_HEIGHT forEdge:NSMinYEdge];
-        
         [mainWindow setMinSize:NSMakeSize(TE_WINDOW_MIN_WIDTH, TE_WINDOW_MIN_HEIGHT)];
         
+        textViewController = [[TETextViewController alloc] initWithWindow:mainWindow];
         [self createTabNamed:NSLocalizedString(@"Untitled", nil) withText:@"" isFocus:YES];
     }
     
@@ -67,12 +65,7 @@
 
 - (void)tabView:(NSTabView *)aTabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
-    if (focusedTabIdentifier) {
-        [(TETextViewController *)[tabEditors objectForKey:focusedTabIdentifier] blur];
-    }
-    
-    [(TETextViewController *)[tabEditors objectForKey:[tabViewItem identifier]] focus];
-    focusedTabIdentifier = [tabViewItem identifier];
+    [textViewController selectTabNamed:[tabViewItem identifier]];
 }
 
 - (void)addNewTab:(id)sender
@@ -93,19 +86,15 @@
 
 #pragma mark - Private methods
 
-- (void) createTabNamed:(NSString *)name withText:(NSString *)text isFocus:(BOOL)focus
+- (void)createTabNamed:(NSString *)name withText:(NSString *)text isFocus:(BOOL)focus
 {
-    NSString *identifier = [NSString stringWithFormat:@"tab-%d", [tabEditors count]];
+    autoIncrementId ++;
+    NSString *identifier = [NSString stringWithFormat:@"tab-%d", autoIncrementId];
     NSTabViewItem *tabViewItem = [[NSTabViewItem alloc] initWithIdentifier:identifier];
     [tabViewItem setLabel:name];
-    
-    TETextViewController *editor = [[TETextViewController alloc] initWithWindow:mainWindow];
-    
-    [editor setTabViewItem:tabViewItem];
-    [[editor textView] setString:text];
-    
-    [tabEditors setValue:editor forKey:identifier];
     [tabView addTabViewItem:tabViewItem];
+    
+    [textViewController createTabNamed:identifier withText:text];
     
     if (focus) {
         [tabView selectTabViewItem:tabViewItem];

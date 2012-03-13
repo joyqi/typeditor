@@ -9,9 +9,10 @@
 #import "TEV8.h"
 
 @interface TEV8 (Private)
-- (BOOL) loadScript:(NSString *) file;
-- (NSUInteger) createConstants:(const v8::Local<v8::Object> &)proto;
-- (void) setUpStyles:(const v8::Local<v8::Object> &)proto withLength:(NSUInteger)length;
+- (BOOL)loadScript:(NSString *) file;
+- (NSUInteger)createConstants:(const v8::Local<v8::Object> &)proto;
+- (void)initLineNumber:(TELineNumberView *)lineNumberView withGlobal:(const v8::Local<v8::Object> &)proto;
+- (void)initTextView:(TETextView *)textView withGlobal:(const v8::Local<v8::Object> &)proto withLength:(NSUInteger)length;
 @end
 
 // register lexer function
@@ -56,7 +57,7 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
     return self;
 }
 
-- (void) setTextViewController:(TETextViewController *)controller
+- (void)setTextViewController:(TETextViewController *)controller
 {
     textViewController = controller;
     
@@ -90,7 +91,6 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
     context->Global()->Set(v8::String::New("$"), obj);
     
     [self loadScript:[[NSBundle mainBundle] pathForResource:@"init" ofType:@"js"]];
-    [self setUpStyles:context->Global() withLength:count];
     
     // life cycle
     while (true) {
@@ -98,21 +98,28 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
             NSEnumerator *keys = [messages keyEnumerator];
             
             for (NSString *msg in keys) {
+                id object = [messages objectForKey:msg];
+                
                 if ([msg isEqualToString:TEV8_MSG_TEXT_CHANGE]) {
-                    [self textChangeCallback:[messages objectForKey:msg]];
-                    [messages removeObjectForKey:msg];
+                    [self textChangeCallback:[object string]];
+                } else if ([msg isEqualToString:TEV8_MSG_INIT_TEXT_VIEW]) {
+                    [self initTextView:object withGlobal:context->Global() withLength:count];
+                } else if ([msg isEqualToString:TEV8_MSG_INIT_LINE_NUMBER]) {
+                    [self initLineNumber:object withGlobal:context->Global()];
                 }
+                
+                [messages removeObjectForKey:msg];
             }
         }
     }
 }
 
-- (void) sendMessage:(NSString *)msgType withObject:(id)obj
+- (void)sendMessage:(NSString *)msgType withObject:(id)obj
 {
     [messages setValue:obj forKey:msgType];
 }
 
-- (void) textChangeCallback:(NSString *)string
+- (void)textChangeCallback:(NSString *)string
 {
     v8::HandleScope handle_scope;
     v8::Local<v8::Value> callback = context->Global()->GetHiddenValue(v8::String::New("lexerCallback"));
@@ -143,7 +150,7 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
     }
 }
 
-- (BOOL) loadScript:(NSString *) file
+- (BOOL)loadScript:(NSString *) file
 {
     v8::TryCatch try_catch;
     v8::HandleScope handle_scope;
@@ -181,7 +188,7 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
     return TRUE;
 }
 
-- (NSUInteger) createConstants:(const v8::Local<v8::Object> &)proto
+- (NSUInteger)createConstants:(const v8::Local<v8::Object> &)proto
 {
     TEGetGlyphStyleNames(names);
     char *result, constants[1024], *q = constants, prefix[32] = "$";
@@ -207,7 +214,41 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
     return pos;
 }
 
-- (void) setUpStyles:(const v8::Local<v8::Object> &)proto withLength:(NSUInteger)length
+- (void)initLineNumber:(TELineNumberView *)lineNumberView withGlobal:(const v8::Local<v8::Object> &)proto
+{
+    v8::Local<v8::Value> styles = proto->Get(v8::String::New("styles"));
+    
+    if (!*styles || styles->IsUndefined() || !styles->IsObject()) {
+        return;
+    }
+    
+    v8::Local<v8::Object> stylesObject = styles->ToObject();
+    
+        
+    // begin lineNumber
+    NSScrollView *scrollView = [textViewController scrollView];
+    BOOL lineNumber = TEV8BooleanValue(stylesObject->Get(v8::String::New("lineNumber")));
+    if (NSNotFound != lineNumber) {
+        [scrollView setRulersVisible:lineNumber];
+    }
+    
+    // 设置行号颜色
+    NSColor *lineNumberColor = TEV8ColorValue(stylesObject->Get(v8::String::New("lineNumberColor")), [lineNumberView textColor]);
+    [lineNumberView setTextColor:lineNumberColor];
+    
+    // 设置行号背景颜色
+    NSColor *lineNumberBackground = TEV8ColorValue(stylesObject->Get(v8::String::New("lineNumberBackground")), [lineNumberView backgroundColor]);
+    [lineNumberView setBackgroundColor:lineNumberBackground];
+    
+    // 设置行号字体
+    NSFont *lineNumberFont = TEMakeTextViewFont([lineNumberView font], 
+                                                TEV8StringValue(stylesObject->Get(v8::String::New("lineNumberFont"))), 
+                                                TEV8FloatVaule(stylesObject->Get(v8::String::New("lineNumberSize"))), 
+                                                NO, NO);
+    [lineNumberView setFont:lineNumberFont];
+}
+
+- (void)initTextView:(TETextView *)textView withGlobal:(const v8::Local<v8::Object> &)proto withLength:(NSUInteger)length
 {
     v8::Local<v8::Value> styles = proto->Get(v8::String::New("styles"));
     
@@ -219,8 +260,6 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
     
     // begin textView
     // 设置编辑器
-    TETextView *textView = [textViewController textView];
-    
     // 默认字体
     NSFont *defaultFont = TEMakeTextViewFont(NULL, 
                                              TEV8StringValue(stylesObject->Get(v8::String::New("font"))), 
@@ -272,31 +311,6 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
     if (NSNotFound != tabStop) {
         [textView setTabStop:tabStop];
     }
-    
-    // end textView
-    
-    // begin lineNumber
-    TELineNumberView *lineNumberView = [textViewController lineNumberView];
-    NSScrollView *scrollView = [textViewController scrollView];
-    BOOL lineNumber = TEV8BooleanValue(stylesObject->Get(v8::String::New("lineNumber")));
-    if (NSNotFound != lineNumber) {
-        [scrollView setRulersVisible:lineNumber];
-    }
-    
-    // 设置行号颜色
-    NSColor *lineNumberColor = TEV8ColorValue(stylesObject->Get(v8::String::New("lineNumberColor")), [lineNumberView textColor]);
-    [lineNumberView setTextColor:lineNumberColor];
-    
-    // 设置行号背景颜色
-    NSColor *lineNumberBackground = TEV8ColorValue(stylesObject->Get(v8::String::New("lineNumberBackground")), [lineNumberView backgroundColor]);
-    [lineNumberView setBackgroundColor:lineNumberBackground];
-    
-    // 设置行号字体
-    NSFont *lineNumberFont = TEMakeTextViewFont([lineNumberView font], 
-                                                TEV8StringValue(stylesObject->Get(v8::String::New("lineNumberFont"))), 
-                                                TEV8FloatVaule(stylesObject->Get(v8::String::New("lineNumberSize"))), 
-                                                NO, NO);
-    [lineNumberView setFont:lineNumberFont];
     
     // 设置所有style的颜色
     for (NSUInteger i = 0; i < length; i ++) {

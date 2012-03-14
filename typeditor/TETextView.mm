@@ -177,16 +177,13 @@
         for (NSUInteger i = from; i <= to; i ++) {
             TEGlyphRange gr = glyphRanges[i];
             
-            NSUInteger start = MAX(gr.location, effectiveRange.location),
-            stop = MIN(gr.location + gr.length, effectiveRange.location + effectiveRange.length);
-            
             // ignore failed
             if (gr.styleType >= TE_MAX_GLYPH_STYLES_NUM) {
                 continue;
             }
             
             TEGlyphStyle *style = [definedGlyphStyles objectAtIndex:gr.styleType];
-            [layoutManager setTemporaryAttributes:style->attributes forCharacterRange:NSMakeRange(start, stop - start)];
+            [layoutManager setTemporaryAttributes:style->attributes forCharacterRange:NSMakeRange(gr.location, gr.length)];
         }
         
         shouldDrawText = NO;

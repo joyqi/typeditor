@@ -19,6 +19,9 @@
 #define TE_SCROLL_RELEASE_TIME 0.05f
 #define TE_CHANGE_RELEASE_TIME 0.1f
 
+// 消息缓冲区大小
+#define TE_MAX_MESSAGES_BUFFER 1024
+
 #define TE_WINDOW_TITLE_HEIGHT 44.0f
 #define TE_WINDOW_BOTTOM_HEIGHT 22.0f
 #define TE_WINDOW_TAB_HEIGHT 22.0f
@@ -66,6 +69,29 @@ typedef struct _TEGlyphRange {
     
 } TEGlyphRange;
 
+// 定义消息类型
+typedef NSUInteger TEMessageType;
+
+enum {
+    TEMessageTypeInitTextView   =   0x00000001,
+    TEMessageTypeInitLineNumber =   0x00000002,
+    TEMessageTypeTextChange     =   0x00000011
+};
+
+// 定义消息结构体
+typedef struct _TEMessage {
+    
+    // 类型
+    TEMessageType type;
+    
+    // next
+    struct _TEMessage *next;
+    
+    // 指针
+    void *ptr;
+    
+} TEMessage;
+
 // make glyph range
 NS_INLINE TEGlyphRange TEMakeGlyphRange(NSUInteger _location, NSUInteger _length, NSUInteger _styleType) {
     TEGlyphRange r;
@@ -93,10 +119,12 @@ NS_INLINE NSFont *TEMakeTextViewFont(NSFont *defaultFont, NSString *fontFamily, 
         mask |= italic ? NSItalicFontMask : NSUnitalicFontMask;
     }
     
-    return [[NSFontManager sharedFontManager] fontWithFamily:fontFamily ? fontFamily : [defaultFont familyName] 
-                                                      traits:mask 
-                                                      weight:0 
-                                                        size:NSNotFound != fontSize ? fontSize : [defaultFont pointSize]];
+    NSFont *font = [[NSFontManager sharedFontManager] fontWithFamily:fontFamily ? fontFamily : [defaultFont familyName] 
+                                                              traits:mask 
+                                                              weight:0 
+                                                                size:NSNotFound != fontSize ? fontSize : [defaultFont pointSize]];
+    
+    return font ? font : [NSFont systemFontOfSize:[NSFont systemFontSize]];
 }
 
 // make color

@@ -92,9 +92,9 @@
     NSString *identifier = [NSString stringWithFormat:@"tab-%d", autoIncrementId];
     NSTabViewItem *tabViewItem = [[NSTabViewItem alloc] initWithIdentifier:identifier];
     [tabViewItem setLabel:name];
-    [tabView addTabViewItem:tabViewItem];
     
     [textViewController createTabNamed:identifier withText:text];
+    [tabView addTabViewItem:tabViewItem];
     
     if (focus) {
         [tabView selectTabViewItem:tabViewItem];

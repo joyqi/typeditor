@@ -11,12 +11,12 @@
 #import "TELineNumberView.h"
 
 @interface TETabStorage : NSObject {
-    TETextView *_textView;
+    NSString *_text;
     TELineNumberView *_lineNumberView;
     NSRange _selectedRange;
 }
 
-@property (strong, nonatomic) TETextView *textView;
+@property (strong, nonatomic) NSString *text;
 @property (strong, nonatomic) TELineNumberView *lineNumberView;
 @property (assign, nonatomic) NSRange selectedRange;
 

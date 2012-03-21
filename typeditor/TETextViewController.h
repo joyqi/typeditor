@@ -21,10 +21,9 @@
     // containter box
     NSView *containter;
     
-    // line number
-    TELineNumberView *lineNumberView;
-    
     TETextView *textView;
+    
+    NSString *lastTab;
     
     // scroll
     NSScrollView *scrollView;
@@ -39,7 +38,6 @@
 }
 
 @property (strong, nonatomic) INAppStoreWindow *window;
-@property (strong, nonatomic) TELineNumberView *lineNumberView;
 @property (strong, nonatomic) TETextView *textView;
 @property (strong, nonatomic) NSScrollView *scrollView;
 @property (strong, nonatomic) TEV8 *v8;

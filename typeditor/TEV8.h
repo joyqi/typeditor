@@ -75,11 +75,14 @@ NS_INLINE NSColor *TEV8ColorValue(const v8::Local<v8::Value> &value, NSColor *co
     
 @private
     TETextViewController *textViewController;
-    NSMutableDictionary *messages;
+    TEMessage *messages;
+    
+    NSUInteger readPos;
+    NSUInteger writePos;
 }
 
 @property (strong, nonatomic) TETextViewController *textViewController;
 
 - (void)textChangeCallback:(NSString *)string;
-- (void)sendMessage:(NSString *)msgType withObject:(id)obj;
+- (void)sendMessage:(TEMessageType)msgType withObject:(id)obj;
 @end

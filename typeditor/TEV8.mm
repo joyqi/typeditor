@@ -51,7 +51,11 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
     self = [super init];
     
     if (self) {
-        messages = [NSMutableDictionary dictionary];
+        size_t messageSize = sizeof(TEMessage) * TE_MAX_MESSAGES_BUFFER;
+        messages = (TEMessage *)malloc(messageSize);
+        memset(messages, 0, messageSize);
+        readPos = 0;
+        writePos = 0;
     }
     
     return self;
@@ -94,29 +98,52 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
     
     // life cycle
     while (true) {
-        if ([messages count] > 0) {
-            NSEnumerator *keys = [messages keyEnumerator];
+        if (readPos != writePos) {
+            TEMessage *message = &messages[readPos];
             
-            for (NSString *msg in keys) {
-                id object = [messages objectForKey:msg];
-                
-                if ([msg isEqualToString:TEV8_MSG_TEXT_CHANGE]) {
-                    [self textChangeCallback:[object string]];
-                } else if ([msg isEqualToString:TEV8_MSG_INIT_TEXT_VIEW]) {
-                    [self initTextView:object withGlobal:context->Global() withLength:count];
-                } else if ([msg isEqualToString:TEV8_MSG_INIT_LINE_NUMBER]) {
-                    [self initLineNumber:object withGlobal:context->Global()];
+            do {
+                switch (message->type) {
+                    case TEMessageTypeInitTextView:
+                        [self initTextView:(__bridge TETextView *)message->ptr withGlobal:context->Global() withLength:count];
+                        break;
+                    case TEMessageTypeInitLineNumber:
+                        [self initLineNumber:(__bridge TELineNumberView *)message->ptr withGlobal:context->Global()];
+                        break;
+                    case TEMessageTypeTextChange:
+                        [self textChangeCallback:(__bridge NSString *)message->ptr];
+                        break;
+                    default:
+                        break;
                 }
                 
-                [messages removeObjectForKey:msg];
-            }
+                message = message->next;
+                readPos ++;
+                if (readPos >= TE_MAX_MESSAGES_BUFFER) {
+                    readPos = 0;
+                }
+                
+            } while (message);
         }
     }
 }
 
-- (void)sendMessage:(NSString *)msgType withObject:(id)obj
+- (void)sendMessage:(TEMessageType)msgType withObject:(id)obj
 {
-    [messages setValue:obj forKey:msgType];
+    NSUInteger lastPos = writePos - 1;
+    if (writePos >= TE_MAX_MESSAGES_BUFFER) {
+        writePos = 0;
+        lastPos = TE_MAX_MESSAGES_BUFFER - 1;
+    }
+    
+    messages[writePos].type = msgType;
+    messages[writePos].ptr = (__bridge void *)obj;
+    messages[writePos].next = NULL;
+    
+    if (messages[lastPos].ptr) {
+        messages[lastPos].next = &messages[writePos];
+    }
+    
+    writePos ++;
 }
 
 - (void)textChangeCallback:(NSString *)string

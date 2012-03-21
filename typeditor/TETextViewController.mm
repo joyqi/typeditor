@@ -13,7 +13,7 @@
 
 @implementation TETextViewController
 
-@synthesize window, lineNumberView, textView, scrollView, v8, containter;
+@synthesize window, textView, scrollView, v8, containter;
 
 // init with parent window
 - (id)initWithWindow:(INAppStoreWindow *)parent
@@ -22,6 +22,7 @@
     
     if (self) {
         window = parent;
+        tabStorages = [NSMutableDictionary dictionary];
         NSRect windowFrame = [[window contentView] frame];
         windowFrame.origin.y += TE_WINDOW_BOTTOM_HEIGHT;
         windowFrame.size.height -= TE_WINDOW_BOTTOM_HEIGHT;
@@ -29,7 +30,6 @@
         NSRect scrollFrame = {{0, 0}, windowFrame.size};
         
         containter = [[NSView alloc] initWithFrame:windowFrame];
-        [containter setHidden:YES];
         [containter setAutoresizesSubviews:YES];
         [containter setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
         [[window contentView] addSubview:containter];
@@ -42,10 +42,22 @@
         [scrollView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
         [containter addSubview:scrollView];
         
-        lineNumberView = [[TELineNumberView alloc] init];
-        [lineNumberView setOrientation:NSVerticalRuler];
-        [lineNumberView setScrollView:scrollView];
-        [scrollView setVerticalRulerView:lineNumberView];
+        NSSize contentSize = [scrollView contentSize];
+        textView = [[TETextView alloc] initWithFrame:scrollFrame];
+        
+        [textView setMinSize:NSMakeSize(0.0, contentSize.height)];
+        [textView setMaxSize:NSMakeSize(FLT_MAX, FLT_MAX)];
+        [textView setVerticallyResizable:YES];
+        [textView setHorizontallyResizable:NO];
+        [textView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+        [textView setRichText:NO];
+        [textView setImportsGraphics:NO];
+        
+        // clear all text container
+        [[textView textContainer] setContainerSize:NSMakeSize(contentSize.width, FLT_MAX)];
+        [[textView textContainer] setWidthTracksTextView:YES];
+        [textView setDelegate:self];
+        [scrollView setDocumentView:textView];
         
         // scroll view changed
         [[scrollView contentView] setPostsBoundsChangedNotifications:YES];
@@ -55,13 +67,13 @@
         
         // 将v8引擎作为独立线程载入
         v8 = [[TEV8 alloc] init];
-        dispatch_queue_t queue = dispatch_queue_create("com.example.CriticalTaskQueue", NULL);
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
             [v8 setTextViewController:self];
         });
         
-        // init line number
-        // [v8 sendMessage:TEV8_MSG_INIT_LINE_NUMBER withObject:lineNumberView];
+        // init text view
+        [v8 sendMessage:TEMessageTypeInitTextView withObject:textView];
     }
     
     return self;
@@ -69,51 +81,50 @@
 
 - (void)createTabNamed:(NSString *)name withText:(NSString *)text
 {
-    TETextView *newTextView = [[TETextView alloc] initWithFrame:[scrollView frame]];
-    NSSize contentSize = [scrollView contentSize];
     NSRange selectedRange = {0, 0};
     
-    [newTextView setMinSize:NSMakeSize(0.0, contentSize.height)];
-    [newTextView setMaxSize:NSMakeSize(FLT_MAX, FLT_MAX)];
-    [newTextView setVerticallyResizable:YES];
-    [newTextView setHorizontallyResizable:NO];
-    [newTextView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-    [newTextView setRichText:NO];
-    [newTextView setImportsGraphics:NO];
+    TELineNumberView *lineNumberView = [[TELineNumberView alloc] initWithScrollView:scrollView];
+    [lineNumberView setOrientation:NSVerticalRuler];
+    [lineNumberView setScrollView:scrollView];
     
-    // clear all text container
-    [[newTextView textContainer] setContainerSize:NSMakeSize(contentSize.width, FLT_MAX)];
-    [[newTextView textContainer] setWidthTracksTextView:YES];
-    
-    // set text
-    [newTextView setString:text];
-    [newTextView setDelegate:self];
+    // init line number
+    [v8 sendMessage:TEMessageTypeInitLineNumber withObject:lineNumberView];
     
     TETabStorage *tabStorage = [[TETabStorage alloc] init];
-    [tabStorage setTextView:newTextView];
     [tabStorage setSelectedRange:selectedRange];
+    [tabStorage setText:@""];
+    [tabStorage setLineNumberView:lineNumberView];
     
     [tabStorages setValue:tabStorage forKey:name];
-    [v8 sendMessage:TEV8_MSG_INIT_TEXT_VIEW withObject:newTextView];
 }
 
 -(void)textDidChange:(NSNotification *)notification
 {
-    NSLog(@"%@", [notification object]);
+    [v8 sendMessage:TEMessageTypeTextChange withObject:[(TETextView *)[notification object] string]];
 }
 
 - (void)selectTabNamed:(NSString *)name
 {
+    if (lastTab && ![lastTab isEqualToString:name]) {
+        TETabStorage *lastTabStorage = [tabStorages objectForKey:lastTab];
+        if (lastTabStorage) {
+            [lastTabStorage setText:[[textView string] copy]];
+            [lastTabStorage setSelectedRange:[textView selectedRange]];
+        }
+    }
+    
     TETabStorage *tabStorage = [tabStorages objectForKey:name];
+
     if (tabStorage) {
-        [scrollView setDocumentView:[tabStorage textView]];
-        [lineNumberView setClientView:textView];
-        textView = [tabStorage textView];
-        
         [window makeKeyAndOrderFront:nil];
         [window makeFirstResponder:textView];
+        [textView setString:[tabStorage text]];
+        [scrollView setVerticalRulerView:[tabStorage lineNumberView]];
         [textView scrollRangeToVisible:[tabStorage selectedRange]];
+        [v8 sendMessage:TEMessageTypeTextChange withObject:[tabStorage text]];
     }
+    
+    lastTab = name;
 }
 
 - (void)boundsDidChange:(NSNotification *)aNotification

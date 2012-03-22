@@ -36,11 +36,23 @@
         [tabBar setTabView:tabView];
         [tabBar setDelegate:self];
         [tabBar setShowAddTabButton:YES];
+        [tabBar setAutoresizingMask:NSViewWidthSizable];
+        [[mainWindow titleBarView] setAutoresizesSubviews:YES];
         [[mainWindow titleBarView] addSubview:tabBar];
         [[mainWindow titleBarView] addSubview:tabView];
         
         [[tabBar addTabButton] setTarget:self];
         [[tabBar addTabButton] setAction:@selector(addNewTab:)];
+        
+        titleTextField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, TE_WINDOW_TAB_HEIGHT - 2.0f, tabFrame.size.width, TE_WINDOW_TITLE_HEIGHT - TE_WINDOW_TAB_HEIGHT)];
+        [titleTextField setBackgroundColor:[NSColor clearColor]];
+        [titleTextField setBezeled:NSNoBorder];
+        [titleTextField setEditable:NO];
+        [titleTextField setTextColor:[NSColor grayColor]];
+        [titleTextField setAlignment:NSCenterTextAlignment];
+        [titleTextField setAutoresizingMask:NSViewWidthSizable];
+        
+        [[mainWindow titleBarView] addSubview:titleTextField];
         
         [tabBar setDelegate:self];
         [mainWindow setDelegate:self];
@@ -63,9 +75,20 @@
     return self;
 }
 
+- (void)setTitle:(NSString *)title
+{
+    [titleTextField setStringValue:title];
+}
+
 - (void)tabView:(NSTabView *)aTabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
+    [self setTitle:[tabViewItem label]];
     [textViewController selectTabNamed:[tabViewItem identifier]];
+}
+
+- (void)tabView:(NSTabView *)aTabView didCloseTabViewItem:(NSTabViewItem *)tabViewItem
+{
+    [textViewController closeTabNamed:[tabViewItem identifier]];
 }
 
 - (void)addNewTab:(id)sender
@@ -76,12 +99,6 @@
 - (void)windowDidLoad
 {
     [super windowDidLoad];
-}
-
-- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize
-{
-    [tabBar setFrameSize:NSMakeSize(frameSize.width, TE_WINDOW_TAB_HEIGHT)];
-    return frameSize;
 }
 
 #pragma mark - Private methods

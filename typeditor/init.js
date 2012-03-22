@@ -945,7 +945,7 @@ styles[$define].color = '#aaa';
 styles[$define].italic = true;
 styles[$structure].bold = true;
 
-$.lexer(function (str) {
+$.lexer(['*'], function (str) {
     if (0 == str.length) {
         return [0, str.length, $none];
     }

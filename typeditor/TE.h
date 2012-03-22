@@ -75,7 +75,9 @@ typedef NSUInteger TEMessageType;
 enum {
     TEMessageTypeInitTextView   =   0x00000001,
     TEMessageTypeInitLineNumber =   0x00000002,
-    TEMessageTypeTextChange     =   0x00000011
+    TEMessageTypeTextChange     =   0x00000011,
+    TEMessageTypeSuffixChange   =   0x00000012,
+    TEMessageTypeCloseTab       =   0x00000021
 };
 
 // 定义消息结构体

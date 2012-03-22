@@ -33,6 +33,9 @@
     // changed
     BOOL textViewChanged;
     
+    // queue
+    dispatch_queue_t queue;
+    
     // v8 embed
     TEV8 *v8;
 }
@@ -41,6 +44,7 @@
 @property (strong, nonatomic) TETextView *textView;
 @property (strong, nonatomic) NSScrollView *scrollView;
 @property (strong, nonatomic) TEV8 *v8;
+@property (strong, nonatomic) NSMutableDictionary *tabStorages;
 @property (readonly, nonatomic) NSView *containter;
 
 - (id)initWithWindow:(INAppStoreWindow *)parent;
@@ -48,5 +52,6 @@
 - (void)frameDidChange:(NSNotification *)aNotification;
 - (void)createTabNamed:(NSString *)name withText:(NSString *)text;
 - (void)selectTabNamed:(NSString *)name;
+- (void)closeTabNamed:(NSString *)name;
 
 @end

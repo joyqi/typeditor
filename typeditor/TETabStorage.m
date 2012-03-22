@@ -9,6 +9,6 @@
 #import "TETabStorage.h"
 
 @implementation TETabStorage
-@synthesize text = _text, selectedRange = _selectedRange, lineNumberView = _lineNumberView;
+@synthesize name = _name, text = _text, selectedRange = _selectedRange, lineNumberView = _lineNumberView, suffix = _suffix;
 
 @end

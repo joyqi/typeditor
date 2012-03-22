@@ -10,10 +10,11 @@
 #import "TEV8.h"
 #import "INAppStoreWindow.h"
 #import "TETabStorage.h"
+#import "WindowController.h"
 
 @implementation TETextViewController
 
-@synthesize window, textView, scrollView, v8, containter;
+@synthesize window, textView, scrollView, v8, containter, tabStorages;
 
 // init with parent window
 - (id)initWithWindow:(INAppStoreWindow *)parent
@@ -67,7 +68,7 @@
         
         // 将v8引擎作为独立线程载入
         v8 = [[TEV8 alloc] init];
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
             [v8 setTextViewController:self];
         });
@@ -77,6 +78,11 @@
     }
     
     return self;
+}
+
+- (void)dealloc
+{
+    dispatch_release(queue);
 }
 
 - (void)createTabNamed:(NSString *)name withText:(NSString *)text
@@ -91,11 +97,18 @@
     [v8 sendMessage:TEMessageTypeInitLineNumber withObject:lineNumberView];
     
     TETabStorage *tabStorage = [[TETabStorage alloc] init];
+    [tabStorage setName:name];
     [tabStorage setSelectedRange:selectedRange];
     [tabStorage setText:@""];
+    [tabStorage setSuffix:@"*"];
     [tabStorage setLineNumberView:lineNumberView];
     
     [tabStorages setValue:tabStorage forKey:name];
+}
+
+- (void)closeTabNamed:(NSString *)name
+{
+    [v8 sendMessage:TEMessageTypeCloseTab withObject:[(TETabStorage *)[tabStorages objectForKey:name] name]];
 }
 
 -(void)textDidChange:(NSNotification *)notification
@@ -121,6 +134,7 @@
         [textView setString:[tabStorage text]];
         [scrollView setVerticalRulerView:[tabStorage lineNumberView]];
         [textView scrollRangeToVisible:[tabStorage selectedRange]];
+        [v8 sendMessage:TEMessageTypeSuffixChange withObject:[tabStorage suffix]];
         [v8 sendMessage:TEMessageTypeTextChange withObject:[tabStorage text]];
     }
     

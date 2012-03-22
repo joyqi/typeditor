@@ -8,6 +8,61 @@
 
 #import "TEV8.h"
 
+#pragma mark - inline method
+
+// 把value转换成float
+CGFloat TEV8FloatVaule(const v8::Local<v8::Value> &value) {
+    if (*value && !value->IsUndefined() && value->IsNumber()) {
+        return value->NumberValue();
+    }
+    
+    return NSNotFound;
+}
+
+NSInteger TEV8BooleanValue(const v8::Local<v8::Value> &value) {
+    if (*value && !value->IsUndefined() && value->IsBoolean()) {
+        return value->BooleanValue();
+    }
+    
+    return NSNotFound;
+}
+
+NSInteger TEV8IntegerValue(const v8::Local<v8::Value> &value) {
+    if (*value && !value->IsUndefined() && value->NumberValue()) {
+        return value->IntegerValue();
+    }
+    
+    return NSNotFound;
+}
+
+NSString *TEV8StringValue(const v8::Local<v8::Value> &value) {
+    if (*value && !value->IsUndefined() && value->IsString()) {
+        v8::String::Utf8Value string(value->ToString());
+        return TEMakeString(*string);
+    }
+    
+    return NULL;
+}
+
+NSColor *TEV8ColorValue(const v8::Local<v8::Value> &value, NSColor *color) {
+    if (*value && !value->IsUndefined() && value->IsString()) {
+        v8::String::Utf8Value string(value->ToString());
+        return TEMakeRGBColor(TEMakeString(*string));
+    }
+    
+    return color;
+}
+
+NSString *TEV8UUID() {
+    CFUUIDRef uuidRef = CFUUIDCreate(kCFAllocatorDefault);
+    CFStringRef strRef = CFUUIDCreateString(kCFAllocatorDefault, uuidRef);
+    NSString *uuidString = [NSString stringWithString:(__bridge NSString*)strRef];
+    CFRelease(strRef);
+    CFRelease(uuidRef);
+    
+    return uuidString;
+}
+
 @interface TEV8 (Private)
 - (BOOL)loadScript:(NSString *) file;
 - (NSUInteger)createConstants:(const v8::Local<v8::Object> &)proto;
@@ -18,11 +73,42 @@
 // register lexer function
 v8::Handle<v8::Value> TEV8Lexer(const v8::Arguments &args)
 {
-    TEV8GetController(textViewController, context);
-    v8::Local<v8::String> key = v8::String::New("lexerCallback");
+    TEV8Context(context, textViewController);
     
-    if (args.Length() >= 1 || args[0]->IsFunction()) {
-        context->Global()->SetHiddenValue(key, args[0]);
+    v8::Local<v8::String> key = v8::String::New("lexers");
+    
+    if (args.Length() >= 2 && args[0]->IsArray() && args[1]->IsFunction()) {
+        v8::Local<v8::Value> lexersValue;
+        
+        if (!context->Global()->Has(key)) {
+            v8::Handle<v8::ObjectTemplate> lexersTemplate = v8::ObjectTemplate::New();
+            lexersValue = lexersTemplate->NewInstance();
+            context->Global()->SetHiddenValue(key, lexersValue);
+        } else {
+            lexersValue = context->Global()->GetHiddenValue(key);
+        }
+        
+        v8::Local<v8::Object> lexersObject = lexersValue->ToObject();
+        
+        // reigister args
+        NSString *UUID = TEV8UUID();
+        v8::Local<v8::String> funcKey = v8::String::New([UUID UTF8String]);
+        lexersObject->Set(funcKey, args[1]);
+        
+        v8::Local<v8::Array> callbackArray = v8::Local<v8::Array>::Cast(args[0]);
+        NSUInteger length = callbackArray->Length(), pos;
+        
+        for (pos = 0; pos < length; pos ++) {
+            NSString *suffix = TEV8StringValue(callbackArray->Get(pos));
+            NSMutableArray *callbacks = [[[textViewController v8] lexers] objectForKey:suffix];
+            
+            if (!callbacks) {
+                callbacks = [NSMutableArray array];
+                [[[textViewController v8] lexers] setValue:callbacks forKey:suffix];
+            }
+            
+            [callbacks addObject:UUID];
+        }
     }
     
     return v8::Undefined();
@@ -44,9 +130,9 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
 
 @implementation TEV8
 
-@synthesize textViewController;
+@synthesize textViewController, lexers;
 
-- (id) init
+- (id)init
 {
     self = [super init];
     
@@ -56,6 +142,9 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
         memset(messages, 0, messageSize);
         readPos = 0;
         writePos = 0;
+        
+        lexers = [NSMutableDictionary dictionary];
+        suffix = @"*";
     }
     
     return self;
@@ -82,7 +171,7 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
     // init a editor object
     v8::Handle<v8::FunctionTemplate> templ = v8::FunctionTemplate::New();
     v8::Local<v8::ObjectTemplate> objInst = templ->InstanceTemplate();
-    objInst->SetInternalFieldCount(1);
+    objInst->SetInternalFieldCount(2);
     
     v8::Local<v8::Template> proto_t = templ->PrototypeTemplate();
     proto_t->Set("lexer", v8::FunctionTemplate::New(TEV8Lexer));
@@ -91,6 +180,7 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
     v8::Handle<v8::Function> ctor = templ->GetFunction();
     v8::Handle<v8::Object> obj = ctor->NewInstance();
     obj->SetInternalField(0, v8::External::New((__bridge void *)textViewController));
+    obj->SetInternalField(1, v8::External::New((__bridge void *)self));
     NSUInteger count = [self createConstants:context->Global()];
     context->Global()->Set(v8::String::New("$"), obj);
     
@@ -112,6 +202,12 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
                     case TEMessageTypeTextChange:
                         [self textChangeCallback:(__bridge NSString *)message->ptr];
                         break;
+                    case TEMessageTypeSuffixChange:
+                        suffix = (__bridge NSString *)message->ptr;
+                        break;
+                    case TEMessageTypeCloseTab:
+                        [[textViewController tabStorages] removeObjectForKey:(__bridge NSString *)message->ptr];
+                        break;
                     default:
                         break;
                 }
@@ -129,50 +225,63 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
 
 - (void)sendMessage:(TEMessageType)msgType withObject:(id)obj
 {
-    NSUInteger lastPos = writePos - 1;
-    if (writePos >= TE_MAX_MESSAGES_BUFFER) {
-        writePos = 0;
+    NSUInteger lastPos = writePos - 1, currentPos = writePos;
+    if (currentPos >= TE_MAX_MESSAGES_BUFFER) {
+        currentPos = 0;
         lastPos = TE_MAX_MESSAGES_BUFFER - 1;
     }
     
-    messages[writePos].type = msgType;
-    messages[writePos].ptr = (__bridge void *)obj;
-    messages[writePos].next = NULL;
+    messages[currentPos].type = msgType;
+    messages[currentPos].ptr = (__bridge void *)obj;
+    messages[currentPos].next = NULL;
     
     if (messages[lastPos].ptr) {
-        messages[lastPos].next = &messages[writePos];
+        messages[lastPos].next = &messages[currentPos];
     }
     
-    writePos ++;
+    writePos = currentPos + 1;
 }
 
 - (void)textChangeCallback:(NSString *)string
 {
     v8::HandleScope handle_scope;
-    v8::Local<v8::Value> callback = context->Global()->GetHiddenValue(v8::String::New("lexerCallback"));
+    NSArray *callbackKeys = [lexers objectForKey:suffix];
     
-    if (!callback->IsUndefined() && callback->IsFunction()) {
-        v8::Local<v8::Function> func = v8::Local<v8::Function>::Cast(callback);
-        v8::Local<v8::Value> argv[1];
-        argv[0] = v8::String::New([string cStringUsingEncoding:NSUTF8StringEncoding]);
+    if (!callbackKeys || ![callbackKeys count]) {
+        return;
+    }
+    
+    v8::Local<v8::Value> callbacks = context->Global()->GetHiddenValue(v8::String::New("lexers"));
+    if (!&callbacks || !callbacks->IsObject()) {
+        return;
+    }
+    
+    for (NSString *key in callbackKeys) {
+        v8::Local<v8::Value> callback = callbacks->ToObject()->Get(v8::String::New([key UTF8String]));
         
-        v8::Local<v8::Value> value = func->Call(context->Global(), 1, argv);
-        
-        // fecth result value
-        if (!value->IsUndefined() && value->IsArray()) {
-            v8::Local<v8::Array> array = v8::Local<v8::Array>::Cast(value);
-            NSUInteger length = array->Length() / 3, pos;
-            TETextView *textView = [textViewController textView];
+        if (!callback->IsUndefined() && callback->IsFunction()) {
+            v8::Local<v8::Function> func = v8::Local<v8::Function>::Cast(callback);
+            v8::Local<v8::Value> argv[1];
+            argv[0] = v8::String::New([string cStringUsingEncoding:NSUTF8StringEncoding]);
             
-            for (pos = 0; pos < length; pos ++) {
-                [textView setGlyphRange:TEMakeGlyphRange(array->Get(pos * 3)->IntegerValue(),
-                                                         array->Get(pos * 3 + 1)->IntegerValue(),
-                                                         array->Get(pos * 3 + 2)->IntegerValue()) 
-                              withIndex:pos];
+            v8::Local<v8::Value> value = func->Call(context->Global(), 1, argv);
+            
+            // fecth result value
+            if (!value->IsUndefined() && value->IsArray()) {
+                v8::Local<v8::Array> array = v8::Local<v8::Array>::Cast(value);
+                NSUInteger length = array->Length() / 3, pos;
+                TETextView *textView = [textViewController textView];
+                
+                for (pos = 0; pos < length; pos ++) {
+                    [textView setGlyphRange:TEMakeGlyphRange(array->Get(pos * 3)->IntegerValue(),
+                                                             array->Get(pos * 3 + 1)->IntegerValue(),
+                                                             array->Get(pos * 3 + 2)->IntegerValue()) 
+                                  withIndex:pos];
+                }
+                
+                [textView setGlyphRangesNum:length];
+                [textView setShouldDrawText:YES];
             }
-            
-            [textView setGlyphRangesNum:length];
-            [textView setShouldDrawText:YES];
         }
     }
 }

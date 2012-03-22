@@ -10,6 +10,8 @@
 #import "v8.h"
 #import "TETextViewController.h"
 
+#define TECheckMessage 100
+
 #define TEV8Context(c, controller) \
     v8::HandleScope handle_scope; \
     v8::Local<v8::Object> self = args.Holder(); \
@@ -21,9 +23,10 @@
     v8::Persistent<v8::Context> c = [controller v8]->context; \
     v8::Context::Scope context_scope(c);
 
-@interface TEV8 : NSObject {
+@interface TEV8 : NSObject <NSMachPortDelegate> {
     
 @public
+    v8::Isolate *isolate;
     v8::Persistent<v8::Context> context;
     
 @private
@@ -32,15 +35,19 @@
     
     NSMutableDictionary *lexers;
     
+    NSPort *localPort;
+    
     NSString *suffix;
     
     NSUInteger readPos;
     NSUInteger writePos;
+    NSUInteger typeCount;
 }
 
 @property (strong, nonatomic) TETextViewController *textViewController;
 @property (strong, nonatomic) NSMutableDictionary *lexers;
 
+- (id)initWithTextViewController:(TETextViewController *)aTextViewController;
 - (void)textChangeCallback:(NSString *)string;
 - (void)sendMessage:(TEMessageType)msgType withObject:(id)obj;
 @end

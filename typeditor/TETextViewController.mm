@@ -67,11 +67,7 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSViewFrameDidChangeNotification object:[scrollView contentView]];
         
         // 将v8引擎作为独立线程载入
-        v8 = [[TEV8 alloc] init];
-        queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        dispatch_async(queue, ^{
-            [v8 setTextViewController:self];
-        });
+        v8 = [[TEV8 alloc] initWithTextViewController:self];
         
         // init text view
         [v8 sendMessage:TEMessageTypeInitTextView withObject:textView];

@@ -86,9 +86,6 @@ typedef struct _TEMessage {
     // 类型
     TEMessageType type;
     
-    // next
-    struct _TEMessage *next;
-    
     // 指针
     void *ptr;
     

@@ -64,6 +64,9 @@ NSString *TEV8UUID() {
 }
 
 @interface TEV8 (Private)
+- (void)thread:(id)inData;
+- (void)setUpTextViewController:(TETextViewController *)aTextViewController;
+- (void)setUpThread:(TETextViewController *)aTextViewController;
 - (BOOL)loadScript:(NSString *) file;
 - (NSUInteger)createConstants:(const v8::Local<v8::Object> &)proto;
 - (void)initLineNumber:(TELineNumberView *)lineNumberView withGlobal:(const v8::Local<v8::Object> &)proto;
@@ -132,7 +135,7 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
 
 @synthesize textViewController, lexers;
 
-- (id)init
+- (id)initWithTextViewController:(TETextViewController *)aTextViewController
 {
     self = [super init];
     
@@ -145,17 +148,19 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
         
         lexers = [NSMutableDictionary dictionary];
         suffix = @"*";
+        
+        [self setUpThread:aTextViewController];
     }
     
     return self;
 }
 
-- (void)setTextViewController:(TETextViewController *)controller
+- (void)setUpTextViewController:(TETextViewController *)aTextViewController
 {
-    textViewController = controller;
+    textViewController = aTextViewController;
     
     // init v8
-    v8::Isolate* isolate = v8::Isolate::New();
+    isolate = v8::Isolate::New();
     v8::Isolate::Scope iscope(isolate);
     
     v8::HandleScope handle_scope;
@@ -181,65 +186,102 @@ v8::Handle<v8::Value> TEV8Log(const v8::Arguments &args)
     v8::Handle<v8::Object> obj = ctor->NewInstance();
     obj->SetInternalField(0, v8::External::New((__bridge void *)textViewController));
     obj->SetInternalField(1, v8::External::New((__bridge void *)self));
-    NSUInteger count = [self createConstants:context->Global()];
+    typeCount = [self createConstants:context->Global()];
     context->Global()->Set(v8::String::New("$"), obj);
     
     [self loadScript:[[NSBundle mainBundle] pathForResource:@"init" ofType:@"js"]];
+}
+
+- (void)setUpThread:(TETextViewController *)aTextViewController
+{
+    localPort = [NSMachPort port];
+    if (localPort) {
+        [[NSRunLoop currentRunLoop] addPort:localPort forMode:NSDefaultRunLoopMode];
+        
+        
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(queue, ^{
+            [self thread:aTextViewController];
+        });
+        
+        // [self performSelectorInBackground:@selector(thread:) withObject:aTextViewController];
+    }
+}
+         
+-(void)thread:(id)inData
+{
+    // init textView
+    [self setUpTextViewController:(TETextViewController *)inData];
     
-    // life cycle
-    while (true) {
+    [localPort setDelegate:self];
+    [[NSRunLoop currentRunLoop] addPort:localPort forMode:NSDefaultRunLoopMode];
+    
+    do {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode 
+                                 beforeDate:[NSDate distantFuture]];
+    } while (true);
+}
+
+- (void)handlePortMessage:(NSPortMessage *)portMessage
+{
+    v8::Isolate::Scope iscope(isolate);
+    v8::HandleScope handle_scope;
+    v8::Context::Scope context_scope(context);
+    NSUInteger message = [portMessage msgid];
+    
+    if (message == TECheckMessage) {
         if (readPos != writePos) {
             TEMessage *message = &messages[readPos];
+
+            switch (message->type) {
+                case TEMessageTypeInitTextView:
+                    [self initTextView:(__bridge TETextView *)message->ptr withGlobal:context->Global() withLength:typeCount];
+                    break;
+                case TEMessageTypeInitLineNumber:
+                    [self initLineNumber:(__bridge TELineNumberView *)message->ptr withGlobal:context->Global()];
+                    break;
+                case TEMessageTypeTextChange:
+                    [self textChangeCallback:(__bridge NSString *)message->ptr];
+                    break;
+                case TEMessageTypeSuffixChange:
+                    suffix = (__bridge NSString *)message->ptr;
+                    break;
+                case TEMessageTypeCloseTab:
+                    [[textViewController tabStorages] removeObjectForKey:(__bridge NSString *)message->ptr];
+                    break;
+                default:
+                    break;
+            }
             
-            do {
-                switch (message->type) {
-                    case TEMessageTypeInitTextView:
-                        [self initTextView:(__bridge TETextView *)message->ptr withGlobal:context->Global() withLength:count];
-                        break;
-                    case TEMessageTypeInitLineNumber:
-                        [self initLineNumber:(__bridge TELineNumberView *)message->ptr withGlobal:context->Global()];
-                        break;
-                    case TEMessageTypeTextChange:
-                        [self textChangeCallback:(__bridge NSString *)message->ptr];
-                        break;
-                    case TEMessageTypeSuffixChange:
-                        suffix = (__bridge NSString *)message->ptr;
-                        break;
-                    case TEMessageTypeCloseTab:
-                        [[textViewController tabStorages] removeObjectForKey:(__bridge NSString *)message->ptr];
-                        break;
-                    default:
-                        break;
-                }
-                
-                message = message->next;
-                readPos ++;
-                if (readPos >= TE_MAX_MESSAGES_BUFFER) {
-                    readPos = 0;
-                }
-                
-            } while (message);
+            readPos ++;
+            if (readPos >= TE_MAX_MESSAGES_BUFFER) {
+                readPos = 0;
+            }
         }
     }
 }
 
 - (void)sendMessage:(TEMessageType)msgType withObject:(id)obj
 {
-    NSUInteger lastPos = writePos - 1, currentPos = writePos;
+    NSUInteger currentPos = writePos;
     if (currentPos >= TE_MAX_MESSAGES_BUFFER) {
         currentPos = 0;
-        lastPos = TE_MAX_MESSAGES_BUFFER - 1;
     }
     
     messages[currentPos].type = msgType;
     messages[currentPos].ptr = (__bridge void *)obj;
-    messages[currentPos].next = NULL;
-    
-    if (messages[lastPos].ptr) {
-        messages[lastPos].next = &messages[currentPos];
-    }
     
     writePos = currentPos + 1;
+    
+    // send message to port
+    NSPortMessage* messageObj = [[NSPortMessage alloc] initWithSendPort:localPort 
+                                                            receivePort:localPort 
+                                                             components:nil];
+    
+    if (messageObj) {
+        [messageObj setMsgid:TECheckMessage];
+        [messageObj sendBeforeDate:[NSDate date]];
+    }
 }
 
 - (void)textChangeCallback:(NSString *)string

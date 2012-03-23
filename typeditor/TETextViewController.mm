@@ -114,6 +114,11 @@
 
 - (void)selectTabNamed:(NSString *)name
 {
+    [v8 sendMessage:TEMessageTypeChangeTab withObject:name];
+}
+
+- (void)changeTabNamed:(NSString *)name
+{
     if (lastTab && ![lastTab isEqualToString:name]) {
         TETabStorage *lastTabStorage = [tabStorages objectForKey:lastTab];
         if (lastTabStorage) {
@@ -123,7 +128,8 @@
     }
     
     TETabStorage *tabStorage = [tabStorages objectForKey:name];
-
+    lastTab = name;
+    
     if (tabStorage) {
         [window makeKeyAndOrderFront:nil];
         [window makeFirstResponder:textView];
@@ -133,8 +139,6 @@
         [v8 sendMessage:TEMessageTypeSuffixChange withObject:[tabStorage suffix]];
         [v8 sendMessage:TEMessageTypeTextChange withObject:[tabStorage text]];
     }
-    
-    lastTab = name;
 }
 
 - (void)boundsDidChange:(NSNotification *)aNotification

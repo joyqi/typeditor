@@ -77,7 +77,8 @@ enum {
     TEMessageTypeInitLineNumber =   0x00000002,
     TEMessageTypeTextChange     =   0x00000011,
     TEMessageTypeSuffixChange   =   0x00000012,
-    TEMessageTypeCloseTab       =   0x00000021
+    TEMessageTypeCloseTab       =   0x00000021,
+    TEMessageTypeChangeTab      =   0x00000022
 };
 
 // 定义消息结构体
@@ -85,6 +86,9 @@ typedef struct _TEMessage {
     
     // 类型
     TEMessageType type;
+    
+    // next
+    struct _TEMessage *next;
     
     // 指针
     void *ptr;

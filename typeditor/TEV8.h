@@ -35,7 +35,9 @@
     
     NSMutableDictionary *lexers;
     
-    NSPort *localPort;
+    NSMessagePort *localPort;
+    NSLock *lock;
+    NSThread *currentThread;
     
     NSString *suffix;
     

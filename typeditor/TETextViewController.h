@@ -52,6 +52,7 @@
 - (void)frameDidChange:(NSNotification *)aNotification;
 - (void)createTabNamed:(NSString *)name withText:(NSString *)text;
 - (void)selectTabNamed:(NSString *)name;
+- (void)changeTabNamed:(NSString *)name;
 - (void)closeTabNamed:(NSString *)name;
 
 @end

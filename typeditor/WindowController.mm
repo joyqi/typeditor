@@ -44,15 +44,28 @@
         [[tabBar addTabButton] setTarget:self];
         [[tabBar addTabButton] setAction:@selector(addNewTab:)];
         
-        titleTextField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, TE_WINDOW_TAB_HEIGHT - 2.0f, tabFrame.size.width, TE_WINDOW_TITLE_HEIGHT - TE_WINDOW_TAB_HEIGHT)];
-        [titleTextField setBackgroundColor:[NSColor clearColor]];
-        [titleTextField setBezeled:NSNoBorder];
-        [titleTextField setEditable:NO];
-        [titleTextField setTextColor:[NSColor grayColor]];
-        [titleTextField setAlignment:NSCenterTextAlignment];
-        [titleTextField setAutoresizingMask:NSViewWidthSizable];
+        title = [[NSTextField alloc] initWithFrame:NSMakeRect(0, TE_WINDOW_TAB_HEIGHT - 2.0f, tabFrame.size.width, TE_WINDOW_TITLE_HEIGHT - TE_WINDOW_TAB_HEIGHT)];
+        [title setBackgroundColor:[NSColor clearColor]];
+        [title setBezeled:NSNoBorder];
+        [title setEditable:NO];
+        [title setTextColor:TE_WINDOW_TITLE_COLOR];
+        [title setAutoresizingMask:NSViewWidthSizable];
         
-        [[mainWindow titleBarView] addSubview:titleTextField];
+        // init shadow
+        NSShadow *shadow = [[NSShadow alloc] init];
+        [shadow setShadowColor:[NSColor colorWithDeviceWhite:1.0 alpha:0.5]];
+        [shadow setShadowOffset:NSMakeSize(1.0, -1.1)];
+        
+        // init alignment
+        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        [paragraphStyle setAlignment:NSCenterTextAlignment];
+        
+        titleAttributes = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+                           [NSFont systemFontOfSize:[NSFont systemFontSize]],NSFontAttributeName,
+                           shadow, NSShadowAttributeName,
+                           paragraphStyle, NSParagraphStyleAttributeName,
+                           nil];
+        [[mainWindow titleBarView] addSubview:title];
         
         [tabBar setDelegate:self];
         [mainWindow setDelegate:self];
@@ -75,9 +88,14 @@
     return self;
 }
 
-- (void)setTitle:(NSString *)title
+- (void)setTitle:(NSString *)aTitle
 {
-    [titleTextField setStringValue:title];
+    [title setAttributedStringValue:[[NSAttributedString alloc] initWithString:aTitle
+                                                                    attributes:titleAttributes]];
+    CGFloat minSize = [[title cell] cellSizeForBounds:
+                       NSMakeRect(0, 0, CGFLOAT_MAX, TE_WINDOW_TITLE_HEIGHT - TE_WINDOW_TAB_HEIGHT)].width + 100.0f * 2;
+    
+    [mainWindow setMinSize:NSMakeSize(minSize, minSize)];
 }
 
 - (void)tabView:(NSTabView *)aTabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
